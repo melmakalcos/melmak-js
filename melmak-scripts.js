@@ -64,80 +64,71 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<!-- ARBOL_SIDEBAR v8 - jerarquía por profundidad de URL -->
 <script>
+/* ARBOL_SIDEBAR v11 - EMPRETIENDA - jerarquia por profundidad de URL */
 (function () {
   "use strict";
   if (window.matchMedia("(pointer: coarse)").matches) return;
 
-  var FORZADAS = {
-    melmakeadas: "https://www.melmakalcos.com.ar/melmakeadas"
-  };
+  var FORZADAS = { melmakeadas: "https://www.melmakalcos.com.ar/melmakeadas" };
 
-  function segs(href) {
-    var m = /melmakalcos\.com\.ar\/([^?\/#]+)?(?:\/([^?\/#]+))?/i.exec(href || "");
-    return m ? m.slice(1) : [];
+  function segs(h) {
+    var m = /melmakalcos\.com\.ar\/([^\/?#]+)?(?:\/([^\/?#]+))?/i.exec(h || "");
+    return m ? [m[1] || "", m[2] || ""] : ["", ""];
   }
-  function nombre(a) {
+
+  function limpio(a) {
     var c = a.cloneNode(true);
-    var malos = c.querySelectorAll("svg,path,i");
+    var malos = c.querySelectorAll("svg,path,i,span");
     for (var i = 0; i < malos.length; i++) if (malos[i].parentNode) malos[i].parentNode.removeChild(malos[i]);
     return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
 
-  function run() {
+  var lista;
+  var n = 0;
+  (function esperar() {
     var caja = document.querySelector(".products-feed__filter");
-    if (!caja || caja.getAttribute("data-arbol-v8")) return;
-    caja.setAttribute("data-arbol-v8", "1");
+    if (!caja) { if (n++ < 150) setTimeout(esperar, 200); return; }
+    if (caja.getAttribute("data-arbol-v11")) return;
+    caja.setAttribute("data-arbol-v11", "1");
 
     var origen = caja.querySelector("ul");
     if (!origen) return;
     var arbol = {};
+
     var enlaces = origen.querySelectorAll("a[href]");
-    var s, e;
-    for (s = 0; s < enlaces.length; s++) {
-      var en = enlaces[s];
-      var seg = segs(en.getAttribute("href") || en.href);
-      if (!seg[0] || seg.length > 2) continue;
-      var r = seg[0].toLowerCase();
-      if (r === "productos" || r === "buscar") continue;
-      if (!arbol[r]) arbol[r] = { top: null, hijos: {} };
-      if (seg.length === 1) {
-        if (!arbol[r].top) arbol[r].top = en;
-      } else {
-        var h = seg[1].toLowerCase();
-        if (!arbol[r].hijos[h]) arbol[r].hijos[h] = en;
-      }
+    var i;
+    for (i = 0; i < enlaces.length; i++) {
+      var a = enlaces[i];
+      var s = segs(a.getAttribute("href") || a.href);
+      if (!s[0] || s[0] === "productos") continue;
+      var r = s[0].toLowerCase();
+      if (!arbol[r]) arbol[r] = { a: null, hijos: {} };
+      if (s[1]) { if (!arbol[r].hijos[s[1]]) arbol[r].hijos[s[1]] = a; }
+      else if (!arbol[r].a) arbol[r].a = a;
     }
 
     for (var f in FORZADAS) if (FORZADAS.hasOwnProperty(f) && !arbol[f]) {
-      var af = document.createElement("a");
-      af.href = FORZADAS[f];
-      af.textContent = f;
-      arbol[f] = { top: af, hijos: {} };
+      var aa = document.createElement("a"); aa.href = FORZADAS[f]; aa.textContent = f;
+      arbol[f] = { a: aa, hijos: {} };
     }
 
     var ulN = document.createElement("ul");
-    var raices = Object.keys(arbol).sort();
-    for (var rr = 0; rr < raices.length; rr++) {
-      var r2 = raices[rr], nd = arbol[r2];
-      if (!nd.top) continue;
-      var liR = document.createElement("li");
+    var raices = Object.keys(arbol).sort(), rr;
+    for (rr = 0; rr < raices.length; rr++) {
+      var nodo = arbol[raices[rr]], liR = document.createElement("li");
       var aR = document.createElement("a");
-      aR.href = nd.top.getAttribute("href") || nd.top.href;
-      aR.textContent = (nombre(nd.top) || r2.replace(/-/g, " ")).toUpperCase();
-      liR.appendChild(aR);
-      if (nd.hijos && Object.keys(nd.hijos).length) {
+      aR.href = nodo.a.getAttribute("href") || nodo.a.href;
+      aR.textContent = (limpio(nodo.a) || raices[rr].replace(/-/g, " ")).toUpperCase();
+      liR.appendChild(aRError);
+      var hs = Object.keys(nodo.hijos).sort();
+      if (hs.length) {
         var ulH = document.createElement("ul");
-        var hs = Object.keys(nd.hijos).sort();
         for (var hh = 0; hh < hs.length; hh++) {
-          var ah = nd.hijos[hs[hh]];
-          var liS = document.createElement("li");
-          var aS = document.createElement("a");
-          aS.href = ah.getAttribute("href") || ah.href;
-          aS.textContent = (nombre(ah) || hs[hh].replace(/-/g, " ")).toUpperCase();
-          liS.appendChild(aS);
-          ulH.appendChild(liS);
+          var liS = document.createElement("li"), aS = document.createElement("a");
+          aS.href = nodo.hijos[hs[hh]].getAttribute("href") || nodo.hijos[hs[hh]].href;
+          aS.textContent = (limpio(nodo.hijos[hs[hh]]) || hs[hh].replace(/-/g, " ")).toUpperCase();
+          liS.appendChild(aS); ulH.appendChild(liS);
         }
         liR.appendChild(ulH);
       }
@@ -145,22 +136,7 @@
     }
 
     var cont = origen.parentNode;
-    if (cont) {
-      var viejo = cont.querySelector(".arbol-v8-wrap");
-      var w = document.createElement("div");
-      w.className = "arbol-v8-wrap";
-      w.appendChild(ulN);
-      if (viejo) cont.replaceChild(w, viejo);
-      else cont.insertBefore(w, origen);
-    }
-  }
-
-  var n = 0;
-  (function t() {
-    var ct = document.querySelector(".products-feed__filter");
-    if (ct) { run(); return; }
-    if (n++ > 150) return;
-    setTimeout(t, 200);
+    if (cont) { var wrap = document.createElement("div"); wrap.className = "arbol-v11"; wrap.appendChild(ulN); cont.insertBefore(wrap, origen); }
   })();
 })();
 </script>
