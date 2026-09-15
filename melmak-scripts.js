@@ -64,118 +64,94 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_ARQUITECTURA_TREE*/
+/*ARBOL_CATEGORIAS_EMPRETIENDA_FLAT*/
 (function () {
     function construir() {
         var filterContainer = document.querySelector('.products-feed__filter');
         if (!filterContainer || filterContainer.querySelector('.cat-arbol')) return;
 
-        // 1. Aislar estrictamente el menú de navegación Desktop
-        var desktopNav = document.querySelector('.header-menu__desktop-list__container-list');
-        if (!desktopNav) return;
-
-        // 2. Localizar el desplegable de "CATÁLOGO" / "CATEGORÍAS"
-        var rootMenuUl = null;
-        var allNavLinks = desktopNav.querySelectorAll('a');
+        // 1. Obtener la navegación principal
+        var menuContainer = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu') 
+            || document.querySelector('.desktop-list__menu')
+            || document.querySelector('.header-menu__desktop-list__container-list');
         
-        for (var i = 0; i < allNavLinks.length; i++) {
-            var txt = allNavLinks[i].textContent.trim().toUpperCase();
-            if (txt === 'CATÁLOGO' || txt === 'CATALOGO' || txt === 'CATEGORÍAS' || txt === 'CATEGORIAS') {
-                var parentLi = allNavLinks[i].closest('li');
-                if (parentLi) {
-                    rootMenuUl = parentLi.querySelector('ul');
-                }
-                break;
+        if (!menuContainer) return;
+
+        // Si existe desplegable "Catálogo" / "Categorías", enfocar ese contenedor
+        var catalogoLink = Array.from(menuContainer.querySelectorAll('a')).find(function(a) {
+            var t = a.textContent.trim().toUpperCase();
+            return t === 'CATÁLOGO' || t === 'CATALOGO' || t === 'CATEGORÍAS' || t === 'CATEGORIAS';
+        });
+
+        var targetUl = menuContainer;
+        if (catalogoLink) {
+            var parentLi = catalogoLink.closest('li');
+            if (parentLi) {
+                var subUl = parentLi.querySelector('ul');
+                if (subUl) targetUl = subUl;
             }
         }
 
-        if (!rootMenuUl) {
-            rootMenuUl = desktopNav.querySelector('.desktop-list__menu');
+        var allLis = Array.from(targetUl.children).filter(function(el) { return el.tagName === 'LI'; });
+        if (!allLis.length) {
+            allLis = Array.from(targetUl.querySelectorAll('li'));
         }
-        if (!rootMenuUl) return;
-
-        // 3. Extraer elementos de Nivel 1 (Categorías Raíz)
-        var level1Lis = [];
-        for (var c = 0; c < rootMenuUl.children.length; c++) {
-            if (rootMenuUl.children[c].tagName === 'LI') {
-                level1Lis.push(rootMenuUl.children[c]);
-            }
-        }
-        if (!level1Lis.length) return;
 
         var tree = [];
+        var currentParent = null;
         var seenUrls = {};
 
-        // FASE 1: CONSTRUCCIÓN DEL ÁRBOL LÓGICO Y REGISTRO DE MEMORIA
-        for (var i = 0; i < level1Lis.length; i++) {
-            var li1 = level1Lis[i];
-            
-            var a1 = null;
-            for (var n = 0; n < li1.childNodes.length; n++) {
-                if (li1.childNodes[n].tagName === 'A') {
-                    a1 = li1.childNodes[n];
-                    break;
+        // 2. Procesar la estructura plana de Empretienda (.desktop-list__subitem)
+        allLis.forEach(function (li) {
+            var a = li.querySelector('a');
+            if (!a) return;
+
+            var href = a.getAttribute('href') || a.href;
+            var text = a.textContent.trim();
+            if (!text || !href || href === '#' || href === 'javascript:void(0)') return;
+
+            var isSubitem = li.classList.contains('desktop-list__subitem') || 
+                            li.classList.contains('subitem') ||
+                            li.parentElement.closest('li') !== null;
+
+            if (isSubitem && currentParent) {
+                // Agregar como hija de la categoría principal activa
+                if (!seenUrls[href] && href !== currentParent.href) {
+                    seenUrls[href] = true;
+                    currentParent.children.push({ title: text, href: a.href });
+                }
+            } else {
+                // Registrar nueva categoría raíz (Nivel 1)
+                if (!seenUrls[href]) {
+                    seenUrls[href] = true;
+                    currentParent = { title: text, href: a.href, children: [] };
+                    tree.push(currentParent);
                 }
             }
-            if (!a1) a1 = li1.querySelector('a');
-            if (!a1) continue;
 
-            var href1 = a1.getAttribute('href') || a1.href;
-            var text1 = a1.textContent.trim();
-            
-            // Bloqueo de duplicados en raíz (ej: MUSICA-PORTADAS)
-            if (!text1 || seenUrls[href1]) continue;
-            seenUrls[href1] = true;
-
-            var node1 = {
-                title: text1,
-                href: a1.href,
-                children: []
-            };
-
-            // Extracción estricta de subcategorías (Nivel 2) dentro de este li1
-            var subUl = li1.querySelector('ul');
-            if (subUl && subUl !== rootMenuUl) {
-                var level2Lis = [];
-                for (var sc = 0; sc < subUl.children.length; sc++) {
-                    if (subUl.children[sc].tagName === 'LI') {
-                        level2Lis.push(subUl.children[sc]);
+            // Fallback para temas con anidación HTML real
+            var nestedUl = li.querySelector('ul');
+            if (nestedUl && currentParent) {
+                var nestedAs = nestedUl.querySelectorAll('a');
+                nestedAs.forEach(function (subA) {
+                    var subHref = subA.getAttribute('href') || subA.href;
+                    var subText = subA.textContent.trim();
+                    if (subText && subHref && !seenUrls[subHref] && subHref !== currentParent.href) {
+                        seenUrls[subHref] = true;
+                        currentParent.children.push({ title: subText, href: subA.href });
                     }
-                }
-
-                for (var j = 0; j < level2Lis.length; j++) {
-                    var li2 = level2Lis[j];
-                    var a2 = li2.querySelector('a');
-                    if (!a2) continue;
-
-                    var href2 = a2.getAttribute('href') || a2.href;
-                    var text2 = a2.textContent.trim();
-
-                    if (!text2 || href2 === href1 || seenUrls[href2]) continue;
-
-                    // REGISTRO CLAVE: Al marcar la subcategoría en seenUrls, 
-                    // se bloquea totalmente la posibilidad de que aparezca como raíz.
-                    seenUrls[href2] = true;
-
-                    node1.children.push({
-                        title: text2,
-                        href: a2.href
-                    });
-                }
+                });
             }
-
-            tree.push(node1);
-        }
+        });
 
         if (!tree.length) return;
 
-        // FASE 2: RENDERIZADO DEL DOM LATERAL
+        // 3. Renderizar el menú lateral (.cat-arbol)
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
         var mainUl = document.createElement('ul');
 
-        for (var k = 0; k < tree.length; k++) {
-            var item = tree[k];
+        tree.forEach(function (item) {
             var rama = document.createElement('li');
             rama.className = 'cat-rama';
 
@@ -197,15 +173,14 @@
                 var subUlElem = document.createElement('ul');
                 subUlElem.className = 'cat-hijos';
 
-                for (var ch = 0; ch < item.children.length; ch++) {
-                    var childItem = item.children[ch];
+                item.children.forEach(function (child) {
                     var subLi = document.createElement('li');
                     var subA = document.createElement('a');
-                    subA.href = childItem.href;
-                    subA.textContent = childItem.title;
+                    subA.href = child.href;
+                    subA.textContent = child.title;
                     subLi.appendChild(subA);
                     subUlElem.appendChild(subLi);
-                }
+                });
 
                 rama.appendChild(cabeza);
                 rama.appendChild(subUlElem);
@@ -214,12 +189,12 @@
             }
 
             mainUl.appendChild(rama);
-        }
+        });
 
         cont.appendChild(mainUl);
         filterContainer.insertBefore(cont, filterContainer.firstChild);
 
-        // Control de Apertura/Cierre del Acordeón
+        // 4. Lógica de acordeón desplegable
         cont.addEventListener('click', function (ev) {
             var a = ev.target.closest ? ev.target.closest('a') : null;
             if (a) {
