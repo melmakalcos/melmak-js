@@ -316,36 +316,41 @@
   })();
 </script>
 
-/* ARBOL_CATEGORIAS_CSS */
-(function () {
-  var c = [
-    '.cat-arbol { list-style: none; margin: 0 0 8px; padding: 0; }',
+<script>
+  /* ARBOL_CATEGORIAS_CSS */
+  (function () {
+    var c = [
+      '.cat-arbol, .cat-arbol ul { list-style: none; margin: 0; padding: 0; }',
 
-    '.cat-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer; padding: 7px 0; border-bottom: 1px solid rgba(53, 53, 53, 0.25); }',
+      '.cat-arbol { margin: 0 0 8px; }',
 
-    '.cat-cabeza a { color: #353535 !important; font-weight: 700; text-transform: uppercase; flex: 1; }',
+      '.cat-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer; padding: 7px 0; border-bottom: 1px solid rgba(53, 53, 53, 0.25); }',
 
-    '.cat-cabeza .flechita { font-size: .8rem; transition: transform .25s ease; }',
+      '.cat-cabeza a { color: #353535 !important; font-weight: 700; text-transform: uppercase; flex: 1; }',
 
-    '.cat-abierta > .cat-cabeza .flechita { transform: rotate(180deg); }',
+      '.cat-cabeza .flechita { font-size: .8rem; transition: transform .25s ease; }',
 
-    '.cat-hijos { list-style: none; margin: 0; padding: 0 0 0 4px; max-height: 0; overflow: hidden; transition: max-height .3s ease; }',
+      '.cat-abierta > .cat-cabeza .flechita { transform: rotate(180deg); }',
 
-    '.cat-abierta > .cat-hijos { max-height: 4000px; }',
+      '.cat-hijos { margin: 0; padding: 0 0 0 4px; max-height: 0; overflow: hidden; transition: max-height .3s ease; }',
 
-    '.cat-hijos a { display: block; margin: 2px 0; padding: 6px 10px; border-radius: 8px; background: #fff; color: #353535 !important; font-size: .82rem; }',
+      '.cat-abierta > .cat-hijos { max-height: 4000px; }',
 
-    '.cat-hijos a:hover { opacity: .85; }',
+      '.cat-hijos a { display: block; margin: 2px 0; padding: 6px 10px; border-radius: 8px; background: #fff; color: #353535 !important; font-size: .82rem; }',
 
-    '.cat-arbol { display: none !important; }';
+      '.cat-hijos a:hover { opacity: .85; }',
 
-  var s = document.createElement('style');
+      '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }'
+    ].join('');
 
-  if (s.styleSheet) {
-    s.styleSheet.cssText = c;
-  } else {
-    s.appendChild(document.createTextNode(c));
-  }
+    var s = document.createElement('style');
 
-  document.head.appendChild(s);
-})();
+    if (s.styleSheet) {
+      s.styleSheet.cssText = c;
+    } else {
+      s.appendChild(document.createTextNode(c));
+    }
+
+    document.head.appendChild(s);
+  })();
+</script>
