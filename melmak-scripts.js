@@ -88,14 +88,11 @@
 })();
 
 
-
 <script>
-/* ARBOL_SIDEBAR FINAL - agrupa por profundidad de URL */
+/* ARBOL_SIDEBAR - decide por PROFUNDIDAD de URL, no por el menú aplanado */
 (function () {
   "use strict";
-  if (window.matchMedia("(pointer: coarse)").matches) return;
-
-  var FORZADAS = { melmakeadas: "/melmakeadas" };
+  if (window.matchMedia("(pointer: coarse)").matches) return; // móvil intacto
 
   function segs(h) {
     var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
@@ -108,10 +105,6 @@
       if (q[i].parentNode) q[i].parentNode.removeChild(q[i]);
     return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
-  function seg2(h) { /* 1ra y 2da parte despues del dominio */
-    var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
-    return m ? [m[1] || "", m[2] || ""] : ["", ""];
-  }
 
   document.addEventListener("DOMContentLoaded", function () {
     var caja = document.querySelector(".products-feed__filter");
@@ -120,23 +113,22 @@
     if (!origen) return;
     var arbol = {};
 
+    /* 1 segmento = raíz · 2 = hija anidada */
     var enlaces = origen.querySelectorAll("a[href]");
     for (var i = 0; i < enlaces.length; i++) {
-      var a = enlaces[i], s = seg2(a.getAttribute("href") || a.href);
+      var a = enlaces[i], s = segs(a.getAttribute("href") || a.href);
       if (!s[0] || s[0] === "productos") continue;
       var raiz = s[0].toLowerCase();
       if (!arbol[raiz]) arbol[raiz] = { a: null, hijos: {} };
       if (s[1]) {
         var hijo = s[1].toLowerCase();
-        if (!arbol[raiz].hijos[hijo]) arbol[raiz].hijos[hijo] = a;
+        if (!arbol[raiz].hijos[hijo]) arbol[raiz].hijos[hijo] = a;   // HIJA
       } else if (!arbol[raiz].a) {
-        arbol[raiz].a = a;
+        arbol[raiz].a = a;                                            // RAIZ
       }
     }
 
-    for (var f in FORZADAS) if (!arbol[f.Replace(/-/g, "")]) ;
-    /* ^ BORRAR esta linea si no la entendes: es residuo mio */
-
+    /* construimos el ul nuevo */
     var ulN = document.createElement("ul");
     Object.keys(arbol).sort().forEach(function (raiz) {
       var n = arbol[raiz];
@@ -146,6 +138,7 @@
       aR.href = n.a.getAttribute("href") || n.a.href;
       aR.textContent = (limpio(n.a) || raiz.replace(/-/g, " ")).toUpperCase();
       li.appendChild(aR);
+
       var hs = Object.keys(n.hijos).sort();
       if (hs.length) {
         var ulH = document.createElement("ul");
@@ -154,7 +147,7 @@
           a3.href = a2.getAttribute("href") || a2.href;
           a3.textContent = (limpio(a2) || h.replace(/-/g, " ")).toUpperCase();
           li2.appendChild(a3);
-          ulH.appendChild(li2);
+          ulH.appendChild(li2);  // anidada
         });
         li.appendChild(ulH);
       }
@@ -164,7 +157,7 @@
     var padre = origen.parentNode;
     if (padre) {
       var w = document.createElement("div");
-      w.className = "arbol-final-wrap";
+      w.className = "arbol-profundidad-wrap";
       w.appendChild(ulN);
       padre.insertBefore(w, origen);
     }
