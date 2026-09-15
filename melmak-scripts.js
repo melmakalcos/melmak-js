@@ -1,4 +1,4 @@
-/*TILT_MELMAK_FINAL_v12 - Fix definitivo UIkit Slider en página de producto*/
+/*TILT_MELMAK_FINAL_v13 - Anulación de sombra nativa y Tilt directo en VIP*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
@@ -6,9 +6,8 @@
     var s = document.createElement('style');
     s.appendChild(document.createTextNode(
       '[class*="product-offer"] { z-index: 999 !important; pointer-events: none !important; }' +
-      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { position: relative !important; transform-style: preserve-3d !important; }' +
-      /* Aseguramos el espacio 3D en los items del slider VIP sin interferir con el desplazamiento */
-      '.product-vip__carrousel .uk-slider-items > li { transform-style: preserve-3d !important; will-change: transform; }'
+      /* Matamos la sombra gris nativa de Empretienda en el producto VIP para que no ensucie el 3D */
+      '.product-vip__carrousel-image { box-shadow: none !important; transition: transform .05s ease-out; will-change: transform; cursor: pointer; }'
     ));
     document.head.appendChild(s);
   })();
@@ -38,26 +37,24 @@
       });
     })(catalogos[i]);
 
-    // 2. Selector para la Página de Producto VIP (Aplica al <li> contenedor del slider para no romper UIkit)
-    var vips = document.querySelectorAll('.product-vip__carrousel .uk-slider-items > li');
-    for (var j = 0; j < vips.length; j++) (function (li) {
-      if (li.getAttribute('data-mxm-tilt')) return;
-      li.setAttribute('data-mxm-tilt', '1');
+    // 2. Selector directo para la imagen de la página de producto VIP
+    var vips = document.querySelectorAll('.product-vip__carrousel-image');
+    for (var j = 0; j < vips.length; j++) (function (img) {
+      if (img.getAttribute('data-mxm-tilt')) return;
+      img.setAttribute('data-mxm-tilt', '1');
 
-      li.addEventListener('mousemove', function (e) {
-        var r = li.getBoundingClientRect();
+      img.addEventListener('mousemove', function (e) {
+        var r = img.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width;
         var y = (e.clientY - r.top) / r.height;
         
-        li.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
-        li.style.transition = 'transform .05s ease-out';
-        li.style.zIndex = '50';
+        img.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
+        img.style.transition = 'transform .05s ease-out';
       });
 
-      li.addEventListener('mouseleave', function () {
-        li.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)';
-        li.style.transition = 'transform .3s ease-out';
-        li.style.zIndex = '1';
+      img.addEventListener('mouseleave', function () {
+        img.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)';
+        img.style.transition = 'transform .3s ease-out';
       });
     })(vips[j]);
   }
