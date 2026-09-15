@@ -176,6 +176,19 @@
       if (viejo) padre.replaceChild(w, viejo);
       else padre.insertBefore(w, origen);
     }
+
+    // tras agrupar, ANTES de pintar:
+  for (var r2 in arbol) if (arbol.hasOwnProperty(r2) && !arbol[r2].a) {
+  var hs2 = Object.keys(arbol[r2].hijos);
+  if (hs2.length) {
+    var aH2 = arbol[r2].hijos[hs2[0]];
+    var seg2 = /melmakalcos\.com\.ar\/([^\/]+)/i.exec(aH2.getAttribute("href") || aH2.href);
+    var aNuevo = document.createElement("a");
+    aNuevo.href = "https://www.melmakalcos.com.ar/" + (seg2 ? seg2[1] : r2);
+    aNuevo.textContent = r2.replace(/-/g, " ").toUpperCase();
+    arbol[r2].a = aNuevo;
+  }
+  }
   });
 })();
 script>
