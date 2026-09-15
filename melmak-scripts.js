@@ -89,78 +89,157 @@
 
 
 <script>
-/* ARBOL_SIDEBAR - decide por PROFUNDIDAD de URL, no por el menú aplanado */
-(function () {
-  "use strict";
-  if (window.matchMedia("(pointer: coarse)").matches) return; // móvil intacto
+document.addEventListener('DOMContentLoaded', function () {
 
-  function segs(h) {
-    var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
-    return m ? [m[1] || "", m[2] || ""] : ["", ""];
-  }
-  function limpio(a) {
-    var c = a.cloneNode(true);
-    var q = c.querySelectorAll("svg,path,i,span");
-    for (var i = 0; i < q.length; i++)
-      if (q[i].parentNode) q[i].parentNode.removeChild(q[i]);
-    return (c.textContent || "").replace(/\s+/g, " ").trim();
-  }
+    const arbol = document.querySelector('.cat-arbol');
+    const categoriasPrincipales = document.querySelector('.products-feed__categories-list');
 
-  document.addEventListener("DOMContentLoaded", function () {
-    var caja = document.querySelector(".products-feed__filter");
-    if (!caja) return;
-    var origen = caja.querySelector("ul");
-    if (!origen) return;
-    var arbol = {};
+    if (!arbol || !categoriasPrincipales) return;
 
-    /* 1 segmento = raíz · 2 = hija anidada */
-    var enlaces = origen.querySelectorAll("a[href]");
-    for (var i = 0; i < enlaces.length; i++) {
-      var a = enlaces[i], s = segs(a.getAttribute("href") || a.href);
-      if (!s[0] || s[0] === "productos") continue;
-      var raiz = s[0].toLowerCase();
-      if (!arbol[raiz]) arbol[raiz] = { a: null, hijos: {} };
-      if (s[1]) {
-        var hijo = s[1].toLowerCase();
-        if (!arbol[raiz].hijos[hijo]) arbol[raiz].hijos[hijo] = a;   // HIJA
-      } else if (!arbol[raiz].a) {
-        arbol[raiz].a = a;                                            // RAIZ
-      }
-    }
+    /*
+     * 1. Guardamos todos los nodos de categorías que Empretienda
+     *    generó en .cat-arbol.
+     */
+    const nodos = new Map();
 
-    /* construimos el ul nuevo */
-    var ulN = document.createElement("ul");
-    Object.keys(arbol).sort().forEach(function (raiz) {
-      var n = arbol[raiz];
-      if (!n.a) return;
-      var li = document.createElement("li");
-      var aR = document.createElement("a");
-      aR.href = n.a.getAttribute("href") || n.a.href;
-      aR.textContent = (limpio(n.a) || raiz.replace(/-/g, " ")).toUpperCase();
-      li.appendChild(aR);
+    arbol.querySelectorAll('a[href]').forEach(function (a) {
 
-      var hs = Object.keys(n.hijos).sort();
-      if (hs.length) {
-        var ulH = document.createElement("ul");
-        hs.forEach(function (h) {
-          var a2 = n.hijos[h], li2 = document.createElement("li"), a3 = document.createElement("a");
-          a3.href = a2.getAttribute("href") || a2.href;
-          a3.textContent = (limpio(a2) || h.replace(/-/g, " ")).toUpperCase();
-          li2.appendChild(a3);
-          ulH.appendChild(li2);  // anidada
-        });
-        li.appendChild(ulH);
-      }
-      ulN.appendChild(li);
+        const url = new URL(a.href, window.location.origin);
+        const path = url.pathname.replace(/\/+$/, '');
+
+        if (!path) return;
+
+        /*
+         * Nos quedamos con la primera aparición de cada URL.
+         */
+        if (!nodos.has(path)) {
+            const liOriginal = a.closest('li');
+
+            nodos.set(path, {
+                path: path,
+                href: a.href,
+                nombre: a.textContent.trim(),
+                li: liOriginal
+            });
+        }
     });
 
-    var padre = origen.parentNode;
-    if (padre) {
-      var w = document.createElement("div");
-      w.className = "arbol-profundidad-wrap";
-      w.appendChild(ulN);
-      padre.insertBefore(w, origen);
+    /*
+     * 2. Las categorías raíz NO las tomamos de .cat-arbol.
+     *    Las tomamos de la lista oficial de categorías.
+     */
+    const raices = [];
+
+    categoriasPrincipales.querySelectorAll('a[href]').forEach(function (a) {
+
+        const url = new URL(a.href, window.location.origin);
+        const path = url.pathname.replace(/\/+$/, '');
+
+        raices.push({
+            path: path,
+            href: a.href,
+            nombre: a.textContent.trim()
+        });
+    });
+
+    /*
+     * 3. Construimos un contenedor completamente nuevo.
+     */
+    const nuevoArbol = document.createElement('ul');
+
+    /*
+     * 4. Genera recursivamente una categoría y sus hijos.
+     */
+    function crearCategoria(categoria) {
+
+        const li = document.createElement('li');
+        li.className = 'cat-rama';
+
+        const cabeza = document.createElement('div');
+        cabeza.className = 'cat-cabeza';
+
+        const enlace = document.createElement('a');
+        enlace.href = categoria.href;
+        enlace.textContent = categoria.nombre;
+
+        cabeza.appendChild(enlace);
+        li.appendChild(cabeza);
+
+        /*
+         * Buscar hijos DIRECTOS:
+         *
+         * /universo
+         * /universo/dc
+         * /universo/dc/batman
+         *
+         * DC es hijo de UNIVERSO.
+         * Batman es hijo de DC.
+         */
+        const hijos = [];
+
+        nodos.forEach(function (posibleHijo) {
+
+            if (posibleHijo.path === categoria.path) return;
+
+            const prefijo = categoria.path + '/';
+
+            if (!posibleHijo.path.startsWith(prefijo)) return;
+
+            const resto = posibleHijo.path.substring(prefijo.length);
+
+            /*
+             * Si contiene otro "/", no es hijo directo.
+             */
+            if (resto.includes('/')) return;
+
+            hijos.push(posibleHijo);
+        });
+
+        /*
+         * Orden alfabético.
+         */
+        hijos.sort(function (a, b) {
+            return a.nombre.localeCompare(b.nombre, 'es', {
+                sensitivity: 'base'
+            });
+        });
+
+        /*
+         * Crear hijos.
+         */
+        if (hijos.length) {
+
+            const flecha = document.createElement('span');
+            flecha.className = 'flechita';
+            flecha.textContent = '▼';
+
+            cabeza.appendChild(flecha);
+
+            const ulHijos = document.createElement('ul');
+            ulHijos.className = 'cat-hijos';
+
+            hijos.forEach(function (hijo) {
+                ulHijos.appendChild(crearCategoria(hijo));
+            });
+
+            li.appendChild(ulHijos);
+        }
+
+        return li;
     }
-  });
-})();
+
+    /*
+     * 5. Crear SOLO las categorías raíz de tu menú superior.
+     */
+    raices.forEach(function (raiz) {
+        nuevoArbol.appendChild(crearCategoria(raiz));
+    });
+
+    /*
+     * 6. Reemplazamos el árbol incorrecto.
+     */
+    arbol.innerHTML = '';
+    arbol.appendChild(nuevoArbol);
+
+});
 </script>
