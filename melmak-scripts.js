@@ -1,4 +1,4 @@
-/*TILT_MELMAK_FINAL_v7 - Catálogo + Dentro del Producto*/
+/*TILT_MELMAK_FINAL_v9 - Catálogo + Página de Producto VIP (Frodo)*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
@@ -9,27 +9,29 @@
       '  z-index: 999 !important; ' +
       '  pointer-events: none !important; ' + 
       '}' +
-      /* Agregamos las clases de la página de producto aquí también */
-      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item, .product-detail-media, .product-images__slide { ' +
+      /* Contenedores para el catálogo y para la página de producto VIP */
+      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item, .product-vip__carrousel-image, [class*="product-vip"] { ' +
       '  position: relative; ' +
       '}'
     ));
     document.head.appendChild(s);
   })();
 
-  /* AQUÍ ES DONDE AGREGAMOS LOS NUEVOS OBJETIVOS */
+  /* AÑADIMOS LAS CLASES DE LA VISTA VIP DE PRODUCTO */
   var SEL = '.block-products-feed__product-media,' +
             '.products-feed__product-media,' +
             '.product-preview-carrousel__item,' +
-            '.product-detail-media,' +          /* Imagen principal del producto */
-            '.product-images__slide,' +         /* Slider del producto */
-            '.js-product-image';                /* Clase de imagen en algunas plantillas */
+            '.product-vip__carrousel-image,' +
+            '.product-vip__carrousel-item,' +
+            '[class*="product-vip__carrousel"]';
 
   function atar() {
     var cs = document.querySelectorAll(SEL);
     for (var i = 0; i < cs.length; i++) (function (c) {
       if (c.getAttribute('data-mxm-tilt')) return;
-      var img = c.querySelector('img');
+      
+      // Si la clase seleccionada es directamente la imagen, buscamos la imagen o usamos el elemento mismo
+      var img = c.tagName === 'IMG' ? c : c.querySelector('img');
       if (!img) return;
       c.setAttribute('data-mxm-tilt', '1');
 
