@@ -64,29 +64,30 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<script>/*ARBOL_CATEGORIAS_DEBUG*/
+/*ARBOL_CATEGORIAS_JERARQUIA_CORREGIDA*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
-        console.log("Contenedor lateral encontrado:", !!f);
         if (!f || f.querySelector('.cat-arbol')) return;
         
-        var tops = document.querySelectorAll('.header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
-        console.log("Cantidad de categorías principales encontradas:", tops.length);
-        
-        if (!tops.length) {
-            console.warn("No se encontraron elementos con el selector del menú superior. Verificando estructura...");
-            return;
-        }
+        // Buscamos los elementos principales de forma más estricta para evitar duplicaciones
+        var tops = document.querySelectorAll('.header-menu__desktop-list__container-list .desktop-list__menu > li.text--primary, .header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
+        if (!tops.length) return;
         
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
         var lista = document.createElement('ul');
         cont.appendChild(lista);
         
+        var procesados = {}; // Evitar duplicados si el selector pisa nodos
+
         for (var i = 0; i < tops.length; i++) {
             var en = tops[i].querySelector(':scope > a');
             if (!en) continue;
+            
+            var hrefTop = en.getAttribute('href');
+            if (procesados[hrefTop]) continue;
+            procesados[hrefTop] = true;
             
             var rama = document.createElement('li');
             rama.className = 'cat-rama';
@@ -98,7 +99,8 @@
             aTop.textContent = en.textContent;
             cabeza.appendChild(aTop);
             
-            var subs = tops[i].querySelectorAll('li.desktop-list__subitem a');
+            // Buscamos estrictamente los hijos directos o subítems que cuelgan de este nodo principal
+            var subs = tops[i].querySelectorAll('ul li.desktop-list__subitem a, .desktop-list__subitem a');
             var hijos = null;
             
             if (subs.length) {
@@ -110,7 +112,13 @@
                 
                 hijos = document.createElement('ul');
                 hijos.className = 'cat-hijos';
+                
+                var subProcesados = {};
                 for (var j = 0; j < subs.length; j++) {
+                    var subHref = subs[j].getAttribute('href');
+                    if (subProcesados[subHref]) continue;
+                    subProcesados[subHref] = true;
+                    
                     var item = document.createElement('li');
                     var aSub = document.createElement('a');
                     aSub.href = subs[j].href;
@@ -119,10 +127,12 @@
                     hijos.appendChild(item);
                 }
             }
+            
             rama.appendChild(cabeza);
             if (hijos) rama.appendChild(hijos);
             lista.appendChild(rama);
         }
+        
         f.insertBefore(cont, f.firstChild);
         
         cont.addEventListener('click', function (ev) {
@@ -152,7 +162,7 @@
 
     function esperar(k) {
         var f = document.querySelector('.products-feed__filter');
-        var menu = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
+        var menu = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
         if (f && menu) {
             construir();
             return;
@@ -164,4 +174,3 @@
     }
     esperar();
 })();
-</script>
