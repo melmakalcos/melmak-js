@@ -87,6 +87,235 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
+<script>
+  /* ARBOL_CATEGORIAS_RECURSIVO */
+  (function () {
+    function textoLimpio(elemento) {
+      return (elemento.textContent || '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function claveDeUrl(href) {
+      try {
+        var url = new URL(href, window.location.origin);
+
+        if (url.origin !== window.location.origin) {
+          return null;
+        }
+
+        var ruta = url.pathname.replace(/\/+$/, '');
+
+        if (!ruta || ruta === '/' || ruta === '/productos') {
+          return null;
+        }
+
+        return ruta.toLowerCase();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function crearArbol() {
+      var filtro = document.querySelector('.products-feed__filter');
+
+      if (!filtro) {
+        return false;
+      }
+
+      var arbolViejo = filtro.querySelector('.cat-arbol');
+      var listaOriginal = filtro.querySelector(
+        '.products-feed__categories-list'
+      );
+
+      if (!arbolViejo || !listaOriginal) {
+        return false;
+      }
+
+      if (arbolViejo.dataset.arbolRecursivo === '1') {
+        return true;
+      }
+
+      var categorias = {};
+      var orden = 0;
+      var clavesPrincipales = [];
+
+      function guardarEnlace(enlace, esPrincipal) {
+        var nombre = textoLimpio(enlace);
+        var clave = claveDeUrl(enlace.href);
+
+        if (
+          !clave ||
+          !nombre ||
+          /^ver todo/i.test(nombre)
+        ) {
+          return;
+        }
+
+        if (!categorias[clave]) {
+          categorias[clave] = {
+            clave: clave,
+            href: enlace.href,
+            nombre: nombre,
+            orden: orden++,
+            hijos: [],
+            padre: null
+          };
+        }
+
+        if (esPrincipal && clavesPrincipales.indexOf(clave) === -1) {
+          clavesPrincipales.push(clave);
+        }
+      }
+
+      /*
+       * La lista original contiene las categorías principales.
+       * El árbol viejo contiene también hijas, nietas y niveles posteriores.
+       */
+      Array.from(listaOriginal.querySelectorAll('a')).forEach(function (enlace) {
+        guardarEnlace(enlace, true);
+      });
+
+      Array.from(arbolViejo.querySelectorAll('a')).forEach(function (enlace) {
+        guardarEnlace(enlace, false);
+      });
+
+      Object.keys(categorias).forEach(function (clave) {
+        var categoria = categorias[clave];
+        var partes = clave.split('/').filter(Boolean);
+
+        for (var nivel = partes.length - 1; nivel > 0; nivel--) {
+          var clavePadre = '/' + partes.slice(0, nivel).join('/');
+
+          if (categorias[clavePadre]) {
+            categoria.padre = categorias[clavePadre];
+            categoria.padre.hijos.push(categoria);
+            break;
+          }
+        }
+      });
+
+      function primerOrden(categoria) {
+        var ordenMenor = categoria.orden;
+
+        categoria.hijos.forEach(function (hijo) {
+          ordenMenor = Math.min(ordenMenor, primerOrden(hijo));
+        });
+
+        return ordenMenor;
+      }
+
+      function ordenarRama(categoria) {
+        categoria.hijos.sort(function (a, b) {
+          return primerOrden(a) - primerOrden(b);
+        });
+
+        categoria.hijos.forEach(ordenarRama);
+      }
+
+      Object.keys(categorias).forEach(function (clave) {
+        ordenarRama(categorias[clave]);
+      });
+
+      var principales = clavesPrincipales
+        .map(function (clave) {
+          return categorias[clave];
+        })
+        .filter(Boolean);
+
+      if (!principales.length) {
+        return false;
+      }
+
+      var arbolNuevo = document.createElement('div');
+      arbolNuevo.className = 'cat-arbol';
+      arbolNuevo.dataset.arbolRecursivo = '1';
+
+      function crearRama(categoriasDeNivel) {
+        var ul = document.createElement('ul');
+
+        categoriasDeNivel.forEach(function (categoria) {
+          var li = document.createElement('li');
+          var tieneHijos = categoria.hijos.length > 0;
+
+          if (tieneHijos) {
+            li.className = 'cat-rama';
+            li.dataset.tieneHijos = '1';
+
+            var cabeza = document.createElement('div');
+            cabeza.className = 'cat-cabeza';
+
+            var enlace = document.createElement('a');
+            enlace.href = categoria.href;
+            enlace.textContent = categoria.nombre;
+
+            var flecha = document.createElement('span');
+            flecha.className = 'flechita';
+            flecha.textContent = '▼';
+
+            cabeza.appendChild(enlace);
+            cabeza.appendChild(flecha);
+
+            var hijos = crearRama(categoria.hijos);
+            hijos.className = 'cat-hijos';
+
+            li.appendChild(cabeza);
+            li.appendChild(hijos);
+          } else {
+            var enlaceSimple = document.createElement('a');
+            enlaceSimple.href = categoria.href;
+            enlaceSimple.textContent = categoria.nombre;
+
+            li.appendChild(enlaceSimple);
+          }
+
+          ul.appendChild(li);
+        });
+
+        return ul;
+      }
+
+      arbolNuevo.appendChild(crearRama(principales));
+
+      arbolNuevo.addEventListener('click', function (evento) {
+        var cabeza = evento.target.closest('.cat-cabeza');
+
+        if (!cabeza || !arbolNuevo.contains(cabeza)) {
+          return;
+        }
+
+        /* El texto navega; la flecha abre/cierra. */
+        if (evento.target.closest('a')) {
+          return;
+        }
+
+        cabeza.parentElement.classList.toggle('cat-abierta');
+      });
+
+      arbolViejo.replaceWith(arbolNuevo);
+
+      return true;
+    }
+
+    function iniciar() {
+      var intentos = 0;
+      var espera = window.setInterval(function () {
+        intentos++;
+
+        if (crearArbol() || intentos >= 80) {
+          window.clearInterval(espera);
+        }
+      }, 500);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', iniciar);
+    } else {
+      iniciar();
+    }
+  })();
+</script>
+
 /* ARBOL_CATEGORIAS_CSS */
 (function () {
   var c = [
