@@ -64,176 +64,103 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_EMPRETIENDA_FLAT*/
+<!-- ARBOL_SIDEBAR v8 - jerarquía por profundidad de URL -->
+<script>
 (function () {
-    function construir() {
-        var filterContainer = document.querySelector('.products-feed__filter');
-        if (!filterContainer || filterContainer.querySelector('.cat-arbol')) return;
+  "use strict";
+  if (window.matchMedia("(pointer: coarse)").matches) return;
 
-        // 1. Obtener la navegación principal
-        var menuContainer = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu') 
-            || document.querySelector('.desktop-list__menu')
-            || document.querySelector('.header-menu__desktop-list__container-list');
-        
-        if (!menuContainer) return;
+  var FORZADAS = {
+    melmakeadas: "https://www.melmakalcos.com.ar/melmakeadas"
+  };
 
-        // Si existe desplegable "Catálogo" / "Categorías", enfocar ese contenedor
-        var catalogoLink = Array.from(menuContainer.querySelectorAll('a')).find(function(a) {
-            var t = a.textContent.trim().toUpperCase();
-            return t === 'CATÁLOGO' || t === 'CATALOGO' || t === 'CATEGORÍAS' || t === 'CATEGORIAS';
-        });
+  function segs(href) {
+    var m = /melmakalcos\.com\.ar\/([^?\/#]+)?(?:\/([^?\/#]+))?/i.exec(href || "");
+    return m ? m.slice(1) : [];
+  }
+  function nombre(a) {
+    var c = a.cloneNode(true);
+    var malos = c.querySelectorAll("svg,path,i");
+    for (var i = 0; i < malos.length; i++) if (malos[i].parentNode) malos[i].parentNode.removeChild(malos[i]);
+    return (c.textContent || "").replace(/\s+/g, " ").trim();
+  }
 
-        var targetUl = menuContainer;
-        if (catalogoLink) {
-            var parentLi = catalogoLink.closest('li');
-            if (parentLi) {
-                var subUl = parentLi.querySelector('ul');
-                if (subUl) targetUl = subUl;
-            }
-        }
+  function run() {
+    var caja = document.querySelector(".products-feed__filter");
+    if (!caja || caja.getAttribute("data-arbol-v8")) return;
+    caja.setAttribute("data-arbol-v8", "1");
 
-        var allLis = Array.from(targetUl.children).filter(function(el) { return el.tagName === 'LI'; });
-        if (!allLis.length) {
-            allLis = Array.from(targetUl.querySelectorAll('li'));
-        }
-
-        var tree = [];
-        var currentParent = null;
-        var seenUrls = {};
-
-        // 2. Procesar la estructura plana de Empretienda (.desktop-list__subitem)
-        allLis.forEach(function (li) {
-            var a = li.querySelector('a');
-            if (!a) return;
-
-            var href = a.getAttribute('href') || a.href;
-            var text = a.textContent.trim();
-            if (!text || !href || href === '#' || href === 'javascript:void(0)') return;
-
-            var isSubitem = li.classList.contains('desktop-list__subitem') || 
-                            li.classList.contains('subitem') ||
-                            li.parentElement.closest('li') !== null;
-
-            if (isSubitem && currentParent) {
-                // Agregar como hija de la categoría principal activa
-                if (!seenUrls[href] && href !== currentParent.href) {
-                    seenUrls[href] = true;
-                    currentParent.children.push({ title: text, href: a.href });
-                }
-            } else {
-                // Registrar nueva categoría raíz (Nivel 1)
-                if (!seenUrls[href]) {
-                    seenUrls[href] = true;
-                    currentParent = { title: text, href: a.href, children: [] };
-                    tree.push(currentParent);
-                }
-            }
-
-            // Fallback para temas con anidación HTML real
-            var nestedUl = li.querySelector('ul');
-            if (nestedUl && currentParent) {
-                var nestedAs = nestedUl.querySelectorAll('a');
-                nestedAs.forEach(function (subA) {
-                    var subHref = subA.getAttribute('href') || subA.href;
-                    var subText = subA.textContent.trim();
-                    if (subText && subHref && !seenUrls[subHref] && subHref !== currentParent.href) {
-                        seenUrls[subHref] = true;
-                        currentParent.children.push({ title: subText, href: subA.href });
-                    }
-                });
-            }
-        });
-
-        if (!tree.length) return;
-
-        // 3. Renderizar el menú lateral (.cat-arbol)
-        var cont = document.createElement('div');
-        cont.className = 'cat-arbol';
-        var mainUl = document.createElement('ul');
-
-        tree.forEach(function (item) {
-            var rama = document.createElement('li');
-            rama.className = 'cat-rama';
-
-            var cabeza = document.createElement('div');
-            cabeza.className = 'cat-cabeza';
-
-            var linkTop = document.createElement('a');
-            linkTop.href = item.href;
-            linkTop.textContent = item.title;
-            cabeza.appendChild(linkTop);
-
-            if (item.children.length > 0) {
-                rama.setAttribute('data-tiene-hijos', '1');
-                var flechita = document.createElement('span');
-                flechita.className = 'flechita';
-                flechita.textContent = '\u25BC';
-                cabeza.appendChild(flechita);
-
-                var subUlElem = document.createElement('ul');
-                subUlElem.className = 'cat-hijos';
-
-                item.children.forEach(function (child) {
-                    var subLi = document.createElement('li');
-                    var subA = document.createElement('a');
-                    subA.href = child.href;
-                    subA.textContent = child.title;
-                    subLi.appendChild(subA);
-                    subUlElem.appendChild(subLi);
-                });
-
-                rama.appendChild(cabeza);
-                rama.appendChild(subUlElem);
-            } else {
-                rama.appendChild(cabeza);
-            }
-
-            mainUl.appendChild(rama);
-        });
-
-        cont.appendChild(mainUl);
-        filterContainer.insertBefore(cont, filterContainer.firstChild);
-
-        // 4. Lógica de acordeón desplegable
-        cont.addEventListener('click', function (ev) {
-            var a = ev.target.closest ? ev.target.closest('a') : null;
-            if (a) {
-                var ramaPadre = a.closest('.cat-rama');
-                if (ramaPadre && ramaPadre.getAttribute('data-tiene-hijos') === '1' && a.parentNode && a.parentNode.classList.contains('cat-cabeza')) {
-                    ev.preventDefault();
-                } else {
-                    return;
-                }
-            }
-
-            var q = ev.target;
-            while (q && q !== cont && !(q.classList && q.classList.contains('cat-rama'))) {
-                q = q.parentNode;
-            }
-
-            if (q && q !== cont && q.getAttribute('data-tiene-hijos') === '1') {
-                if (!q.classList.contains('cat-abierta')) {
-                    var ab = cont.querySelectorAll('.cat-abierta');
-                    for (var m = 0; m < ab.length; m++) {
-                        ab[m].classList.remove('cat-abierta');
-                    }
-                }
-                q.classList.toggle('cat-abierta');
-            }
-        });
+    var origen = caja.querySelector("ul");
+    if (!origen) return;
+    var arbol = {};
+    var enlaces = origen.querySelectorAll("a[href]");
+    var s, e;
+    for (s = 0; s < enlaces.length; s++) {
+      var en = enlaces[s];
+      var seg = segs(en.getAttribute("href") || en.href);
+      if (!seg[0] || seg.length > 2) continue;
+      var r = seg[0].toLowerCase();
+      if (r === "productos" || r === "buscar") continue;
+      if (!arbol[r]) arbol[r] = { top: null, hijos: {} };
+      if (seg.length === 1) {
+        if (!arbol[r].top) arbol[r].top = en;
+      } else {
+        var h = seg[1].toLowerCase();
+        if (!arbol[r].hijos[h]) arbol[r].hijos[h] = en;
+      }
     }
 
-    function esperar(k) {
-        var f = document.querySelector('.products-feed__filter');
-        var menu = document.querySelector('.header-menu__desktop-list__container-list');
-        if (f && menu) {
-            construir();
-            return;
-        }
-        if (k > 80) return;
-        setTimeout(function () {
-            esperar((k || 0) + 1);
-        }, 200);
+    for (var f in FORZADAS) if (FORZADAS.hasOwnProperty(f) && !arbol[f]) {
+      var af = document.createElement("a");
+      af.href = FORZADAS[f];
+      af.textContent = f;
+      arbol[f] = { top: af, hijos: {} };
     }
-    esperar();
+
+    var ulN = document.createElement("ul");
+    var raices = Object.keys(arbol).sort();
+    for (var rr = 0; rr < raices.length; rr++) {
+      var r2 = raices[rr], nd = arbol[r2];
+      if (!nd.top) continue;
+      var liR = document.createElement("li");
+      var aR = document.createElement("a");
+      aR.href = nd.top.getAttribute("href") || nd.top.href;
+      aR.textContent = (nombre(nd.top) || r2.replace(/-/g, " ")).toUpperCase();
+      liR.appendChild(aR);
+      if (nd.hijos && Object.keys(nd.hijos).length) {
+        var ulH = document.createElement("ul");
+        var hs = Object.keys(nd.hijos).sort();
+        for (var hh = 0; hh < hs.length; hh++) {
+          var ah = nd.hijos[hs[hh]];
+          var liS = document.createElement("li");
+          var aS = document.createElement("a");
+          aS.href = ah.getAttribute("href") || ah.href;
+          aS.textContent = (nombre(ah) || hs[hh].replace(/-/g, " ")).toUpperCase();
+          liS.appendChild(aS);
+          ulH.appendChild(liS);
+        }
+        liR.appendChild(ulH);
+      }
+      ulN.appendChild(liR);
+    }
+
+    var cont = origen.parentNode;
+    if (cont) {
+      var viejo = cont.querySelector(".arbol-v8-wrap");
+      var w = document.createElement("div");
+      w.className = "arbol-v8-wrap";
+      w.appendChild(ulN);
+      if (viejo) cont.replaceChild(w, viejo);
+      else cont.insertBefore(w, origen);
+    }
+  }
+
+  var n = 0;
+  (function t() {
+    var ct = document.querySelector(".products-feed__filter");
+    if (ct) { run(); return; }
+    if (n++ > 150) return;
+    setTimeout(t, 200);
+  })();
 })();
+</script>
