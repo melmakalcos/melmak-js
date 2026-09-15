@@ -1,4 +1,13 @@
-
+var estiloOferta = document.createElement('style');
+estiloOferta.appendChild(document.createTextNode(
+  '.products-feed__product-offer,' +
+  '.block-products-feed__product-offer,' +
+  '.products-feed__product-badge{' +
+  '  position:relative !important;' +
+  '  z-index:5 !important;' +
+  '}'
+));
+document.head.appendChild(estiloOferta);
 /*TILT_3D_MELMAK_v3*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
