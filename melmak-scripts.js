@@ -1,4 +1,4 @@
-/*TILT_MELMAK_FINAL_v9 - Catálogo + Página de Producto VIP (Frodo)*/
+/*TILT_MELMAK_FINAL_v10 - Catálogo + Página de Producto VIP Corregido*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
@@ -9,30 +9,41 @@
       '  z-index: 999 !important; ' +
       '  pointer-events: none !important; ' + 
       '}' +
-      /* Contenedores para el catálogo y para la página de producto VIP */
-      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item, .product-vip__carrousel-image, [class*="product-vip"] { ' +
-      '  position: relative; ' +
+      /* Aseguramos posicionamiento 3D en los contenedores tanto de catálogo como de producto VIP */
+      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item, [class*="product-vip__carrousel"] { ' +
+      '  position: relative !important; ' +
+      '  transform-style: preserve-3d !important; ' +
       '}'
     ));
     document.head.appendChild(s);
   })();
 
-  /* AÑADIMOS LAS CLASES DE LA VISTA VIP DE PRODUCTO */
+  /* Selector amplio que cubre tanto el catálogo como la estructura interna del producto VIP */
   var SEL = '.block-products-feed__product-media,' +
             '.products-feed__product-media,' +
             '.product-preview-carrousel__item,' +
             '.product-vip__carrousel-image,' +
-            '.product-vip__carrousel-item,' +
             '[class*="product-vip__carrousel"]';
 
   function atar() {
     var cs = document.querySelectorAll(SEL);
-    for (var i = 0; i < cs.length; i++) (function (c) {
+    for (var i = 0; i < cs.length; i++) (function (elem) {
+      if (elem.getAttribute('data-mxm-tilt')) return;
+
+      var c = elem;
+      var img = null;
+
+      /* Si el selector atrapó directamente a la imagen, subimos a su contenedor padre para rotar la caja entera */
+      if (elem.tagName === 'IMG') {
+        img = elem;
+        c = elem.closest('[class*="product-vip"]') || elem.parentElement;
+      } else {
+        img = c.querySelector('img');
+      }
+
+      if (!img || !c) return;
       if (c.getAttribute('data-mxm-tilt')) return;
-      
-      // Si la clase seleccionada es directamente la imagen, buscamos la imagen o usamos el elemento mismo
-      var img = c.tagName === 'IMG' ? c : c.querySelector('img');
-      if (!img) return;
+
       c.setAttribute('data-mxm-tilt', '1');
 
       function enBienv() { return !!document.getElementById('mzm-wm'); }
@@ -43,7 +54,7 @@
         var x = (e.clientX - r.left) / r.width;
         var y = (e.clientY - r.top) / r.height;
 
-        var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
+        var detalle = c.className.indexOf('product-preview-carrousel') !== -1 || c.className.indexOf('product-vip') !== -1;
         var ry = detalle ? 16 : 30;
         var rx = detalle ? 12 : 25;
         var sc = detalle ? 1.04 : 1.10;
