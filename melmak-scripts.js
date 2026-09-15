@@ -1,13 +1,16 @@
-/*TILT_MELMAK_OPTIMIZED*/
+/*TILT_MELMAK_DEEP_3D*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
-  // Inyección de CSS para corregir el posicionamiento y evitar asignaciones de estilo repetitivas
   var s = document.createElement('style');
   s.appendChild(document.createTextNode(
     '.products-feed__product-offer, .block-products-feed__product-offer, [class*="product-offer"] { z-index:50 !important; position:relative; }\n' +
-    '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { position: relative; overflow: hidden; }\n' +
-    '.mxm-tilt-img { transition: transform .06s ease-out; will-change: transform; }'
+    '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item {' +
+    '  position: relative; overflow: visible !important; transform-style: preserve-3d; perspective: 800px;' +
+    '}\n' +
+    '.block-products-feed__product-media img, .products-feed__product-media img, .product-preview-carrousel__item img {' +
+    '  transition: transform .1s ease-out; will-change: transform; transform-style: preserve-3d;' +
+    '}'
   ));
   document.head.appendChild(s);
 
@@ -28,15 +31,14 @@
         c.setAttribute('data-mxm-tilt', '1');
 
         var lu = document.createElement('div');
-        lu.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:2;' +
-          'background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),transparent 55%);' +
-          'opacity:0;transition:opacity .15s;border-radius:inherit;';
+        lu.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:10;' +
+          'background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.6),transparent 60%);' +
+          'opacity:0;transition:opacity .2s;border-radius:inherit;transform: translateZ(30px);';
         c.appendChild(lu);
 
         c.addEventListener('mouseenter', function () {
           if (enBienv()) return;
           lu.style.opacity = '1';
-          img.classList.add('mxm-tilt-img');
         });
 
         c.addEventListener('mousemove', function (e) {
@@ -46,14 +48,20 @@
           var y = (e.clientY - r.top) / r.height;
 
           var detalle = c.classList.contains('product-preview-carrousel__item');
-          var ry = detalle ? 12 : 40;
-          var rx = detalle ? 9  : 30;
-          var sc = detalle ? 1.03 : 1.10;
-          var pe = detalle ? 800 : 240;
+          
+          // Ángulos de rotación
+          var ry = detalle ? 15 : 25; 
+          var rx = detalle ? 12 : 20; 
+          
+          // Elevación en el eje Z (profundidad 3D)
+          var translateZ = detalle ? 15 : 35; // Pixeles que sobresale la imagen
+          var sc = detalle ? 1.02 : 1.05;
 
-          img.style.transform = 'perspective(' + pe + 'px) rotateX(' +
-            ((0.5 - y) * rx) + 'deg) rotateY(' + ((x - 0.5) * ry) + 'deg) ' +
-            'scale(' + sc + ')';
+          var rotateX = (0.5 - y) * rx;
+          var rotateY = (x - 0.5) * ry;
+
+          // Rotación + Elevación 3D en el espacio
+          img.style.transform = 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateZ(' + translateZ + 'px) scale(' + sc + ')';
 
           lu.style.setProperty('--mx', (x * 100) + '%');
           lu.style.setProperty('--my', (y * 100) + '%');
@@ -61,24 +69,18 @@
 
         c.addEventListener('mouseleave', function () {
           lu.style.opacity = '0';
-          img.style.transform = '';
-          img.classList.remove('mxm-tilt-img');
+          img.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)';
         });
       })(cs[i]);
     }
   }
 
-  // Ejecución inicial
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', atar);
   } else {
     atar();
   }
 
-  // Reemplazo de setInterval por MutationObserver para mejor rendimiento
-  var observer = new MutationObserver(function () {
-    atar();
-  });
-  
+  var observer = new MutationObserver(atar);
   observer.observe(document.body, { childList: true, subtree: true });
 })();
