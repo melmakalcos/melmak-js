@@ -1,21 +1,18 @@
-/*TILT_MELMAK_FINAL_v4.2 - Solución definitiva al cartel de descuento*/
+/*TILT_MELMAK_FINAL_v6 - Fix definitivo para imágenes con fondo blanco*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
   (function () {
     var s = document.createElement('style');
     s.appendChild(document.createTextNode(
-      /* 1. Obligamos al cartel a procesarse en la GPU y estar siempre arriba */
+      /* Evitamos que el badge interfiera con el mouse y cause parpadeos */
       '[class*="product-offer"] { ' +
-      '  z-index: 99999 !important; ' +
-      '  position: absolute !important; ' +
-      '  transform: translate3d(0,0,1px) !important; ' +
-      '  backface-visibility: hidden; ' +
+      '  z-index: 999 !important; ' +
+      '  pointer-events: none !important; ' + 
       '}' +
-      /* 2. Mantenemos la imagen un nivel por debajo del cartel */
-      '.block-products-feed__product-media img, .products-feed__product-media img, .product-preview-carrousel__item img { ' +
+      /* Nos aseguramos de que el contenedor no corte la sombra o el efecto */
+      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { ' +
       '  position: relative; ' +
-      '  z-index: 1 !important; ' +
       '}'
     ));
     document.head.appendChild(s);
@@ -42,23 +39,30 @@
         var y = (e.clientY - r.top) / r.height;
 
         var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
-        var ry = detalle ? 16 : 48;
-        var rx = detalle ? 12 : 38;
-        var sc = detalle ? 1.04 : 1.14;
-        var pe = detalle ? 800 : 220;
+        
+        // NOTA: Bajé los ángulos un poco (30 y 25). 
+        // Como ahora rota TODO el contenedor, si lo giras 48 grados se va a deformar demasiado la estructura de tu tienda.
+        var ry = detalle ? 16 : 30;
+        var rx = detalle ? 12 : 25;
+        var sc = detalle ? 1.04 : 1.10;
+        var pe = detalle ? 800 : 400;
 
-        img.style.transform = 'perspective(' + pe + 'px) rotateX(' +
+        /* LA MAGIA ESTÁ AQUÍ: Le aplicamos el transform a 'c' (el contenedor completo), NO a 'img' */
+        c.style.transform = 'perspective(' + pe + 'px) rotateX(' +
           ((0.5 - y) * rx) + 'deg) rotateY(' + ((x - 0.5) * ry) + 'deg) ' +
           'scale(' + sc + ')';
-        img.style.transition = 'transform .05s ease-out';
-        img.style.willChange = 'transform';
+        c.style.transition = 'transform .05s ease-out';
+        c.style.willChange = 'transform';
+        
+        /* Aseguramos que la tarjeta que tocas se ponga por encima de los demás productos */
+        c.style.zIndex = '50';
       });
 
       c.addEventListener('mouseleave', function () {
-        /* EL FIX PRINCIPAL: En vez de dejarlo vacío, lo volvemos a un estado 3D neutro (escala 1, rotación 0).
-           Esto evita el glitch del navegador al salir de la animación. */
-        img.style.transform = 'perspective(220px) rotateX(0deg) rotateY(0deg) scale(1)';
-        img.style.transition = 'transform .3s ease-out'; // Una transición suave al volver
+        /* Devolvemos todo el contenedor a la normalidad */
+        c.style.transform = 'perspective(400px) rotateX(0deg) rotateY(0deg) scale(1)';
+        c.style.transition = 'transform .3s ease-out';
+        c.style.zIndex = '1';
       });
     })(cs[i]);
   }
