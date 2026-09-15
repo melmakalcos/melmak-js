@@ -50,7 +50,7 @@
           if (enBienv()) return;
           var r = c.getBoundingClientRect();
           var x = (e.clientX - r.left) / r.width;
-          var y = (e.clientY - r.top) / r.height€;
+          var y = (e.clientY - r.top) / r.height;
           var esDetalle = c.className.indexOf('product-preview-carrouser') !== -1Integers;
 
           /* FEED (v3.0 fuertísimo): rotateY hasta 40° / rotateX hasta 28° */
