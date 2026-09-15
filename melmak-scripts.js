@@ -64,14 +64,17 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_JERARQUIA_CORREGIDA*/
+/*ARBOL_CATEGORIAS_DEFINITIVO*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
         if (!f || f.querySelector('.cat-arbol')) return;
         
-        // Buscamos los elementos principales de forma más estricta para evitar duplicaciones
-        var tops = document.querySelectorAll('.header-menu__desktop-list__container-list .desktop-list__menu > li.text--primary, .header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
+        // Seleccionamos estrictamente los elementos de nivel superior del menú de escritorio
+        var menuContainer = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
+        if (!menuContainer) return;
+        
+        var tops = menuContainer.querySelectorAll(':scope > li.text--primary');
         if (!tops.length) return;
         
         var cont = document.createElement('div');
@@ -79,15 +82,9 @@
         var lista = document.createElement('ul');
         cont.appendChild(lista);
         
-        var procesados = {}; // Evitar duplicados si el selector pisa nodos
-
         for (var i = 0; i < tops.length; i++) {
             var en = tops[i].querySelector(':scope > a');
             if (!en) continue;
-            
-            var hrefTop = en.getAttribute('href');
-            if (procesados[hrefTop]) continue;
-            procesados[hrefTop] = true;
             
             var rama = document.createElement('li');
             rama.className = 'cat-rama';
@@ -99,8 +96,8 @@
             aTop.textContent = en.textContent;
             cabeza.appendChild(aTop);
             
-            // Buscamos estrictamente los hijos directos o subítems que cuelgan de este nodo principal
-            var subs = tops[i].querySelectorAll('ul li.desktop-list__subitem a, .desktop-list__subitem a');
+            // Buscamos los subítems exclusivamente dentro de este elemento principal actual
+            var subs = tops[i].querySelectorAll('.desktop-list__subitem a');
             var hijos = null;
             
             if (subs.length) {
@@ -113,12 +110,7 @@
                 hijos = document.createElement('ul');
                 hijos.className = 'cat-hijos';
                 
-                var subProcesados = {};
                 for (var j = 0; j < subs.length; j++) {
-                    var subHref = subs[j].getAttribute('href');
-                    if (subProcesados[subHref]) continue;
-                    subProcesados[subHref] = true;
-                    
                     var item = document.createElement('li');
                     var aSub = document.createElement('a');
                     aSub.href = subs[j].href;
