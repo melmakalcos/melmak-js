@@ -108,8 +108,7 @@
 
     '.cat-hijos a:hover { opacity: .85; }',
 
-    '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }'
-  ].join('');
+    '.cat-arbol { display: none !important; }';
 
   var s = document.createElement('style');
 
