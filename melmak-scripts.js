@@ -91,291 +91,173 @@
 <script>
 (function () {
 
-    function reconstruirArbolCategorias() {
+    function corregirArbol() {
 
         const arbol = document.querySelector('.cat-arbol');
-        const listaRaices = document.querySelector('.products-feed__categories-list');
 
-        if (!arbol || !listaRaices) {
-            return false;
-        }
+        if (!arbol) return false;
 
-        /*
-         * Evita ejecutar el proceso dos veces.
-         */
-        if (arbol.dataset.arbolCorregido === '1') {
-            return true;
-        }
+        const items = Array.from(
+            arbol.querySelectorAll('li.cat-rama')
+        );
+
+        if (!items.length) return false;
 
         /*
-         * ---------------------------------------------------------
-         * 1. Obtener las categorías RAÍZ.
-         *
-         * Estas son exactamente las que Empretienda muestra
-         * en "Categorías".
-         * ---------------------------------------------------------
+         * Mapa:
+         * URL de categoría -> <li>
          */
+        const mapa = new Map();
 
-        const raices = [];
+        items.forEach(function (li) {
 
-        listaRaices.querySelectorAll(':scope > li > a').forEach(function (a) {
+            const enlace = li.querySelector(':scope > .cat-cabeza > a');
 
-            const url = new URL(a.href, window.location.origin);
+            if (!enlace) return;
+
+            const url = new URL(
+                enlace.href,
+                window.location.origin
+            );
+
             const path = normalizar(url.pathname);
 
-            raices.push({
-                path: path,
-                href: a.href,
-                nombre: a.textContent.trim()
-            });
-
+            mapa.set(path, li);
         });
 
 
         /*
-         * ---------------------------------------------------------
-         * 2. Obtener TODAS las categorías del árbol original.
-         * ---------------------------------------------------------
+         * Para cada categoría buscamos su padre
+         * utilizando la URL.
+         *
+         * /universo/dc
+         *        padre = /universo
+         *
+         * /universo/dc/batman-joker
+         *        padre = /universo/dc
          */
+        items.forEach(function (li) {
 
-        const categorias = new Map();
+            const enlace = li.querySelector(
+                ':scope > .cat-cabeza > a'
+            );
 
-        arbol.querySelectorAll('a[href]').forEach(function (a) {
+            if (!enlace) return;
 
-            const url = new URL(a.href, window.location.origin);
+            const url = new URL(
+                enlace.href,
+                window.location.origin
+            );
+
             const path = normalizar(url.pathname);
 
-            if (!path) {
+            if (path === '/') return;
+
+            const partes = path.split('/').filter(Boolean);
+
+            if (partes.length <= 1) {
+                /*
+                 * Es categoría raíz.
+                 */
                 return;
             }
 
-            /*
-             * No guardar dos veces la misma URL.
-             */
-            if (!categorias.has(path)) {
+            partes.pop();
 
-                categorias.set(path, {
-                    path: path,
-                    href: a.href,
-                    nombre: a.textContent.trim()
-                });
+            const padrePath =
+                '/' + partes.join('/');
+
+            const padre = mapa.get(padrePath);
+
+            if (!padre || padre === li) return;
+
+
+            /*
+             * Buscar o crear el UL de hijos
+             * del padre.
+             */
+            let hijos = padre.querySelector(
+                ':scope > ul.cat-hijos'
+            );
+
+            if (!hijos) {
+
+                hijos = document.createElement('ul');
+
+                hijos.className = 'cat-hijos';
+
+                padre.appendChild(hijos);
 
             }
 
-        });
-
-
-        /*
-         * ---------------------------------------------------------
-         * 3. Construir un árbol jerárquico REAL a partir de las URLs.
-         *
-         * Ejemplo:
-         *
-         * /universo
-         * /universo/dc
-         * /universo/dc/batman-joker
-         *
-         * se convierte en:
-         *
-         * UNIVERSO
-         *    DC
-         *       BATMAN-JOKER
-         * ---------------------------------------------------------
-         */
-
-        function obtenerHijos(pathPadre) {
-
-            const hijos = [];
-
-            categorias.forEach(function (categoria) {
-
-                if (categoria.path === pathPadre) {
-                    return;
-                }
-
-                const prefijo = pathPadre + '/';
-
-                if (!categoria.path.startsWith(prefijo)) {
-                    return;
-                }
-
-                const resto = categoria.path.substring(prefijo.length);
-
-                /*
-                 * Solamente queremos hijos DIRECTOS.
-                 *
-                 * /universo/dc       -> hijo de /universo
-                 * /universo/dc/batman -> NO es hijo directo
-                 */
-                if (resto.indexOf('/') !== -1) {
-                    return;
-                }
-
-                hijos.push(categoria);
-
-            });
 
             /*
-             * Orden alfabético.
+             * Mover el elemento debajo de su padre.
              */
-            hijos.sort(function (a, b) {
-                return a.nombre.localeCompare(
-                    b.nombre,
-                    'es',
-                    { sensitivity: 'base' }
-                );
-            });
+            hijos.appendChild(li);
 
-            return hijos;
-        }
-
-
-        /*
-         * ---------------------------------------------------------
-         * 4. Crear visualmente cada categoría.
-         * ---------------------------------------------------------
-         */
-
-        function crearNodo(categoria) {
-
-            const li = document.createElement('li');
-            li.className = 'cat-rama';
-
-            const cabeza = document.createElement('div');
-            cabeza.className = 'cat-cabeza';
-
-            const enlace = document.createElement('a');
-
-            enlace.href = categoria.href;
-            enlace.textContent = categoria.nombre;
-
-            cabeza.appendChild(enlace);
-
-            const hijos = obtenerHijos(categoria.path);
 
             /*
-             * Si tiene hijos, ponemos la flecha.
+             * Asegurarnos de que el padre tenga flecha.
              */
-            if (hijos.length > 0) {
+            const cabeza = padre.querySelector(
+                ':scope > .cat-cabeza'
+            );
 
-                const flecha = document.createElement('span');
+            if (
+                cabeza &&
+                !cabeza.querySelector(':scope > .flechita')
+            ) {
+
+                const flecha =
+                    document.createElement('span');
 
                 flecha.className = 'flechita';
+
                 flecha.textContent = '▼';
 
                 cabeza.appendChild(flecha);
-
             }
-
-            li.appendChild(cabeza);
-
-
-            /*
-             * Crear subcategorías.
-             */
-            if (hijos.length > 0) {
-
-                const ul = document.createElement('ul');
-
-                ul.className = 'cat-hijos';
-
-                hijos.forEach(function (hijo) {
-                    ul.appendChild(crearNodo(hijo));
-                });
-
-                li.appendChild(ul);
-
-            }
-
-            return li;
-        }
-
-
-        /*
-         * ---------------------------------------------------------
-         * 5. Crear el nuevo árbol.
-         * ---------------------------------------------------------
-         */
-
-        const nuevoArbol = document.createElement('ul');
-
-
-        raices.forEach(function (raiz) {
-
-            /*
-             * Protección contra duplicados.
-             */
-            if (
-                nuevoArbol.querySelector(
-                    'a[href="' + CSS.escape(raiz.href) + '"]'
-                )
-            ) {
-                return;
-            }
-
-            nuevoArbol.appendChild(
-                crearNodo(raiz)
-            );
 
         });
 
 
-        /*
-         * ---------------------------------------------------------
-         * 6. Sustituir el árbol que genera Empretienda.
-         * ---------------------------------------------------------
-         */
-
-        arbol.innerHTML = '';
-        arbol.appendChild(nuevoArbol);
-
-        arbol.dataset.arbolCorregido = '1';
+        arbol.dataset.corregido = '1';
 
         return true;
     }
 
 
-    /*
-     * Normaliza URLs.
-     */
     function normalizar(path) {
 
         path = path.replace(/\/+$/, '');
 
-        if (path === '') {
-            path = '/';
-        }
-
-        return path;
+        return path || '/';
     }
 
 
     /*
-     * Empretienda puede terminar de insertar el árbol
-     * después del primer momento de carga.
+     * Esperar a que Empretienda termine de construir
+     * el árbol.
      */
-
     let intentos = 0;
 
-    const intervalo = setInterval(function () {
+    const timer = setInterval(function () {
 
         intentos++;
 
-        if (reconstruirArbolCategorias()) {
-            clearInterval(intervalo);
+        if (corregirArbol()) {
+            clearInterval(timer);
         }
 
-        if (intentos >= 30) {
-            clearInterval(intervalo);
+        if (intentos >= 40) {
+            clearInterval(timer);
         }
 
-    }, 300);
+    }, 250);
 
 
-    /*
-     * También intentamos inmediatamente.
-     */
-    reconstruirArbolCategorias();
+    corregirArbol();
 
 })();
 </script>
