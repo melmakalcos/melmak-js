@@ -64,79 +64,94 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_CLON_DIRECTO*/
+/*ARBOL_CATEGORIAS_ESTRICTO*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
         if (!f || f.querySelector('.cat-arbol')) return;
         
-        // Buscamos el contenedor del menú superior de escritorio
         var menuOriginal = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
         if (!menuOriginal) return;
         
-        // Creamos nuestro contenedor principal para la barra lateral
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
+        var listaUl = document.createElement('ul');
+        cont.appendChild(listaUl);
         
-        // Clonamos la estructura HTML pura del menú superior
-        var clonMenu = menuOriginal.cloneNode(true);
+        // Seleccionamos ÚNICAMENTE los elementos <li> de primer nivel (hijos directos del menú superior)
+        var tops = menuOriginal.querySelectorAll(':scope > li');
+        if (!tops.length) return;
         
-        // Transformamos los elementos clonados para que adopten la estructura de árbol y acordeón
-        var itemsPrincipales = clonMenu.querySelectorAll(':scope > li');
-        
-        for (var i = 0; i < itemsPrincipales.length; i++) {
-            var liTop = itemsPrincipales[i];
-            liTop.className = 'cat-rama';
-            
-            var aTop = liTop.querySelector(':scope > a');
+        for (var i = 0; i < tops.length; i++) {
+            var topLi = tops[i];
+            var aTop = topLi.querySelector(':scope > a');
             if (!aTop) continue;
             
-            // Creamos la cabecera clickeable
+            var rama = document.createElement('li');
+            rama.className = 'cat-rama';
+            
             var cabeza = document.createElement('div');
             cabeza.className = 'cat-cabeza';
             
-            // Movemos el enlace principal a la cabecera
-            cabeza.appendChild(aTop);
+            var linkTop = document.createElement('a');
+            linkTop.href = aTop.href;
+            linkTop.textContent = aTop.textContent;
+            cabeza.appendChild(linkTop);
             
-            // Buscamos si tiene sublistas (hijos)
-            var subMenu = liTop.querySelector('ul, .desktop-list__subitem');
+            // Buscamos subcategorías exclusivamente dentro de este <li> principal (aislado)
+            var subUl = topLi.querySelector('ul');
+            var subs = subUl ? subUl.querySelectorAll('li a') : [];
             
-            if (subMenu) {
-                liTop.setAttribute('data-tiene-hijos', '1');
-                
-                // Agregamos la flechita indicadora
+            if (subs && subs.length > 0) {
+                rama.setAttribute('data-tiene-hijos', '1');
                 var fle = document.createElement('span');
                 fle.className = 'flechita';
                 fle.textContent = '\u25BC';
                 cabeza.appendChild(fle);
                 
-                // Re-estilizamos el contenedor de los hijos
-                subMenu.className = 'cat-hijos';
+                var hijosUl = document.createElement('ul');
+                hijosUl.className = 'cat-hijos';
                 
-                var subLinks = subMenu.querySelectorAll('a');
-                for (var j = 0; j < subLinks.length; j++) {
-                    // Aseguramos que los links hijos tengan su formato limpio
-                    var subLi = subLinks[j].parentElement;
-                    if (subLi && subLi.tagName === 'LI') {
-                        subLi.className = '';
-                    }
+                var subProcesados = {};
+                for (var j = 0; j < subs.length; j++) {
+                    var subA = subs[j];
+                    
+                    // Evitamos duplicar el enlace principal si se repite en la sublista
+                    if (subA.href === linkTop.href) continue;
+                    
+                    var subHref = subA.getAttribute('href');
+                    if (subProcesados[subHref]) continue;
+                    subProcesados[subHref] = true;
+                    
+                    var itemLi = document.createElement('li');
+                    var itemA = document.createElement('a');
+                    itemA.href = subA.href;
+                    itemA.textContent = subA.textContent;
+                    itemLi.appendChild(itemA);
+                    hijosUl.appendChild(itemLi);
                 }
+                
+                if (hijosUl.children.length > 0) {
+                    rama.appendChild(cabeza);
+                    rama.appendChild(hijosUl);
+                } else {
+                    rama.appendChild(cabeza);
+                }
+            } else {
+                rama.appendChild(cabeza);
             }
             
-            // Insertamos la cabecera al inicio del item principal
-            liTop.insertBefore(cabeza, liTop.firstChild);
+            listaUl.appendChild(rama);
         }
         
-        cont.appendChild(clonMenu);
         f.insertBefore(cont, f.firstChild);
         
-        // Manejador de eventos para abrir/cerrar los desplegables al hacer clic
+        // Manejador del acordeón lateral
         cont.addEventListener('click', function (ev) {
             var a = ev.target.closest ? ev.target.closest('a') : null;
             if (a) {
-                // Si hacen clic en el texto del padre y tiene hijos, evitamos que navegue para que actúe como acordeón
                 var ramaPadre = a.closest('.cat-rama');
-                if (ramaPadre && ramaPadre.getAttribute('data-tiene-hijos') === '1' && a.parentElement.className.indexOf('cat-cabeza') !== -1) {
+                if (ramaPadre && ramaPadre.getAttribute('data-tiene-hijos') === '1' && a.parentNode && a.parentNode.classList.contains('cat-cabeza')) {
                     ev.preventDefault();
                 } else {
                     return;
