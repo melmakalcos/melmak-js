@@ -64,97 +64,90 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_ESTRUCTURAL*/
+/*ARBOL_CATEGORIAS_CLON_DIRECTO*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
         if (!f || f.querySelector('.cat-arbol')) return;
         
-        // Buscamos el menú principal de escritorio
-        var menuContainer = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
-        if (!menuContainer) return;
+        // Buscamos el contenedor del menú superior de escritorio
+        var menuOriginal = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
+        if (!menuOriginal) return;
         
-        // Tomamos únicamente los elementos de la lista de primer nivel (ul > li directo)
-        var tops = menuContainer.querySelectorAll(':scope > li');
-        if (!tops.length) return;
-        
+        // Creamos nuestro contenedor principal para la barra lateral
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
-        var lista = document.createElement('ul');
-        cont.appendChild(lista);
         
-        for (var i = 0; i < tops.length; i++) {
-            var en = tops[i].querySelector(':scope > a');
-            if (!en) continue;
+        // Clonamos la estructura HTML pura del menú superior
+        var clonMenu = menuOriginal.cloneNode(true);
+        
+        // Transformamos los elementos clonados para que adopten la estructura de árbol y acordeón
+        var itemsPrincipales = clonMenu.querySelectorAll(':scope > li');
+        
+        for (var i = 0; i < itemsPrincipales.length; i++) {
+            var liTop = itemsPrincipales[i];
+            liTop.className = 'cat-rama';
             
-            var rama = document.createElement('li');
-            rama.className = 'cat-rama';
+            var aTop = liTop.querySelector(':scope > a');
+            if (!aTop) continue;
+            
+            // Creamos la cabecera clickeable
             var cabeza = document.createElement('div');
             cabeza.className = 'cat-cabeza';
             
-            var aTop = document.createElement('a');
-            aTop.href = en.href;
-            aTop.textContent = en.textContent;
+            // Movemos el enlace principal a la cabecera
             cabeza.appendChild(aTop);
             
-            // Buscamos si este elemento tiene una lista hija directa (submenú)
-            var subsContainer = tops[i].querySelector(':scope > ul, :scope .desktop-list__subitem, :scope ul');
-            var subs = subsContainer ? tops[i].querySelectorAll('ul a, .desktop-list__subitem a') : [];
-            var hijos = null;
+            // Buscamos si tiene sublistas (hijos)
+            var subMenu = liTop.querySelector('ul, .desktop-list__subitem');
             
-            // Filtramos para asegurarnos de que no tome al propio enlace padre como subítem
-            var subsValidos = [];
-            for (var j = 0; j < subs.length; j++) {
-                if (subs[j].href !== en.href) {
-                    subsValidos.push(subs[j]);
-                }
-            }
-            
-            if (subsValidos.length) {
-                rama.setAttribute('data-tiene-hijos', '1');
+            if (subMenu) {
+                liTop.setAttribute('data-tiene-hijos', '1');
+                
+                // Agregamos la flechita indicadora
                 var fle = document.createElement('span');
                 fle.className = 'flechita';
                 fle.textContent = '\u25BC';
                 cabeza.appendChild(fle);
                 
-                hijos = document.createElement('ul');
-                hijos.className = 'cat-hijos';
+                // Re-estilizamos el contenedor de los hijos
+                subMenu.className = 'cat-hijos';
                 
-                var procesadosSub = {};
-                for (var s = 0; s < subsValidos.length; s++) {
-                    var subHref = subsValidos[s].href;
-                    if (procesadosSub[subHref]) continue;
-                    procesadosSub[subHref] = true;
-                    
-                    var item = document.createElement('li');
-                    var aSub = document.createElement('a');
-                    aSub.href = subsValidos[s].href;
-                    aSub.textContent = subsValidos[s].textContent;
-                    item.appendChild(aSub);
-                    hijos.appendChild(item);
+                var subLinks = subMenu.querySelectorAll('a');
+                for (var j = 0; j < subLinks.length; j++) {
+                    // Aseguramos que los links hijos tengan su formato limpio
+                    var subLi = subLinks[j].parentElement;
+                    if (subLi && subLi.tagName === 'LI') {
+                        subLi.className = '';
+                    }
                 }
             }
             
-            rama.appendChild(cabeza);
-            if (hijos) rama.appendChild(hijos);
-            lista.appendChild(rama);
+            // Insertamos la cabecera al inicio del item principal
+            liTop.insertBefore(cabeza, liTop.firstChild);
         }
         
+        cont.appendChild(clonMenu);
         f.insertBefore(cont, f.firstChild);
         
+        // Manejador de eventos para abrir/cerrar los desplegables al hacer clic
         cont.addEventListener('click', function (ev) {
             var a = ev.target.closest ? ev.target.closest('a') : null;
             if (a) {
-                if (a.parentNode && a.parentNode.className.indexOf('cat-cabeza') !== -1) {
+                // Si hacen clic en el texto del padre y tiene hijos, evitamos que navegue para que actúe como acordeón
+                var ramaPadre = a.closest('.cat-rama');
+                if (ramaPadre && ramaPadre.getAttribute('data-tiene-hijos') === '1' && a.parentElement.className.indexOf('cat-cabeza') !== -1) {
                     ev.preventDefault();
                 } else {
                     return;
                 }
             }
+            
             var q = ev.target;
             while (q && q !== cont && !(q.classList && q.classList.contains('cat-rama'))) {
                 q = q.parentNode;
             }
+            
             if (q && q !== cont && q.getAttribute('data-tiene-hijos') === '1') {
                 if (!q.classList.contains('cat-abierta')) {
                     var ab = cont.querySelectorAll('.cat-abierta');
