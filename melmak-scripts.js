@@ -9,7 +9,7 @@
       '.product-vip__carrousel-image { box-shadow: none !important; transition: transform .05s ease-out, filter .05s ease-out; will-change: transform; cursor: pointer; }' +
       /* Estilos para la capa de brillo en el catálogo */
       '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { position: relative; overflow: hidden; }' +
-      '.melmak-glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; opacity: 0; transition: opacity .3s ease; mix-blend-mode: overlay; }'
+      '.melmak-glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; opacity: 0; transition: opacity .3s ease; mix-blend-mode: color-dodge; }'
     ));
     document.head.appendChild(s);
   })();
@@ -42,7 +42,7 @@
 
         // Actualizar la posición del destello según el cursor
         glare.style.opacity = '1';
-        glare.style.background = 'radial-gradient(circle at ' + (x * 100) + '% ' + (y * 100) + '%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 65%)';
+        glare.style.background = 'radial-gradient(circle at ' + (x * 100) + '% ' + (y * 100) + '%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 55%)';
       });
 
       c.addEventListener('mouseleave', function () {
@@ -69,7 +69,7 @@
         img.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
         
         // Brillo reactivo a la inclinación vertical (rango 0.85 a 1.20)
-        var brightness = 1 + (0.5 - y) * 0.35;
+        var brightness = 1 + (0.5 - y) * 0.60;
         img.style.filter = 'brightness(' + brightness + ')';
         img.style.transition = 'transform .05s ease-out, filter .05s ease-out';
       });
