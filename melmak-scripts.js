@@ -598,3 +598,170 @@
 
 })();
 </script>
+
+<script>
+/* ARBOL_CATEGORIAS_CSS_V2 */
+(function () {
+
+    var css = [
+
+        /* =====================================================
+           CONTENEDOR GENERAL
+           ===================================================== */
+
+        '.cat-arbol {',
+        '  list-style:none;',
+        '  margin:0 0 8px;',
+        '  padding:0;',
+        '}',
+
+        '.cat-lista,',
+        '.cat-lista ul {',
+        '  list-style:none;',
+        '  margin:0;',
+        '  padding:0;',
+        '}',
+
+
+        /* =====================================================
+           CABEZAS DE CATEGORÍA
+           ===================================================== */
+
+        '.cat-cabeza {',
+        '  display:flex;',
+        '  justify-content:space-between;',
+        '  align-items:center;',
+        '  gap:8px;',
+        '  cursor:pointer;',
+        '  padding:7px 0;',
+        '  border-bottom:1px solid rgba(53,53,53,0.25);',
+        '}',
+
+        '.cat-cabeza a {',
+        '  color:#353535 !important;',
+        '  font-weight:700;',
+        '  text-transform:uppercase;',
+        '  flex:1;',
+        '  text-decoration:none;',
+        '}',
+
+
+        /* =====================================================
+           FLECHAS
+           ===================================================== */
+
+        '.cat-cabeza .flechita {',
+        '  display:inline-block;',
+        '  flex:0 0 auto;',
+        '  font-size:.8rem;',
+        '  line-height:1;',
+        '  transition:transform .25s ease;',
+        '}',
+
+        '.cat-abierta > .cat-cabeza .flechita {',
+        '  transform:rotate(180deg);',
+        '}',
+
+
+        /* =====================================================
+           SUBCATEGORÍAS
+           ===================================================== */
+
+        '.cat-hijos {',
+        '  list-style:none;',
+        '  margin:0;',
+        '  padding:0 0 0 4px;',
+        '  max-height:0;',
+        '  overflow:hidden;',
+        '  opacity:0;',
+        '  transition:',
+        '    max-height .35s ease,',
+        '    opacity .25s ease;',
+        '}',
+
+        '.cat-abierta > .cat-hijos {',
+        '  max-height:10000px;',
+        '  opacity:1;',
+        '}',
+
+
+        /* =====================================================
+           ENLACES DE SUBCATEGORÍAS
+           ===================================================== */
+
+        '.cat-hijos > li > a {',
+        '  display:block;',
+        '  margin:2px 0;',
+        '  padding:6px 10px;',
+        '  border-radius:8px;',
+        '  background:#fff;',
+        '  color:#353535 !important;',
+        '  font-size:.82rem;',
+        '  text-decoration:none;',
+        '}',
+
+        '.cat-hijos > li > a:hover {',
+        '  opacity:.85;',
+        '}',
+
+
+        /* =====================================================
+           RAMAS ANIDADAS
+           ===================================================== */
+
+        '.cat-hijos .cat-cabeza {',
+        '  padding-left:6px;',
+        '}',
+
+        '.cat-hijos .cat-hijos {',
+        '  padding-left:8px;',
+        '}',
+
+
+        /* =====================================================
+           RAMAS ABIERTAS
+           ===================================================== */
+
+        '.cat-rama > .cat-hijos {',
+        '  box-sizing:border-box;',
+        '}',
+
+
+        /* =====================================================
+           EVITAR QUE EMPRETIENDA META ESTILOS RAROS
+           ===================================================== */
+
+        '.cat-arbol ul,',
+        '.cat-arbol li {',
+        '  list-style:none !important;',
+        '}',
+
+
+        /* =====================================================
+           OCULTAR EL LISTADO NATIVO
+           ===================================================== */
+
+        '.products-feed__filter > .products-feed__filter-title,',
+        '.products-feed__filter > hr,',
+        '.products-feed__filter > .products-feed__categories-list {',
+        '  display:none !important;',
+        '}'
+
+    ].join('');
+
+    var style = document.createElement('style');
+    style.id = 'arbol-categorias-css-v2';
+    style.type = 'text/css';
+
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(
+            document.createTextNode(css)
+        );
+    }
+
+    document.head.appendChild(style);
+
+})();
+</script>
