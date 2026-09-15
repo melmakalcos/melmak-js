@@ -64,133 +64,94 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<!-- MENU_MANUAL_MELMAK -->
+
 <script>
+/* ARBOL_SIDEBAR FINAL - Empretienda
+   Agrupa por PROFUNDIDAD de URL:
+     /raiz        = RAIZ
+     /raiz/hija   = HIJA anidada
+   -> DC y MARVEL quedan DENTRO de UNIVERSO
+   -> TORNA SOL queda DENTRO de HOLOGRÁFICOS
+   -> MELMAKEADAS forzada como raíz
+   Sólo desktop (móvil intacto) */
 (function () {
   "use strict";
+  if (window.matchMedia("(pointer: coarse)").matches) return;
 
-  // 1. EDITA TU MENÚ AQUÍ (Agrega, quita o cambia nombres y links a gusto)
-  var MI_MENU = [
-    {
-      nombre: "MÚSICA",
-      url: "/musica",
-      subcategorias: [
-        { nombre: "PORTADAS", url: "/musica/portadas" },
-        { nombre: "DC", url: "/musica/dc" },
-        { nombre: "TORNASOL", url: "/musica/tornasol" }
-      ]
-    },
-    {
-      nombre: "MELMAKEADAS",
-      url: "/melmakeadas",
-      subcategorias: []
-    },
-    {
-      nombre: "ANIME",
-      url: "/anime",
-      subcategorias: [
-        { nombre: "EVANGELION", url: "/anime/evangelion" }
-      ]
-    }
-  ];
+  var FORZADAS = { melmakeadas: "/melmakeadas" };
 
-  function renderizarMenu() {
-    var caja = document.querySelector(".products-feed__filter");
-    if (!caja || caja.getAttribute("data-menu-manual")) return false;
-
-    // Crear contenedor principal
-    var wrap = document.createElement("div");
-    wrap.className = "menu-manual-wrap";
-
-    var ulPrincipal = document.createElement("ul");
-    ulPrincipal.style.listStyle = "none";
-    ulPrincipal.style.padding = "0";
-    ulPrincipal.style.margin = "0";
-
-    for (var i = 0; i < MI_MENU.length; i++) {
-      var cat = MI_MENU[i];
-      var liR = document.createElement("li");
-      liR.style.marginBottom = "10px";
-
-      var divCabeza = document.createElement("div");
-      divCabeza.style.display = "flex";
-      divCabeza.style.justifyContent = "space-between";
-      divCabeza.style.alignItems = "center";
-
-      var aR = document.createElement("a");
-      aR.href = cat.url;
-      aR.textContent = cat.nombre.toUpperCase();
-      aR.style.fontWeight = "bold";
-      aR.style.textDecoration = "none";
-      aR.style.color = "inherit";
-
-      divCabeza.appendChild(aR);
-
-      // Si tiene subcategorías, agregar botón desplegable
-      if (cat.subcategorias && cat.subcategorias.length > 0) {
-        var btn = document.createElement("span");
-        btn.innerHTML = "&#9660;";
-        btn.style.cursor = "pointer";
-        btn.style.fontSize = "12px";
-        btn.style.padding = "0 5px";
-        divCabeza.appendChild(btn);
-
-        var ulSub = document.createElement("ul");
-        ulSub.className = "sub-lista";
-        ulSub.style.listStyle = "none";
-        ulSub.style.paddingLeft = "15px";
-        ulSub.style.marginTop = "5px";
-        ulSub.style.display = "none"; // Oculto por defecto
-
-        for (var j = 0; j < cat.subcategorias.length; j++) {
-          var sub = cat.subcategorias[j];
-          var liS = document.createElement("li");
-          liS.style.margin = "5px 0";
-
-          var aS = document.createElement("a");
-          aS.href = sub.url;
-          aS.textContent = sub.nombre.toUpperCase();
-          aS.style.textDecoration = "none";
-          aS.style.color = "#555";
-
-          liS.appendChild(aS);
-          ulSub.appendChild(liS);
-        }
-
-        // Evento desplegable
-        (function(subUlElement, icono) {
-          icono.addEventListener("click", function(e) {
-            e.preventDefault();
-            var estaOculto = subUlElement.style.display === "none";
-            subUlElement.style.display = estaOculto ? "block" : "none";
-            icono.innerHTML = estaOculto ? "&#9650;" : "&#9660;";
-          });
-        })(ulSub, btn);
-
-        liR.appendChild(divCabeza);
-        liR.appendChild(ulSub);
-      } else {
-        liR.appendChild(divCabeza);
-      }
-
-      ulPrincipal.appendChild(liR);
-    }
-
-    wrap.appendChild(ulPrincipal);
-
-    // Ocultar el contenido original del filtro y poner nuestro menú
-    caja.innerHTML = "";
-    caja.appendChild(wrap);
-    caja.setAttribute("data-menu-manual", "1");
-    return true;
+  function segs(h) {
+    var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
+    return m ? [m[1] || "", m[2] || ""] : ["", ""];
+  }
+  function limpio(a) {
+    var c = a.cloneNode(true);
+    var q = c.querySelectorAll("svg,path,i,span");
+    for (var i = 0; i < q.length; i++)
+      if (q[i].parentNode) q[i].parentNode.removeChild(q[i]);
+    return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
 
-  // Ejecución continua hasta encontrar el contenedor
-  var n = 0;
-  var timer = setInterval(function() {
-    if (renderizarMenu() || n++ > 100) {
-      clearInterval(timer);
+  document.addEventListener("DOMContentLoaded", function () {
+    var caja = document.querySelector(".products-feed__filter");
+    if (!caja) return;
+    var origen = caja.querySelector("ul");
+    if (!origen) return;
+    var arbol = {};
+
+    var enlaces = origen.querySelectorAll("a[href]");
+    for (var i = 0; i < enlaces.length; i++) {
+      var a = enlaces[i], s = segs(a.getAttribute("href") || a.href);
+      if (!s[0] || s[0] === "productos") continue;
+      var raiz = s[0].toLowerCase();
+      if (!arbol[raiz]) arbol[raiz] = { a: null, hijos: {} };
+      if (s[1]) {
+        var hijo = s[1].toLowerCase();
+        if (!arbol[raiz].hijos[hijo]) arbol[raiz].hijos[hijo] = a;
+      } else if (!arbol[raiz].a) {
+        arbol[raiz].a = a;
+      }
     }
-  }, 150);
+
+    for (var f in FORZADAS) if (!arbol[f]) {
+      var af = document.createElement("a");
+      af.href = FORZADAS[f];
+      arbol[f] = { a: af, hijos: {} };
+    }
+
+    var ulN = document.createElement("ul");
+    Object.keys(arbol).sort().forEach(function (raiz) {
+      var n = arbol[raiz];
+      if (!n.a) return;
+      var li = document.createElement("li");
+      var aR = document.createElement("a");
+      aR.href = n.a.getAttribute("href") || n.a.href;
+      aR.textContent = (limpio(n.a) || raiz.replace(/-/g, " ")).toUpperCase();
+      li.appendChild(aR);
+      var hs = Object.keys(n.hijos).sort();
+      if (hs.length) {
+        var ulH = document.createElement("ul");
+        hs.forEach(function (h) {
+          var a2 = n.hijos[h], li2 = document.createElement("li"), a3 = document.createElement("a");
+          a3.href = a2.getAttribute("href") || a2.href;
+          a3.textContent = (limpio(a2) || h.replace(/-/g, " ")).toUpperCase();
+          li2.appendChild(a3);
+          ulH.appendChild(li2);
+        });
+        li.appendChild(ulH);
+      }
+      ulN.appendChild(li);
+    });
+
+    var padre = origen.parentNode;
+    if (padre) {
+      var viejo = padre.querySelector(".arbol-final-wrap");
+      var w = document.createElement("div");
+      w.className = "arbol-final-wrap";
+      w.appendChild(ulN);
+      if (viejo) padre.replaceChild(w, viejo);
+      else padre.insertBefore(w, origen);
+    }
+  });
 })();
-</script>
+script>
