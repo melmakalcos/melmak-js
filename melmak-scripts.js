@@ -64,125 +64,148 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_MENU_CATALOGO*/
+/*ARBOL_CATEGORIAS_ESTRICTO_HIJOS*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
         if (!f || f.querySelector('.cat-arbol')) return;
 
-        // 1. Encontrar el menú superior general
-        var menuContainer = document.querySelector('.header-menu__desktop-list__container-list');
-        if (!menuContainer) return;
+        var menuNav = document.querySelector('.header-menu__desktop-list__container-list');
+        if (!menuNav) return;
 
-        // 2. Buscar específicamente la pestaña "Catálogo" o "Productos"
-        var todosLosLinks = menuContainer.querySelectorAll('a');
+        // 1. Ubicar el desplegable específico de Catálogo / Productos
+        var todosLinks = menuNav.querySelectorAll('a');
         var linkCatalogo = null;
-        for (var i = 0; i < todosLosLinks.length; i++) {
-            var txt = todosLosLinks[i].textContent.trim().toUpperCase();
-            if (txt === 'CATÁLOGO' || txt === 'CATALOGO' || txt === 'PRODUCTOS') {
-                linkCatalogo = todosLosLinks[i];
+
+        for (var i = 0; i < todosLinks.length; i++) {
+            var txt = todosLinks[i].textContent.trim().toUpperCase();
+            if (txt === 'CATÁLOGO' || txt === 'CATALOGO' || txt === 'CATEGORIAS' || txt === 'CATEGORÍAS') {
+                linkCatalogo = todosLinks[i];
                 break;
             }
         }
 
-        if (!linkCatalogo) return; // Si no encuentra la pestaña, se detiene
+        var ulRoot = null;
+        if (linkCatalogo) {
+            var parentLi = linkCatalogo.closest('li');
+            if (parentLi) {
+                ulRoot = parentLi.querySelector('ul');
+            }
+        }
 
-        // 3. Obtener el contenedor desplegable de esa pestaña exacta
-        var liPadre = linkCatalogo.closest('li');
-        if (!liPadre) return;
+        if (!ulRoot) {
+            ulRoot = menuNav.querySelector('.desktop-list__menu');
+        }
 
-        var ulCategorias = liPadre.querySelector('ul');
-        if (!ulCategorias) return;
+        if (!ulRoot) return;
 
-        // Creamos la estructura lateral
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
-        var listaUl = document.createElement('ul');
-        cont.appendChild(listaUl);
+        var mainUl = document.createElement('ul');
+        cont.appendChild(mainUl);
 
-        // Objeto para filtrar duplicados como "Musica-Portadas"
-        var procesados = {}; 
+        // Registro de URLs para prevenir duplicados globales (como MUSICA-PORTADAS)
+        var urlsProcesadas = {};
 
-        // Iteramos solo por los hijos directos de Catálogo (Nivel 1)
-        var hijosNivel1 = ulCategorias.children;
+        // 2. Extraer ÚNICAMENTE los hijos directos del Nivel 1 (sin buscar a profundidad)
+        var children = ulRoot.children;
+        var lisNivel1 = [];
+        for (var c = 0; c < children.length; c++) {
+            if (children[c].tagName === 'LI') {
+                lisNivel1.push(children[c]);
+            }
+        }
 
-        for (var i = 0; i < hijosNivel1.length; i++) {
-            var liTop = hijosNivel1[i];
-            if (liTop.tagName !== 'LI') continue;
-
-            var aTop = liTop.querySelector('a');
-            if (!aTop) continue;
-
-            var hrefTop = aTop.getAttribute('href');
+        for (var i = 0; i < lisNivel1.length; i++) {
+            var li1 = lisNivel1[i];
             
-            // Filtro anti-duplicados: Si la URL ya pasó, la ignora
-            if (procesados[hrefTop]) continue; 
-            procesados[hrefTop] = true;
+            // Obtener el enlace principal del Nivel 1
+            var a1 = null;
+            for (var k = 0; k < li1.childNodes.length; k++) {
+                var node = li1.childNodes[k];
+                if (node.tagName === 'A') { a1 = node; break; }
+                if (node.tagName === 'DIV' || node.tagName === 'SPAN') {
+                    var subA = node.querySelector('a');
+                    if (subA) { a1 = subA; break; }
+                }
+            }
+            if (!a1) a1 = li1.querySelector('a');
+            if (!a1) continue;
+
+            var href1 = a1.getAttribute('href');
+            if (!href1 || urlsProcesadas[href1]) continue;
+
+            // 3. Extraer subcategorías del Nivel 2 (hijos directos del sub-UL)
+            var subUl = li1.querySelector('ul');
+            var lisNivel2 = [];
+            if (subUl) {
+                var subChildren = subUl.children;
+                for (var sc = 0; sc < subChildren.length; sc++) {
+                    if (subChildren[sc].tagName === 'LI') {
+                        lisNivel2.push(subChildren[sc]);
+                    }
+                }
+            }
 
             var rama = document.createElement('li');
             rama.className = 'cat-rama';
+
             var cabeza = document.createElement('div');
             cabeza.className = 'cat-cabeza';
-            
-            var linkPrincipal = document.createElement('a');
-            linkPrincipal.href = aTop.href;
-            linkPrincipal.textContent = aTop.textContent.trim();
-            cabeza.appendChild(linkPrincipal);
 
-            // 4. Buscar si esta categoría tiene hijas directas (Nivel 2, ej: DC o Tornasol)
-            var ulNivel2 = liTop.querySelector('ul');
-            if (ulNivel2) {
-                var hijosNivel2 = ulNivel2.children;
-                var tieneSubValidas = false;
-                
-                var hijosUl = document.createElement('ul');
-                hijosUl.className = 'cat-hijos';
-                var subProcesados = {};
+            var linkTop = document.createElement('a');
+            linkTop.href = a1.href;
+            linkTop.textContent = a1.textContent.trim();
+            cabeza.appendChild(linkTop);
 
-                for (var j = 0; j < hijosNivel2.length; j++) {
-                    var liSub = hijosNivel2[j];
-                    if (liSub.tagName !== 'LI') continue;
-                    
-                    var aSub = liSub.querySelector('a');
-                    if (!aSub) continue;
+            var subUlContainer = null;
+            var tieneHijosValidos = false;
 
-                    // Ignorar links automáticos como "Ver todo" que apuntan a la misma categoría padre
-                    if (aSub.href === aTop.href) continue;
-                    
-                    var hrefSub = aSub.getAttribute('href');
-                    if (subProcesados[hrefSub]) continue;
-                    subProcesados[hrefSub] = true;
+            if (lisNivel2.length > 0) {
+                subUlContainer = document.createElement('ul');
+                subUlContainer.className = 'cat-hijos';
 
-                    tieneSubValidas = true;
-                    var itemLi = document.createElement('li');
-                    var itemA = document.createElement('a');
-                    itemA.href = aSub.href;
-                    itemA.textContent = aSub.textContent.trim();
-                    itemLi.appendChild(itemA);
-                    hijosUl.appendChild(itemLi);
+                for (var j = 0; j < lisNivel2.length; j++) {
+                    var li2 = lisNivel2[j];
+                    var a2 = li2.querySelector('a');
+                    if (!a2) continue;
+
+                    var href2 = a2.getAttribute('href');
+                    if (!href2 || href2 === href1 || urlsProcesadas[href2]) continue;
+
+                    urlsProcesadas[href2] = true;
+
+                    var subLi = document.createElement('li');
+                    var subA = document.createElement('a');
+                    subA.href = a2.href;
+                    subA.textContent = a2.textContent.trim();
+                    subLi.appendChild(subA);
+                    subUlContainer.appendChild(subLi);
+
+                    tieneHijosValidos = true;
                 }
+            }
 
-                if (tieneSubValidas) {
-                    rama.setAttribute('data-tiene-hijos', '1');
-                    var fle = document.createElement('span');
-                    fle.className = 'flechita';
-                    fle.textContent = '\u25BC';
-                    cabeza.appendChild(fle);
-                    rama.appendChild(cabeza);
-                    rama.appendChild(hijosUl);
-                } else {
-                    rama.appendChild(cabeza);
-                }
+            if (tieneHijosValidos) {
+                rama.setAttribute('data-tiene-hijos', '1');
+                var flechita = document.createElement('span');
+                flechita.className = 'flechita';
+                flechita.textContent = '\u25BC';
+                cabeza.appendChild(flechita);
+
+                rama.appendChild(cabeza);
+                rama.appendChild(subUlContainer);
             } else {
                 rama.appendChild(cabeza);
             }
 
-            listaUl.appendChild(rama);
+            urlsProcesadas[href1] = true;
+            mainUl.appendChild(rama);
         }
 
         f.insertBefore(cont, f.firstChild);
 
-        // Funcionalidad del acordeón
+        // Control del desplegable lateral
         cont.addEventListener('click', function (ev) {
             var a = ev.target.closest ? ev.target.closest('a') : null;
             if (a) {
