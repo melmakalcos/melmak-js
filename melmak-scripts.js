@@ -33,8 +33,8 @@
         var y = (e.clientY - r.top) / r.height;
 
         var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
-        var ry = detalle ? 16 : 80;
-        var rx = detalle ? 12 : 80;
+        var ry = detalle ? 16 : 120;
+        var rx = detalle ? 12 : 120;
         var sc = detalle ? 1.04 : 1.14;
         var pe = detalle ? 800 : 220;
 
