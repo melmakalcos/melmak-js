@@ -64,28 +64,32 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS (Corregido)*/
+<script>/*ARBOL_CATEGORIAS_DEBUG*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
+        console.log("Contenedor lateral encontrado:", !!f);
         if (!f || f.querySelector('.cat-arbol')) return;
         
         var tops = document.querySelectorAll('.header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
-        if (!tops.length) return;
+        console.log("Cantidad de categorías principales encontradas:", tops.length);
+        
+        if (!tops.length) {
+            console.warn("No se encontraron elementos con el selector del menú superior. Verificando estructura...");
+            return;
+        }
         
         var cont = document.createElement('div');
         cont.className = 'cat-arbol';
         var lista = document.createElement('ul');
         cont.appendChild(lista);
         
-        var i;
-        for (i = 0; i < tops.length; i++) {
+        for (var i = 0; i < tops.length; i++) {
             var en = tops[i].querySelector(':scope > a');
             if (!en) continue;
             
             var rama = document.createElement('li');
             rama.className = 'cat-rama';
-            
             var cabeza = document.createElement('div');
             cabeza.className = 'cat-cabeza';
             
@@ -94,7 +98,6 @@
             aTop.textContent = en.textContent;
             cabeza.appendChild(aTop);
             
-            // Corrección aquí: buscamos cualquier etiqueta <a> dentro de los subítems sin requerir que sea hijo directo '>'
             var subs = tops[i].querySelectorAll('li.desktop-list__subitem a');
             var hijos = null;
             
@@ -107,9 +110,7 @@
                 
                 hijos = document.createElement('ul');
                 hijos.className = 'cat-hijos';
-                
-                var j;
-                for (j = 0; j < subs.length; j++) {
+                for (var j = 0; j < subs.length; j++) {
                     var item = document.createElement('li');
                     var aSub = document.createElement('a');
                     aSub.href = subs[j].href;
@@ -118,12 +119,10 @@
                     hijos.appendChild(item);
                 }
             }
-            
             rama.appendChild(cabeza);
             if (hijos) rama.appendChild(hijos);
             lista.appendChild(rama);
         }
-        
         f.insertBefore(cont, f.firstChild);
         
         cont.addEventListener('click', function (ev) {
@@ -165,3 +164,4 @@
     }
     esperar();
 })();
+</script>
