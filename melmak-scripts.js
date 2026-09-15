@@ -44,7 +44,7 @@
           if (bienv()) return;
           var r = c.getBoundingClientRect();
           var x = (e.clientX - r.left) / r.width;
-          var y = (e.clientY - r.top) / r.height###;
+          var y = (e.clientY - r.top) / r.height;
           var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
           if (detalle) {
             /* galería del producto: suave */
