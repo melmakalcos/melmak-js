@@ -64,17 +64,18 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*ARBOL_CATEGORIAS_DEFINITIVO*/
+/*ARBOL_CATEGORIAS_ESTRUCTURAL*/
 (function () {
     function construir() {
         var f = document.querySelector('.products-feed__filter');
         if (!f || f.querySelector('.cat-arbol')) return;
         
-        // Seleccionamos estrictamente los elementos de nivel superior del menú de escritorio
+        // Buscamos el menú principal de escritorio
         var menuContainer = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu');
         if (!menuContainer) return;
         
-        var tops = menuContainer.querySelectorAll(':scope > li.text--primary');
+        // Tomamos únicamente los elementos de la lista de primer nivel (ul > li directo)
+        var tops = menuContainer.querySelectorAll(':scope > li');
         if (!tops.length) return;
         
         var cont = document.createElement('div');
@@ -96,11 +97,20 @@
             aTop.textContent = en.textContent;
             cabeza.appendChild(aTop);
             
-            // Buscamos los subítems exclusivamente dentro de este elemento principal actual
-            var subs = tops[i].querySelectorAll('.desktop-list__subitem a');
+            // Buscamos si este elemento tiene una lista hija directa (submenú)
+            var subsContainer = tops[i].querySelector(':scope > ul, :scope .desktop-list__subitem, :scope ul');
+            var subs = subsContainer ? tops[i].querySelectorAll('ul a, .desktop-list__subitem a') : [];
             var hijos = null;
             
-            if (subs.length) {
+            // Filtramos para asegurarnos de que no tome al propio enlace padre como subítem
+            var subsValidos = [];
+            for (var j = 0; j < subs.length; j++) {
+                if (subs[j].href !== en.href) {
+                    subsValidos.push(subs[j]);
+                }
+            }
+            
+            if (subsValidos.length) {
                 rama.setAttribute('data-tiene-hijos', '1');
                 var fle = document.createElement('span');
                 fle.className = 'flechita';
@@ -110,11 +120,16 @@
                 hijos = document.createElement('ul');
                 hijos.className = 'cat-hijos';
                 
-                for (var j = 0; j < subs.length; j++) {
+                var procesadosSub = {};
+                for (var s = 0; s < subsValidos.length; s++) {
+                    var subHref = subsValidos[s].href;
+                    if (procesadosSub[subHref]) continue;
+                    procesadosSub[subHref] = true;
+                    
                     var item = document.createElement('li');
                     var aSub = document.createElement('a');
-                    aSub.href = subs[j].href;
-                    aSub.textContent = subs[j].textContent;
+                    aSub.href = subsValidos[s].href;
+                    aSub.textContent = subsValidos[s].textContent;
                     item.appendChild(aSub);
                     hijos.appendChild(item);
                 }
