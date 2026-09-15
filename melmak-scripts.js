@@ -361,3 +361,23 @@
   estilo.appendChild(document.createTextNode(css));
   document.head.appendChild(estilo);
 })();
+
+/* QUITAR SOMBRA GRIS AL HOVER - TODOS LOS PRODUCTOS */
+.products-feed__product-preview:hover,
+.products-feed__product-preview:focus-within,
+.product-preview:hover,
+.product-preview:focus-within,
+.block-products-feed__product-preview:hover,
+.block-products-feed__product-preview:focus-within,
+.products-feed__product:hover,
+.products-feed__product:focus-within,
+.block-products-feed__product:hover,
+.block-products-feed__product:focus-within,
+[class*="product"]:hover,
+[class*="product"]:focus-within,
+[class*="product-preview"]:hover,
+[class*="product-preview"]:focus-within {
+  box-shadow: none !important;
+  transform: none !important;
+  border-color: transparent !important;
+}
