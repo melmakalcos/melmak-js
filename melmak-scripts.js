@@ -507,116 +507,236 @@
 </script>
 
 <script>
-/* ARBOL_CATEGORIAS_CSS_V3 */
+/* ARBOL_CATEGORIAS_CSS_V4 */
 (function () {
 
     var c = [
 
+        /* =====================================================
+           CONTENEDOR GENERAL
+           ===================================================== */
+
         '.cat-arbol {',
-        '  list-style:none;',
-        '  margin:0 0 8px;',
-        '  padding:0;',
+        '  list-style:none !important;',
+        '  margin:0 0 8px !important;',
+        '  padding:0 !important;',
         '}',
 
         '.cat-arbol ul,',
         '.cat-arbol li {',
-        '  list-style:none;',
-        '  margin:0;',
-        '}',
-
-        '.cat-lista {',
-        '  margin:0;',
+        '  list-style:none !important;',
+        '  margin:0 !important;',
         '  padding:0;',
         '}',
 
-        '.cat-cabeza {',
-        '  display:flex;',
-        '  justify-content:space-between;',
-        '  align-items:center;',
-        '  gap:8px;',
-        '  cursor:pointer;',
-        '  padding:7px 0;',
-        '  border-bottom:1px solid rgba(53,53,53,0.25);',
+        '.cat-lista {',
+        '  margin:0 !important;',
+        '  padding:0 !important;',
         '}',
 
-        '.cat-cabeza a {',
+
+        /* =====================================================
+           CATEGORÍAS PRINCIPALES
+           ===================================================== */
+
+        '.cat-lista > .cat-rama > .cat-cabeza {',
+        '  display:flex;',
+        '  align-items:center;',
+        '  justify-content:space-between;',
+        '  gap:8px;',
+        '  width:100%;',
+        '  box-sizing:border-box;',
+        '  cursor:pointer;',
+        '  padding:8px 2px;',
+        '  margin:0;',
+        '  border-bottom:1px solid rgba(53,53,53,.25);',
+        '  transition:all .22s ease;',
+        '}',
+
+        '.cat-lista > .cat-rama > .cat-cabeza:hover {',
+        '  padding-left:6px;',
+        '  padding-right:6px;',
+        '}',
+
+        '.cat-lista > .cat-rama > .cat-cabeza a {',
+        '  display:block;',
+        '  flex:1;',
         '  color:#353535 !important;',
         '  font-weight:700;',
         '  text-transform:uppercase;',
-        '  flex:1;',
-        '  text-decoration:none;',
+        '  text-decoration:none !important;',
+        '  transition:all .22s ease;',
         '}',
 
+
+        /* =====================================================
+           FLECHA
+           ===================================================== */
+
         '.cat-cabeza .flechita {',
-        '  font-size:.8rem;',
-        '  transition:transform .25s ease;',
+        '  display:inline-block;',
+        '  font-size:.72rem;',
+        '  line-height:1;',
+        '  color:#353535;',
         '  flex-shrink:0;',
+        '  transition:transform .28s ease;',
         '}',
 
         '.cat-abierta > .cat-cabeza .flechita {',
         '  transform:rotate(180deg);',
         '}',
 
+
+        /* =====================================================
+           CONTENEDOR DE HIJOS
+           ===================================================== */
+
         '.cat-hijos {',
-        '  list-style:none;',
-        '  margin:0;',
-        '  padding:0 0 0 4px;',
+        '  list-style:none !important;',
+        '  margin:0 !important;',
+        '  padding:0 0 0 5px !important;',
         '  max-height:0;',
         '  overflow:hidden;',
-        '  transition:max-height .3s ease;',
+        '  opacity:0;',
+        '  transform:translateY(-4px);',
+        '  transition:',
+        '    max-height .38s ease,',
+        '    opacity .22s ease,',
+        '    transform .28s ease;',
         '}',
 
         '.cat-abierta > .cat-hijos {',
-        '  max-height:4000px;',
+        '  max-height:10000px;',
+        '  opacity:1;',
+        '  transform:translateY(0);',
         '}',
 
-        /*
-         * BOTONES DE LAS SUBCATEGORÍAS
-         */
 
-        '.cat-hijos > li > a {',
+        /* =====================================================
+           BOTONES DE CATEGORÍAS SIN HIJOS
+           ===================================================== */
+
+        '.cat-hijos > li:not(.cat-rama) > a {',
         '  display:block;',
-        '  margin:2px 0;',
-        '  padding:6px 10px;',
+        '  width:100%;',
+        '  box-sizing:border-box;',
+        '  margin:3px 0;',
+        '  padding:7px 11px;',
         '  border-radius:8px;',
         '  background:#fff;',
         '  color:#353535 !important;',
         '  font-size:.82rem;',
-        '  text-decoration:none;',
+        '  font-weight:500;',
+        '  line-height:1.2;',
+        '  text-decoration:none !important;',
+        '  box-shadow:0 1px 3px rgba(0,0,0,.08);',
+        '  transition:',
+        '    transform .18s ease,',
+        '    box-shadow .18s ease,',
+        '    background .18s ease,',
+        '    padding-left .18s ease;',
         '}',
 
-        '.cat-hijos > li > a:hover {',
-        '  opacity:.85;',
+        '.cat-hijos > li:not(.cat-rama) > a:hover {',
+        '  transform:translateX(4px);',
+        '  padding-left:15px;',
+        '  box-shadow:0 3px 8px rgba(0,0,0,.14);',
+        '  background:#fdfdfd;',
         '}',
 
-        /*
-         * RAMAS INTERMEDIAS:
-         * DC, MARVEL, TORNASOL, MUSICA-PORTADAS, etc.
-         */
+
+        /* =====================================================
+           BOTONES DE RAMAS INTERMEDIAS
+           DC / MARVEL / TORNASOL /
+           MUSICA-PORTADAS / COUNTER STRIKE / ETC.
+           ===================================================== */
 
         '.cat-hijos > .cat-rama > .cat-cabeza {',
-        '  margin:2px 0;',
-        '  padding:6px 10px;',
+        '  display:flex;',
+        '  align-items:center;',
+        '  justify-content:space-between;',
+        '  gap:7px;',
+        '  width:100%;',
+        '  box-sizing:border-box;',
+        '  margin:3px 0;',
+        '  padding:7px 11px;',
+        '  border:0;',
         '  border-radius:8px;',
         '  background:#fff;',
-        '  border-bottom:0;',
+        '  box-shadow:0 1px 3px rgba(0,0,0,.08);',
+        '  cursor:pointer;',
+        '  transition:',
+        '    transform .18s ease,',
+        '    box-shadow .18s ease,',
+        '    background .18s ease;',
+        '}',
+
+        '.cat-hijos > .cat-rama > .cat-cabeza:hover {',
+        '  transform:translateX(4px);',
+        '  box-shadow:0 3px 8px rgba(0,0,0,.14);',
+        '  background:#fdfdfd;',
         '}',
 
         '.cat-hijos > .cat-rama > .cat-cabeza a {',
+        '  display:block;',
+        '  flex:1;',
+        '  color:#353535 !important;',
         '  font-size:.82rem;',
+        '  font-weight:500;',
+        '  line-height:1.2;',
+        '  text-decoration:none !important;',
+        '  text-transform:none;',
         '}',
 
-        /*
-         * Nivel 3
-         */
+
+        /* =====================================================
+           FLECHA DE RAMAS INTERMEDIAS
+           ===================================================== */
+
+        '.cat-hijos > .cat-rama > .cat-cabeza .flechita {',
+        '  font-size:.65rem;',
+        '}',
+
+
+        /* =====================================================
+           NIVELES MÁS PROFUNDOS
+           ===================================================== */
 
         '.cat-hijos .cat-hijos {',
-        '  padding-left:6px;',
+        '  padding-left:7px !important;',
         '}',
 
-        /*
-         * Ocultar categorías nativas SOLO cuando existe el árbol.
-         */
+        '.cat-hijos .cat-hijos > li:not(.cat-rama) > a {',
+        '  font-size:.78rem;',
+        '  padding:6px 10px;',
+        '}',
+
+        '.cat-hijos .cat-hijos > .cat-rama > .cat-cabeza {',
+        '  padding:6px 10px;',
+        '}',
+
+        '.cat-hijos .cat-hijos > .cat-rama > .cat-cabeza a {',
+        '  font-size:.78rem;',
+        '}',
+
+
+        /* =====================================================
+           ANIMACIÓN AL ABRIR UNA RAMA
+           ===================================================== */
+
+        '.cat-rama {',
+        '  position:relative;',
+        '}',
+
+        '.cat-rama.cat-abierta > .cat-cabeza {',
+        '  box-shadow:0 3px 9px rgba(0,0,0,.12);',
+        '}',
+
+
+        /* =====================================================
+           OCULTAR EL LISTADO NATIVO
+           SOLO MIENTRAS EXISTE EL ÁRBOL
+           ===================================================== */
 
         '.products-feed__filter > .products-feed__filter-title,',
         '.products-feed__filter > hr,',
@@ -626,9 +746,17 @@
 
     ].join('');
 
+    var viejo = document.getElementById(
+        'arbol-categorias-css-v3'
+    );
+
+    if (viejo) {
+        viejo.remove();
+    }
+
     var s = document.createElement('style');
 
-    s.id = 'arbol-categorias-css-v3';
+    s.id = 'arbol-categorias-css-v4';
     s.type = 'text/css';
 
     if (s.styleSheet) {
