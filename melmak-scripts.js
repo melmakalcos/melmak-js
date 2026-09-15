@@ -31,10 +31,10 @@
         var y = (e.clientY - r.top) / r.height;
 
         var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
-        var ry = detalle ? 16 : 48;
-        var rx = detalle ? 12 : 38;
+        var ry = detalle ? 16 : 80;
+        var rx = detalle ? 12 : 60;
         var sc = detalle ? 1.04 : 1.14;
-        var pe = detalle ? 800 : 220;
+        var pe = detalle ? 500 : 220;
 
         img.style.transform = 'perspective(' + pe + 'px) rotateX(' +
           ((0.5 - y) * rx) + 'deg) rotateY(' + ((x - 0.5) * ry) + 'deg) ' +
