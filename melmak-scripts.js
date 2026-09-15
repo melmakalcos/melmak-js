@@ -1,13 +1,22 @@
-/*TILT_MELMAK_FINAL_v4.1 - Fix Badge de Descuento*/
+/*TILT_MELMAK_FINAL_v4.2 - Solución definitiva al cartel de descuento*/
 (function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
   (function () {
     var s = document.createElement('style');
     s.appendChild(document.createTextNode(
-      /* Le damos un espacio 3D al contenedor y empujamos el badge hacia adelante */
-      '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { transform-style: preserve-3d; }' +
-      '[class*="product-offer"] { z-index: 9999 !important; transform: translateZ(30px) !important; position: absolute !important; }'
+      /* 1. Obligamos al cartel a procesarse en la GPU y estar siempre arriba */
+      '[class*="product-offer"] { ' +
+      '  z-index: 99999 !important; ' +
+      '  position: absolute !important; ' +
+      '  transform: translate3d(0,0,1px) !important; ' +
+      '  backface-visibility: hidden; ' +
+      '}' +
+      /* 2. Mantenemos la imagen un nivel por debajo del cartel */
+      '.block-products-feed__product-media img, .products-feed__product-media img, .product-preview-carrousel__item img { ' +
+      '  position: relative; ' +
+      '  z-index: 1 !important; ' +
+      '}'
     ));
     document.head.appendChild(s);
   })();
@@ -33,8 +42,8 @@
         var y = (e.clientY - r.top) / r.height;
 
         var detalle = c.className.indexOf('product-preview-carrousel') !== -1;
-        var ry = detalle ? 16 : 120;
-        var rx = detalle ? 12 : 120;
+        var ry = detalle ? 16 : 48;
+        var rx = detalle ? 12 : 38;
         var sc = detalle ? 1.04 : 1.14;
         var pe = detalle ? 800 : 220;
 
@@ -46,10 +55,10 @@
       });
 
       c.addEventListener('mouseleave', function () {
-        // Limpiamos el transform y el willChange para evitar glitches de repintado
-        img.style.transform = '';
-        img.style.willChange = 'auto'; 
-        img.style.transition = 'transform .3s ease-out'; // Opcional: hace que la vuelta a la normalidad sea suave
+        /* EL FIX PRINCIPAL: En vez de dejarlo vacío, lo volvemos a un estado 3D neutro (escala 1, rotación 0).
+           Esto evita el glitch del navegador al salir de la animación. */
+        img.style.transform = 'perspective(220px) rotateX(0deg) rotateY(0deg) scale(1)';
+        img.style.transition = 'transform .3s ease-out'; // Una transición suave al volver
       });
     })(cs[i]);
   }
