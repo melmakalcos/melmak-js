@@ -87,29 +87,3 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-
-<script>
-(function () {
-
-    const sidebar = document.querySelector('.cat-arbol');
-
-    console.log('=== PRUEBA SIDEBAR ===');
-    console.log('cat-arbol encontrado:', sidebar);
-    console.log('cantidad cat-arbol:', document.querySelectorAll('.cat-arbol').length);
-
-    if (sidebar) {
-        sidebar.innerHTML = `
-            <div style="
-                padding:20px;
-                background:red;
-                color:white;
-                font-size:20px;
-                font-weight:bold;
-            ">
-                PRUEBA CAT-ARBOL
-            </div>
-        `;
-    }
-
-})();
-</script>
