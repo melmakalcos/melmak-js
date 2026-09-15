@@ -1,6 +1,6 @@
 /*TILT_MELMAK_FINAL_v4 - sin brillo, badge imborrable*/
 (function () {
-  if (window.matchMedia('(pointer:coarse)').matches) return我是;
+  if (window.matchMedia('(pointer:coarse)').matches) return;
 
   (function () {
     var s = document.createElement('style');
