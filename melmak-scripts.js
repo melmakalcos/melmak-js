@@ -64,94 +64,104 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-/*SIDEBAR_MAPA_COMPLETO_v2 - barra lateral = categorias raiz del catalogo*/
+/*ARBOL_CATEGORIAS (Corregido)*/
 (function () {
-  if (window.matchMedia('(pointer:coarse)').matches) return;
-
-  /* Categorias raiz exactas de MELMAKALCOS (orden del menu CATALOGO) */
-  var RAICES = [
-    ['ANIMADOS',      '/animados'],
-    ['ANIMANGA',      '/animanga'],
-    ['CINE Y TV',     '/cine-y-tv'],
-    ['COLOR',         '/color'],
-    ['DRAGON BALL',   '/dragon-ball'],
-    ['HARRY POTTER',  '/harry-potter'],
-    ['MELMAKEADAS',   '/melmakeadas'],
-    ['MUSICA',        '/musica'],
-    ['MUSICA-PORTADAS','/musica-portadas'],
-    ['POKEMON',       '/pokemon-todos'],
-    ['SIMPSONS',      '/simpsons'],
-    ['STAR WARS',     '/star-wars'],
-    ['UNIVERSO',      '/universo'],
-    ['HOLOGRÁFICOS',  '/holograficos'],
-    ['STICKERS-PORTADAS','/stickers-portadas'],
-    ['MAYORISTA',     '/mayorista'],
-    ['PERSONALIZADOS','/personalizados'],
-    ['PACKS',         '/packs']
-  ];
-  /* sacá/agregá las que quieras; este carrito es: ES LA LISTA = "Ver todo en..." */
-
-  function raizActual() {
-    var p = location.pathname.toLowerCase();
-    for (var i = 0; i < RAICES.length; i++) {
-      if (p === RAICES[i][1] || p.indexOf(RAICES[i][1] + '/') === 0) return RAICES[i][1];
+    function construir() {
+        var f = document.querySelector('.products-feed__filter');
+        if (!f || f.querySelector('.cat-arbol')) return;
+        
+        var tops = document.querySelectorAll('.header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
+        if (!tops.length) return;
+        
+        var cont = document.createElement('div');
+        cont.className = 'cat-arbol';
+        var lista = document.createElement('ul');
+        cont.appendChild(lista);
+        
+        var i;
+        for (i = 0; i < tops.length; i++) {
+            var en = tops[i].querySelector(':scope > a');
+            if (!en) continue;
+            
+            var rama = document.createElement('li');
+            rama.className = 'cat-rama';
+            
+            var cabeza = document.createElement('div');
+            cabeza.className = 'cat-cabeza';
+            
+            var aTop = document.createElement('a');
+            aTop.href = en.href;
+            aTop.textContent = en.textContent;
+            cabeza.appendChild(aTop);
+            
+            // Corrección aquí: buscamos cualquier etiqueta <a> dentro de los subítems sin requerir que sea hijo directo '>'
+            var subs = tops[i].querySelectorAll('li.desktop-list__subitem a');
+            var hijos = null;
+            
+            if (subs.length) {
+                rama.setAttribute('data-tiene-hijos', '1');
+                var fle = document.createElement('span');
+                fle.className = 'flechita';
+                fle.textContent = '\u25BC';
+                cabeza.appendChild(fle);
+                
+                hijos = document.createElement('ul');
+                hijos.className = 'cat-hijos';
+                
+                var j;
+                for (j = 0; j < subs.length; j++) {
+                    var item = document.createElement('li');
+                    var aSub = document.createElement('a');
+                    aSub.href = subs[j].href;
+                    aSub.textContent = subs[j].textContent;
+                    item.appendChild(aSub);
+                    hijos.appendChild(item);
+                }
+            }
+            
+            rama.appendChild(cabeza);
+            if (hijos) rama.appendChild(hijos);
+            lista.appendChild(rama);
+        }
+        
+        f.insertBefore(cont, f.firstChild);
+        
+        cont.addEventListener('click', function (ev) {
+            var a = ev.target.closest ? ev.target.closest('a') : null;
+            if (a) {
+                if (a.parentNode && a.parentNode.className.indexOf('cat-cabeza') !== -1) {
+                    ev.preventDefault();
+                } else {
+                    return;
+                }
+            }
+            var q = ev.target;
+            while (q && q !== cont && !(q.classList && q.classList.contains('cat-rama'))) {
+                q = q.parentNode;
+            }
+            if (q && q !== cont && q.getAttribute('data-tiene-hijos') === '1') {
+                if (!q.classList.contains('cat-abierta')) {
+                    var ab = cont.querySelectorAll('.cat-abierta');
+                    for (var m = 0; m < ab.length; m++) {
+                        ab[m].classList.remove('cat-abierta');
+                    }
+                }
+                q.classList.toggle('cat-abierta');
+            }
+        });
     }
-    return '';
-  }
 
-  function pintar() {
-    /* contenedor real de la lista lateral */
-    var caja = document.querySelector('.products-feed__categories-list,' +
-      '[class*="categories-list"], [class*="block-products-feed__product-media"] .products-feed__categories');
-
-    /* busco el ul que contiene los links actuales */
-    var ul = document.querySelector('.products-feed__categories-list ul,' +
-      '[class*="categories-list"] ul');
-    if (!caja && !ul) return;
-    var cont = ul || document.createElement('ul');
-
-    if (cont.getAttribute('data-mxm-map')) { marcarActivo(); return; }
-    cont.setAttribute('data-mxm-map', '1');
-    cont.innerHTML = '';
-
-    for (var i = 0; i < RAICES.length; i++) {
-      var a = document.createElement('a');
-      a.setAttribute('data-mxm-dir', RAICES[i][1]);
-      a.href = 'https://www.melmakalcos.com.ar' + RAICES[i][1];
-      a.className = 'products-feed__categories-list-link text--primary text--primary-hover';
-      a.textContent = RAICES[i][0];
-      a.style.cssText = 'display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;' +
-        'color:#5a2d82;text-transform:uppercase;font-weight:600;font-size:.82rem;' +
-        'letter-spacing:.03em;border-left:3px solid transparent;transition:.15s;';
-
-      var li = document.createElement('li');
-      li.appendChild(a);
-      cont.appendChild(li);
+    function esperar(k) {
+        var f = document.querySelector('.products-feed__filter');
+        var menu = document.querySelector('.header-menu__desktop-list__container-list .desktop-list__menu li.text--primary:not(.desktop-list__subitem)');
+        if (f && menu) {
+            construir();
+            return;
+        }
+        if (k > 80) return;
+        setTimeout(function () {
+            esperar((k || 0) + 1);
+        }, 200);
     }
-
-    /* meto la lista en la caja si no habia ul */
-    if (!ul && caja) {
-      caja.innerHTML = '';
-      caja.appendChild(cont);
-    }
-    cont.style.cssText = 'list-style:none;margin:0;padding:.5rem .25rem;';
-    marcarActivo();
-  }
-
-  function marcarActivo() {
-    var raiz = raizActual();
-    var links = document.querySelectorAll('[data-mxm-dir]');
-    for (var i = 0; i < links.length; i++) {
-      var es = links[i].getAttribute('data-mxm-dir').toLowerCase() === raiz.toLowerCase();
-      links[i].style.backgroundColor = es ? '#f7ef10' : 'transparent';
-      links[i].style.borderLeftColor = es ? '#f7ef10' : 'transparent';
-      links[i].style.fontWeight = es ? '800' : '600';
-      links[i].style.color = es ? '#14120f' : '#5a2d82';
-    }
-  }
-
-  pintar();
-  setInterval(pintar, 700);                 /* cubre navegación SPA si el tema la usa */
-  window.addEventListener('scroll', pintar, { passive: true });
-  document.addEventListener('DOMContentLoaded', pintar);
+    esperar();
 })();
