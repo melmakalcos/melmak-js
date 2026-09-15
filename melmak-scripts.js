@@ -87,269 +87,277 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-  /* ARBOL_CATEGORIAS_RECURSIVO */
-  (function () {
-    function textoLimpio(elemento) {
-      return (elemento.textContent || '')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
+/* ARBOL DE CATEGORIAS RECURSIVO */
+(function () {
+  function limpiarTexto(elemento) {
+    return (elemento.textContent || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
-    function claveDeUrl(href) {
-      try {
-        var url = new URL(href, window.location.origin);
+  function obtenerClave(href) {
+    try {
+      var url = new URL(href, window.location.origin);
+      var ruta = url.pathname.replace(/\/+$/, '');
 
-        if (url.origin !== window.location.origin) {
-          return null;
-        }
-
-        var ruta = url.pathname.replace(/\/+$/, '');
-
-        if (!ruta || ruta === '/' || ruta === '/productos') {
-          return null;
-        }
-
-        return ruta.toLowerCase();
-      } catch (error) {
+      if (
+        url.origin !== window.location.origin ||
+        !ruta ||
+        ruta === '/' ||
+        ruta === '/productos'
+      ) {
         return null;
       }
+
+      return ruta.toLowerCase();
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function crearArbol() {
+    var filtro = document.querySelector('.products-feed__filter');
+    var listaOriginal = document.querySelector(
+      '.products-feed__categories-list'
+    );
+
+    /*
+     * El menú superior tiene todas las categorías y subcategorías.
+     * La lista original define cuáles son las categorías principales.
+     */
+    var enlacesMenuSuperior = document.querySelectorAll(
+      '.header-menu__desktop-list__container-list a.desktop-list-link__text'
+    );
+
+    if (!filtro || !listaOriginal || !enlacesMenuSuperior.length) {
+      return false;
     }
 
-    function crearArbol() {
-      var filtro = document.querySelector('.products-feed__filter');
-
-      if (!filtro) {
-        return false;
-      }
-
-      var arbolViejo = filtro.querySelector('.cat-arbol');
-      var listaOriginal = filtro.querySelector(
-        '.products-feed__categories-list'
-      );
-
-      if (!arbolViejo || !listaOriginal) {
-        return false;
-      }
-
-      if (arbolViejo.dataset.arbolRecursivo === '1') {
-        return true;
-      }
-
-      var categorias = {};
-      var orden = 0;
-      var clavesPrincipales = [];
-
-      function guardarEnlace(enlace, esPrincipal) {
-        var nombre = textoLimpio(enlace);
-        var clave = claveDeUrl(enlace.href);
-
-        if (
-          !clave ||
-          !nombre ||
-          /^ver todo/i.test(nombre)
-        ) {
-          return;
-        }
-
-        if (!categorias[clave]) {
-          categorias[clave] = {
-            clave: clave,
-            href: enlace.href,
-            nombre: nombre,
-            orden: orden++,
-            hijos: [],
-            padre: null
-          };
-        }
-
-        if (esPrincipal && clavesPrincipales.indexOf(clave) === -1) {
-          clavesPrincipales.push(clave);
-        }
-      }
-
-      /*
-       * La lista original contiene las categorías principales.
-       * El árbol viejo contiene también hijas, nietas y niveles posteriores.
-       */
-      Array.from(listaOriginal.querySelectorAll('a')).forEach(function (enlace) {
-        guardarEnlace(enlace, true);
-      });
-
-      Array.from(arbolViejo.querySelectorAll('a')).forEach(function (enlace) {
-        guardarEnlace(enlace, false);
-      });
-
-      Object.keys(categorias).forEach(function (clave) {
-        var categoria = categorias[clave];
-        var partes = clave.split('/').filter(Boolean);
-
-        for (var nivel = partes.length - 1; nivel > 0; nivel--) {
-          var clavePadre = '/' + partes.slice(0, nivel).join('/');
-
-          if (categorias[clavePadre]) {
-            categoria.padre = categorias[clavePadre];
-            categoria.padre.hijos.push(categoria);
-            break;
-          }
-        }
-      });
-
-      function primerOrden(categoria) {
-        var ordenMenor = categoria.orden;
-
-        categoria.hijos.forEach(function (hijo) {
-          ordenMenor = Math.min(ordenMenor, primerOrden(hijo));
-        });
-
-        return ordenMenor;
-      }
-
-      function ordenarRama(categoria) {
-        categoria.hijos.sort(function (a, b) {
-          return primerOrden(a) - primerOrden(b);
-        });
-
-        categoria.hijos.forEach(ordenarRama);
-      }
-
-      Object.keys(categorias).forEach(function (clave) {
-        ordenarRama(categorias[clave]);
-      });
-
-      var principales = clavesPrincipales
-        .map(function (clave) {
-          return categorias[clave];
-        })
-        .filter(Boolean);
-
-      if (!principales.length) {
-        return false;
-      }
-
-      var arbolNuevo = document.createElement('div');
-      arbolNuevo.className = 'cat-arbol';
-      arbolNuevo.dataset.arbolRecursivo = '1';
-
-      function crearRama(categoriasDeNivel) {
-        var ul = document.createElement('ul');
-
-        categoriasDeNivel.forEach(function (categoria) {
-          var li = document.createElement('li');
-          var tieneHijos = categoria.hijos.length > 0;
-
-          if (tieneHijos) {
-            li.className = 'cat-rama';
-            li.dataset.tieneHijos = '1';
-
-            var cabeza = document.createElement('div');
-            cabeza.className = 'cat-cabeza';
-
-            var enlace = document.createElement('a');
-            enlace.href = categoria.href;
-            enlace.textContent = categoria.nombre;
-
-            var flecha = document.createElement('span');
-            flecha.className = 'flechita';
-            flecha.textContent = '▼';
-
-            cabeza.appendChild(enlace);
-            cabeza.appendChild(flecha);
-
-            var hijos = crearRama(categoria.hijos);
-            hijos.className = 'cat-hijos';
-
-            li.appendChild(cabeza);
-            li.appendChild(hijos);
-          } else {
-            var enlaceSimple = document.createElement('a');
-            enlaceSimple.href = categoria.href;
-            enlaceSimple.textContent = categoria.nombre;
-
-            li.appendChild(enlaceSimple);
-          }
-
-          ul.appendChild(li);
-        });
-
-        return ul;
-      }
-
-      arbolNuevo.appendChild(crearRama(principales));
-
-      arbolNuevo.addEventListener('click', function (evento) {
-        var cabeza = evento.target.closest('.cat-cabeza');
-
-        if (!cabeza || !arbolNuevo.contains(cabeza)) {
-          return;
-        }
-
-        /* El texto navega; la flecha abre/cierra. */
-        if (evento.target.closest('a')) {
-          return;
-        }
-
-        cabeza.parentElement.classList.toggle('cat-abierta');
-      });
-
-      arbolViejo.replaceWith(arbolNuevo);
-
+    if (filtro.querySelector('.cat-arbol[data-recursivo="ok"]')) {
       return true;
     }
 
-    function iniciar() {
-      var intentos = 0;
-      var espera = window.setInterval(function () {
-        intentos++;
+    var categorias = {};
+    var principales = [];
+    var orden = 0;
 
-        if (crearArbol() || intentos >= 80) {
-          window.clearInterval(espera);
+    function guardarCategoria(enlace, esPrincipal) {
+      var nombre = limpiarTexto(enlace);
+      var clave = obtenerClave(enlace.href);
+
+      if (!clave || !nombre || /^ver todo/i.test(nombre)) {
+        return;
+      }
+
+      if (!categorias[clave]) {
+        categorias[clave] = {
+          clave: clave,
+          href: enlace.href,
+          nombre: nombre,
+          orden: orden++,
+          hijos: []
+        };
+      }
+
+      if (
+        esPrincipal &&
+        principales.indexOf(clave) === -1
+      ) {
+        principales.push(clave);
+      }
+    }
+
+    Array.from(listaOriginal.querySelectorAll('a')).forEach(function (enlace) {
+      guardarCategoria(enlace, true);
+    });
+
+    Array.from(enlacesMenuSuperior).forEach(function (enlace) {
+      guardarCategoria(enlace, false);
+    });
+
+    Object.keys(categorias).forEach(function (clave) {
+      var categoria = categorias[clave];
+      var partes = clave.split('/').filter(Boolean);
+
+      for (var nivel = partes.length - 1; nivel > 0; nivel--) {
+        var clavePadre = '/' + partes.slice(0, nivel).join('/');
+
+        if (categorias[clavePadre]) {
+          categorias[clavePadre].hijos.push(categoria);
+          break;
         }
-      }, 500);
+      }
+    });
+
+    function primerOrden(categoria) {
+      var resultado = categoria.orden;
+
+      categoria.hijos.forEach(function (hijo) {
+        resultado = Math.min(resultado, primerOrden(hijo));
+      });
+
+      return resultado;
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', iniciar);
-    } else {
-      iniciar();
-    }
-  })();
+    function ordenarHijos(categoria) {
+      categoria.hijos.sort(function (a, b) {
+        return primerOrden(a) - primerOrden(b);
+      });
 
-
-
-  /* ARBOL_CATEGORIAS_CSS */
-  (function () {
-    var c = [
-      '.cat-arbol, .cat-arbol ul { list-style: none; margin: 0; padding: 0; }',
-
-      '.cat-arbol { margin: 0 0 8px; }',
-
-      '.cat-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer; padding: 7px 0; border-bottom: 1px solid rgba(53, 53, 53, 0.25); }',
-
-      '.cat-cabeza a { color: #353535 !important; font-weight: 700; text-transform: uppercase; flex: 1; }',
-
-      '.cat-cabeza .flechita { font-size: .8rem; transition: transform .25s ease; }',
-
-      '.cat-abierta > .cat-cabeza .flechita { transform: rotate(180deg); }',
-
-      '.cat-hijos { margin: 0; padding: 0 0 0 4px; max-height: 0; overflow: hidden; transition: max-height .3s ease; }',
-
-      '.cat-abierta > .cat-hijos { max-height: 4000px; }',
-
-      '.cat-hijos a { display: block; margin: 2px 0; padding: 6px 10px; border-radius: 8px; background: #fff; color: #353535 !important; font-size: .82rem; }',
-
-      '.cat-hijos a:hover { opacity: .85; }',
-
-      '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }'
-    ].join('');
-
-    var s = document.createElement('style');
-
-    if (s.styleSheet) {
-      s.styleSheet.cssText = c;
-    } else {
-      s.appendChild(document.createTextNode(c));
+      categoria.hijos.forEach(ordenarHijos);
     }
 
-    document.head.appendChild(s);
-  })();
+    Object.keys(categorias).forEach(function (clave) {
+      ordenarHijos(categorias[clave]);
+    });
 
+    var categoriasPrincipales = principales
+      .map(function (clave) {
+        return categorias[clave];
+      })
+      .filter(Boolean);
+
+    if (!categoriasPrincipales.length) {
+      return false;
+    }
+
+    var arbolAnterior = filtro.querySelector('.cat-arbol');
+
+    if (arbolAnterior) {
+      arbolAnterior.remove();
+    }
+
+    var arbol = document.createElement('div');
+    arbol.className = 'cat-arbol';
+    arbol.dataset.recursivo = 'ok';
+
+    function crearNivel(categoriasDelNivel) {
+      var ul = document.createElement('ul');
+
+      categoriasDelNivel.forEach(function (categoria) {
+        var li = document.createElement('li');
+        var enlace = document.createElement('a');
+
+        enlace.href = categoria.href;
+        enlace.textContent = categoria.nombre;
+
+        if (categoria.hijos.length) {
+          li.className = 'cat-rama';
+
+          var cabeza = document.createElement('div');
+          cabeza.className = 'cat-cabeza';
+
+          var flecha = document.createElement('span');
+          flecha.className = 'flechita';
+          flecha.textContent = '▼';
+
+          cabeza.appendChild(enlace);
+          cabeza.appendChild(flecha);
+
+          var hijos = crearNivel(categoria.hijos);
+          hijos.className = 'cat-hijos';
+
+          li.appendChild(cabeza);
+          li.appendChild(hijos);
+        } else {
+          li.appendChild(enlace);
+        }
+
+        ul.appendChild(li);
+      });
+
+      return ul;
+    }
+
+    arbol.appendChild(crearNivel(categoriasPrincipales));
+
+    arbol.addEventListener('click', function (evento) {
+      var cabeza = evento.target.closest('.cat-cabeza');
+
+      if (!cabeza || !arbol.contains(cabeza)) {
+        return;
+      }
+
+      if (evento.target.closest('a')) {
+        return;
+      }
+
+      cabeza.parentElement.classList.toggle('cat-abierta');
+    });
+
+    listaOriginal.insertAdjacentElement('beforebegin', arbol);
+
+    return true;
+  }
+
+  function iniciar() {
+    var intentos = 0;
+
+    var espera = window.setInterval(function () {
+      intentos++;
+
+      if (crearArbol()) {
+        window.clearInterval(espera);
+        return;
+      }
+
+      /*
+       * Evita que quede el panel vacío si el tema cambia su estructura.
+       */
+      if (intentos >= 120) {
+        var listaOriginal = document.querySelector(
+          '.products-feed__categories-list'
+        );
+
+        if (listaOriginal) {
+          listaOriginal.style.setProperty(
+            'display',
+            'block',
+            'important'
+          );
+        }
+
+        window.clearInterval(espera);
+      }
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+})();
+
+/* ESTILOS DEL ARBOL */
+(function () {
+  var css = [
+    '.cat-arbol, .cat-arbol ul { list-style: none; margin: 0; padding: 0; }',
+
+    '.cat-arbol { margin: 0 0 8px; }',
+
+    '.cat-arbol > ul > li > a { display: block; padding: 7px 0; border-bottom: 1px solid rgba(53,53,53,.25); color: #353535 !important; font-weight: 700; text-transform: uppercase; }',
+
+    '.cat-cabeza { display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer; padding: 7px 0; border-bottom: 1px solid rgba(53,53,53,.25); }',
+
+    '.cat-cabeza a { color: #353535 !important; font-weight: 700; text-transform: uppercase; flex: 1; }',
+
+    '.flechita { font-size: .8rem; transition: transform .25s ease; }',
+
+    '.cat-abierta > .cat-cabeza .flechita { transform: rotate(180deg); }',
+
+    '.cat-hijos { padding: 0 0 0 4px; max-height: 0; overflow: hidden; transition: max-height .3s ease; }',
+
+    '.cat-abierta > .cat-hijos { max-height: 6000px; }',
+
+    '.cat-hijos a { display: block; margin: 2px 0; padding: 6px 10px; border-radius: 8px; background: #fff; color: #353535 !important; font-size: .82rem; }',
+
+    '.cat-hijos a:hover { opacity: .85; }',
+
+    '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }'
+  ].join('');
+
+  var estilo = document.createElement('style');
+  estilo.appendChild(document.createTextNode(css));
+  document.head.appendChild(estilo);
+})();
