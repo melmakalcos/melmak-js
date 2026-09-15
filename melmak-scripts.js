@@ -64,18 +64,15 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<!-- ARBOL_SIDEBAR v8.1 - Jerarquía por rutas relativas/absolutas -->
+<!-- ARBOL_SIDEBAR v9 - DOM Observer & Ejecución Universal -->
 <script>
 (function () {
   "use strict";
-
-  if (window.matchMedia("(pointer: coarse)").matches) return;
 
   var FORZADAS = {
     melmakeadas: "https://www.melmakalcos.com.ar/melmakeadas"
   };
 
-  // Parsea cualquier URL (relativa o absoluta) sin depender del dominio
   function segs(href) {
     if (!href) return [];
     try {
@@ -95,15 +92,15 @@
     return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
 
-  function run() {
+  function transformar() {
     var caja = document.querySelector(".products-feed__filter");
-    if (!caja || caja.getAttribute("data-arbol-v8")) return false;
+    if (!caja || caja.getAttribute("data-arbol-v9")) return false;
 
     var origen = caja.querySelector("ul");
     if (!origen) return false;
 
     var enlaces = origen.querySelectorAll("a[href]");
-    if (!enlaces.length) return false; // Espera a que existan enlaces cargados
+    if (!enlaces || enlaces.length === 0) return false;
 
     var arbol = {};
     for (var s = 0; s < enlaces.length; s++) {
@@ -134,9 +131,11 @@
     }
 
     var raices = Object.keys(arbol).sort();
-    if (!raices.length) return false;
+    if (raices.length === 0) return false;
 
     var ulN = document.createElement("ul");
+    ulN.className = "arbol-v9-lista";
+
     for (var rr = 0; rr < raices.length; rr++) {
       var r2 = raices[rr], nd = arbol[r2];
       if (!nd.top) continue;
@@ -166,26 +165,34 @@
 
     var cont = origen.parentNode;
     if (cont) {
-      var viejo = cont.querySelector(".arbol-v8-wrap");
+      var viejo = cont.querySelector(".arbol-v8-wrap, .arbol-v9-wrap");
       var w = document.createElement("div");
-      w.className = "arbol-v8-wrap";
+      w.className = "arbol-v9-wrap";
       w.appendChild(ulN);
 
       if (viejo) cont.replaceChild(w, viejo);
       else cont.insertBefore(w, origen);
 
-      origen.style.display = "none"; // Oculta la lista original no estructurada
-      caja.setAttribute("data-arbol-v8", "1");
+      origen.style.display = "none";
+      caja.setAttribute("data-arbol-v9", "1");
+      console.log("[MELMAK] Árbol de categorías renderizado correctamente.");
       return true;
     }
     return false;
   }
 
-  var n = 0;
-  (function t() {
-    if (run()) return;
-    if (n++ > 150) return;
-    setTimeout(t, 200);
-  })();
+  // Escucha cambios dinámicos en la página (AJAX / Carga diferida)
+  var observer = new MutationObserver(function () {
+    if (transformar()) {
+      observer.disconnect();
+    }
+  });
+
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Intento de ejecución directa inmediata
+  transformar();
 })();
 </script>
