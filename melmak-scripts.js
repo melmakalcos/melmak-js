@@ -65,12 +65,15 @@
 })();
 
 
+
 <script>
-/* ARBOL_SIDEBAR FINAL v2 - Empretienda
-   Agrupa por PROFUNDIDAD de URL (soporta 1, 2 y 3 niveles):
-     /raiz               = RAIZ (Ej: HOLOGRÁFICOS)
-     /raiz/hija          = HIJA (Ej: TORNASOL)
-     /raiz/hija/subhija  = SUB-HIJA (Ej: ANIMADOS)
+/* ARBOL_SIDEBAR FINAL - Empretienda
+   Agrupa por PROFUNDIDAD de URL:
+     /raiz        = RAIZ
+     /raiz/hija   = HIJA anidada
+   -> DC y MARVEL quedan DENTRO de UNIVERSO
+   -> TORNA SOL queda DENTRO de HOLOGRÁFICOS
+   -> MELMAKEADAS forzada como raíz
    Sólo desktop (móvil intacto) */
 (function () {
   "use strict";
@@ -79,21 +82,14 @@
   var FORZADAS = { melmakeadas: "/melmakeadas" };
 
   function segs(h) {
-    if (!h) return [];
-    try {
-      var path = new URL(h, window.location.origin).pathname;
-      return path.split("/").filter(Boolean);
-    } catch (e) {
-      return [];
-    }
+    var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
+    return m ? [m[1] || "", m[2] || ""] : ["", ""];
   }
-
   function limpio(a) {
     var c = a.cloneNode(true);
     var q = c.querySelectorAll("svg,path,i,span");
-    for (var i = 0; i < q.length; i++) {
+    for (var i = 0; i < q.length; i++)
       if (q[i].parentNode) q[i].parentNode.removeChild(q[i]);
-    }
     return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
 
@@ -102,78 +98,45 @@
     if (!caja) return;
     var origen = caja.querySelector("ul");
     if (!origen) return;
-
     var arbol = {};
+
     var enlaces = origen.querySelectorAll("a[href]");
-
     for (var i = 0; i < enlaces.length; i++) {
-      var a = enlaces[i];
-      var s = segs(a.getAttribute("href") || a.href);
-      if (!s[0] || s[0].toLowerCase() === "productos" || s[0].toLowerCase() === "buscar") continue;
-
-      var r = s[0].toLowerCase();
-      if (!arbol[r]) arbol[r] = { a: null, hijos: {} };
-
-      if (s.length === 1) {
-        if (!arbol[r].a) arbol[r].a = a;
-      } else if (s.length === 2) {
-        var h = s[1].toLowerCase();
-        if (!arbol[r].hijos[h]) arbol[r].hijos[h] = { a: a, subhijos: {} };
-        else if (!arbol[r].hijos[h].a) arbol[r].hijos[h].a = a;
-      } else if (s.length >= 3) {
-        var h2 = s[1].toLowerCase();
-        var sub = s[2].toLowerCase();
-        if (!arbol[r].hijos[h2]) arbol[r].hijos[h2] = { a: null, subhijos: {} };
-        if (!arbol[r].hijos[h2].subhijos[sub]) arbol[r].hijos[h2].subhijos[sub] = a;
+      var a = enlaces[i], s = segs(a.getAttribute("href") || a.href);
+      if (!s[0] || s[0] === "productos") continue;
+      var raiz = s[0].toLowerCase();
+      if (!arbol[raiz]) arbol[raiz] = { a: null, hijos: {} };
+      if (s[1]) {
+        var hijo = s[1].toLowerCase();
+        if (!arbol[raiz].hijos[hijo]) arbol[raiz].hijos[hijo] = a;
+      } else if (!arbol[raiz].a) {
+        arbol[raiz].a = a;
       }
     }
 
-    for (var f in FORZADAS) {
-      if (!arbol[f]) {
-        var af = document.createElement("a");
-        af.href = FORZADAS[f];
-        arbol[f] = { a: af, hijos: {} };
-      }
+    for (var f in FORZADAS) if (!arbol[f]) {
+      var af = document.createElement("a");
+      af.href = FORZADAS[f];
+      arbol[f] = { a: af, hijos: {} };
     }
 
     var ulN = document.createElement("ul");
-
     Object.keys(arbol).sort().forEach(function (raiz) {
       var n = arbol[raiz];
-      if (!n.a && Object.keys(n.hijos).length === 0) return;
-
+      if (!n.a) return;
       var li = document.createElement("li");
       var aR = document.createElement("a");
-      aR.href = n.a ? (n.a.getAttribute("href") || n.a.href) : "/" + raiz;
-      aR.textContent = (n.a ? limpio(n.a) : raiz.replace(/-/g, " ")).toUpperCase();
+      aR.href = n.a.getAttribute("href") || n.a.href;
+      aR.textContent = (limpio(n.a) || raiz.replace(/-/g, " ")).toUpperCase();
       li.appendChild(aR);
-
       var hs = Object.keys(n.hijos).sort();
       if (hs.length) {
         var ulH = document.createElement("ul");
         hs.forEach(function (h) {
-          var nodoHijo = n.hijos[h];
-          var li2 = document.createElement("li");
-          var a2 = document.createElement("a");
-          
-          a2.href = nodoHijo.a ? (nodoHijo.a.getAttribute("href") || nodoHijo.a.href) : "/" + raiz + "/" + h;
-          a2.textContent = (nodoHijo.a ? limpio(nodoHijo.a) : h.replace(/-/g, " ")).toUpperCase();
-          li2.appendChild(a2);
-
-          var subs = Object.keys(nodoHijo.subhijos).sort();
-          if (subs.length) {
-            var ulSub = document.createElement("ul");
-            subs.forEach(function (sb) {
-              var a3 = nodoHijo.subhijos[sb];
-              var li3 = document.createElement("li");
-              var aSub = document.createElement("a");
-              aSub.href = a3.getAttribute("href") || a3.href;
-              aSub.textContent = (limpio(a3) || sb.replace(/-/g, " ")).toUpperCase();
-              li3.appendChild(aSub);
-              ulSub.appendChild(li3);
-            });
-            li2.appendChild(ulSub);
-          }
+          var a2 = n.hijos[h], li2 = document.createElement("li"), a3 = document.createElement("a");
+          a3.href = a2.getAttribute("href") || a2.href;
+          a3.textContent = (limpio(a2) || h.replace(/-/g, " ")).toUpperCase();
+          li2.appendChild(a3);
           ulH.appendChild(li2);
         });
         li.appendChild(ulH);
@@ -189,8 +152,7 @@
       w.appendChild(ulN);
       if (viejo) padre.replaceChild(w, viejo);
       else padre.insertBefore(w, origen);
-      origen.style.display = "none";
     }
   });
 })();
-</script>
+script>
