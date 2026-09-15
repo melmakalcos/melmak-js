@@ -64,135 +64,133 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<!-- ARBOL_SIDEBAR v9 - DOM Observer & Ejecución Universal -->
+<!-- MENU_MANUAL_MELMAK -->
 <script>
 (function () {
   "use strict";
 
-  var FORZADAS = {
-    melmakeadas: "https://www.melmakalcos.com.ar/melmakeadas"
-  };
-
-  function segs(href) {
-    if (!href) return [];
-    try {
-      var path = new URL(href, window.location.origin).pathname;
-      return path.split("/").filter(Boolean);
-    } catch (e) {
-      return [];
+  // 1. EDITA TU MENÚ AQUÍ (Agrega, quita o cambia nombres y links a gusto)
+  var MI_MENU = [
+    {
+      nombre: "MÚSICA",
+      url: "/musica",
+      subcategorias: [
+        { nombre: "PORTADAS", url: "/musica/portadas" },
+        { nombre: "DC", url: "/musica/dc" },
+        { nombre: "TORNASOL", url: "/musica/tornasol" }
+      ]
+    },
+    {
+      nombre: "MELMAKEADAS",
+      url: "/melmakeadas",
+      subcategorias: []
+    },
+    {
+      nombre: "ANIME",
+      url: "/anime",
+      subcategorias: [
+        { nombre: "EVANGELION", url: "/anime/evangelion" }
+      ]
     }
-  }
+  ];
 
-  function nombre(a) {
-    var c = a.cloneNode(true);
-    var malos = c.querySelectorAll("svg,path,i");
-    for (var i = 0; i < malos.length; i++) {
-      if (malos[i].parentNode) malos[i].parentNode.removeChild(malos[i]);
-    }
-    return (c.textContent || "").replace(/\s+/g, " ").trim();
-  }
-
-  function transformar() {
+  function renderizarMenu() {
     var caja = document.querySelector(".products-feed__filter");
-    if (!caja || caja.getAttribute("data-arbol-v9")) return false;
+    if (!caja || caja.getAttribute("data-menu-manual")) return false;
 
-    var origen = caja.querySelector("ul");
-    if (!origen) return false;
+    // Crear contenedor principal
+    var wrap = document.createElement("div");
+    wrap.className = "menu-manual-wrap";
 
-    var enlaces = origen.querySelectorAll("a[href]");
-    if (!enlaces || enlaces.length === 0) return false;
+    var ulPrincipal = document.createElement("ul");
+    ulPrincipal.style.listStyle = "none";
+    ulPrincipal.style.padding = "0";
+    ulPrincipal.style.margin = "0";
 
-    var arbol = {};
-    for (var s = 0; s < enlaces.length; s++) {
-      var en = enlaces[s];
-      var seg = segs(en.getAttribute("href") || en.href);
-      if (!seg[0] || seg.length > 2) continue;
-
-      var r = seg[0].toLowerCase();
-      if (r === "productos" || r === "buscar") continue;
-
-      if (!arbol[r]) arbol[r] = { top: null, hijos: {} };
-
-      if (seg.length === 1) {
-        if (!arbol[r].top) arbol[r].top = en;
-      } else {
-        var h = seg[1].toLowerCase();
-        if (!arbol[r].hijos[h]) arbol[r].hijos[h] = en;
-      }
-    }
-
-    for (var f in FORZADAS) {
-      if (FORZADAS.hasOwnProperty(f) && !arbol[f]) {
-        var af = document.createElement("a");
-        af.href = FORZADAS[f];
-        af.textContent = f;
-        arbol[f] = { top: af, hijos: {} };
-      }
-    }
-
-    var raices = Object.keys(arbol).sort();
-    if (raices.length === 0) return false;
-
-    var ulN = document.createElement("ul");
-    ulN.className = "arbol-v9-lista";
-
-    for (var rr = 0; rr < raices.length; rr++) {
-      var r2 = raices[rr], nd = arbol[r2];
-      if (!nd.top) continue;
-
+    for (var i = 0; i < MI_MENU.length; i++) {
+      var cat = MI_MENU[i];
       var liR = document.createElement("li");
+      liR.style.marginBottom = "10px";
+
+      var divCabeza = document.createElement("div");
+      divCabeza.style.display = "flex";
+      divCabeza.style.justifyContent = "space-between";
+      divCabeza.style.alignItems = "center";
+
       var aR = document.createElement("a");
-      aR.href = nd.top.getAttribute("href") || nd.top.href;
-      aR.textContent = (nombre(nd.top) || r2.replace(/-/g, " ")).toUpperCase();
-      liR.appendChild(aR);
+      aR.href = cat.url;
+      aR.textContent = cat.nombre.toUpperCase();
+      aR.style.fontWeight = "bold";
+      aR.style.textDecoration = "none";
+      aR.style.color = "inherit";
 
-      var hs = Object.keys(nd.hijos).sort();
-      if (hs.length > 0) {
-        var ulH = document.createElement("ul");
-        for (var hh = 0; hh < hs.length; hh++) {
-          var ah = nd.hijos[hs[hh]];
+      divCabeza.appendChild(aR);
+
+      // Si tiene subcategorías, agregar botón desplegable
+      if (cat.subcategorias && cat.subcategorias.length > 0) {
+        var btn = document.createElement("span");
+        btn.innerHTML = "&#9660;";
+        btn.style.cursor = "pointer";
+        btn.style.fontSize = "12px";
+        btn.style.padding = "0 5px";
+        divCabeza.appendChild(btn);
+
+        var ulSub = document.createElement("ul");
+        ulSub.className = "sub-lista";
+        ulSub.style.listStyle = "none";
+        ulSub.style.paddingLeft = "15px";
+        ulSub.style.marginTop = "5px";
+        ulSub.style.display = "none"; // Oculto por defecto
+
+        for (var j = 0; j < cat.subcategorias.length; j++) {
+          var sub = cat.subcategorias[j];
           var liS = document.createElement("li");
+          liS.style.margin = "5px 0";
+
           var aS = document.createElement("a");
-          aS.href = ah.getAttribute("href") || ah.href;
-          aS.textContent = (nombre(ah) || hs[hh].replace(/-/g, " ")).toUpperCase();
+          aS.href = sub.url;
+          aS.textContent = sub.nombre.toUpperCase();
+          aS.style.textDecoration = "none";
+          aS.style.color = "#555";
+
           liS.appendChild(aS);
-          ulH.appendChild(liS);
+          ulSub.appendChild(liS);
         }
-        liR.appendChild(ulH);
+
+        // Evento desplegable
+        (function(subUlElement, icono) {
+          icono.addEventListener("click", function(e) {
+            e.preventDefault();
+            var estaOculto = subUlElement.style.display === "none";
+            subUlElement.style.display = estaOculto ? "block" : "none";
+            icono.innerHTML = estaOculto ? "&#9650;" : "&#9660;";
+          });
+        })(ulSub, btn);
+
+        liR.appendChild(divCabeza);
+        liR.appendChild(ulSub);
+      } else {
+        liR.appendChild(divCabeza);
       }
-      ulN.appendChild(liR);
+
+      ulPrincipal.appendChild(liR);
     }
 
-    var cont = origen.parentNode;
-    if (cont) {
-      var viejo = cont.querySelector(".arbol-v8-wrap, .arbol-v9-wrap");
-      var w = document.createElement("div");
-      w.className = "arbol-v9-wrap";
-      w.appendChild(ulN);
+    wrap.appendChild(ulPrincipal);
 
-      if (viejo) cont.replaceChild(w, viejo);
-      else cont.insertBefore(w, origen);
-
-      origen.style.display = "none";
-      caja.setAttribute("data-arbol-v9", "1");
-      console.log("[MELMAK] Árbol de categorías renderizado correctamente.");
-      return true;
-    }
-    return false;
+    // Ocultar el contenido original del filtro y poner nuestro menú
+    caja.innerHTML = "";
+    caja.appendChild(wrap);
+    caja.setAttribute("data-menu-manual", "1");
+    return true;
   }
 
-  // Escucha cambios dinámicos en la página (AJAX / Carga diferida)
-  var observer = new MutationObserver(function () {
-    if (transformar()) {
-      observer.disconnect();
+  // Ejecución continua hasta encontrar el contenedor
+  var n = 0;
+  var timer = setInterval(function() {
+    if (renderizarMenu() || n++ > 100) {
+      clearInterval(timer);
     }
-  });
-
-  if (document.body) {
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
-
-  // Intento de ejecución directa inmediata
-  transformar();
+  }, 150);
 })();
 </script>
