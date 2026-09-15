@@ -91,979 +91,731 @@
 /* ARBOL_CATEGORIAS_FINAL */
 (function () {
 
-    function normalizar(url) {
-        try {
-            return new URL(url, location.origin)
-                .pathname
-                .replace(/\/+$/, '')
-                .toLowerCase();
-        } catch (e) {
-            return '';
-        }
-    }
+    function iniciarArbol() {
 
+        var filtro = document.querySelector('.products-feed__filter');
+        if (!filtro) return false;
 
-    function construir() {
-
-        var filtro = document.querySelector(
-            '.products-feed__filter'
-        );
-
+        var lista = filtro.querySelector('.products-feed__categories-list');
         var menu = document.querySelector(
-            '.header-menu__desktop-list__container-list'
+            '.header-menu__desktop-list__container-list .desktop-list__menu'
         );
 
-        if (!filtro || !menu) return false;
+        if (!lista || !menu) return false;
 
+        /*
+         * ELIMINAMOS EL ÁRBOL PERSONALIZADO ANTERIOR
+         */
+        filtro.querySelectorAll('.cat-arbol').forEach(function (el) {
+            el.remove();
+        });
 
-        /* =====================================================
-           BORRAR ÁRBOL ANTERIOR
-           ===================================================== */
+        /*
+         * RESTAURAMOS EL LISTADO NATIVO.
+         * No lo ocultamos: ahora lo vamos a reutilizar.
+         */
+        lista.style.removeProperty('display');
+        lista.classList.add('cat-arbol-lista');
 
-        var anterior = filtro.querySelector('.cat-arbol');
-
-        if (anterior) {
-            anterior.remove();
-        }
-
-
-        /* =====================================================
-           OBTENER LAS CATEGORÍAS RAÍZ
-           DESDE EL LISTADO NATIVO
-           ===================================================== */
-
-        var raices = Array.from(
-            filtro.querySelectorAll(
-                '.products-feed__categories-list > li > a[href]'
-            )
+        /*
+         * Buscamos las categorías PRINCIPALES del menú superior.
+         *
+         * La estructura real de Empretienda es:
+         *
+         * .desktop-list__menu
+         *   └── ul
+         *       └── li
+         *           ├── a = categoría principal
+         *           ├── ul
+         *           │   └── li
+         *           │       └── a = subcategoría
+         *           ├── ul
+         *           │   └── li
+         *           │       └── a = otra subcategoría
+         *           ...
+         */
+        var menuRaices = Array.from(
+            menu.querySelectorAll(':scope > ul > li')
         );
 
         /*
-         * En algunas versiones de Empretienda el enlace puede
-         * estar directamente dentro de la lista.
+         * Mapa por URL para encontrar rápidamente
+         * cada categoría principal.
          */
+        var mapaRaices = {};
 
-        if (!raices.length) {
+        menuRaices.forEach(function (li) {
 
-            raices = Array.from(
-                filtro.querySelectorAll(
-                    '.products-feed__categories-list a[href]'
-                )
-            );
-        }
+            var a = li.querySelector(':scope > a');
 
-        if (!raices.length) return false;
+            if (!a) return;
 
+            var url = normalizarURL(a.getAttribute('href'));
 
-        /* =====================================================
-           BUSCAR ENLACE EN EL MENÚ SUPERIOR
-           ===================================================== */
-
-        function buscarEnMenu(href) {
-
-            var buscado = normalizar(href);
-
-            var enlaces = Array.from(
-                menu.querySelectorAll('a[href]')
-            );
-
-            for (var i = 0; i < enlaces.length; i++) {
-
-                if (
-                    normalizar(enlaces[i].href) === buscado
-                ) {
-                    return enlaces[i];
-                }
+            if (url) {
+                mapaRaices[url] = li;
             }
-
-            return null;
-        }
+        });
 
 
-        /* =====================================================
-           OBTENER LOS UL QUE PERTENECEN DIRECTAMENTE AL LI
-           
-           IMPORTANTE:
-           Empretienda genera UN UL POR CADA SUBCATEGORÍA.
-           
-           NO debemos devolver solamente el primero.
-           ===================================================== */
-
-        function obtenerULDirectos(li) {
+        /*
+         * Obtiene los hijos DIRECTOS de un LI.
+         *
+         * IMPORTANTE:
+         * Cada subcategoría de Empretienda está dentro
+         * de un UL separado, por eso recorremos los UL
+         * hijos directos del LI.
+         */
+        function obtenerHijos(li) {
 
             var resultado = [];
 
-            /*
-             * Caso 1:
-             * UL directamente dentro del LI.
-             */
-
             Array.from(li.children).forEach(function (elemento) {
 
-                if (
-                    elemento.tagName &&
-                    elemento.tagName.toLowerCase() === 'ul'
-                ) {
-                    resultado.push(elemento);
-                }
+                if (elemento.tagName !== 'UL') return;
+
+                Array.from(elemento.children).forEach(function (hijoLI) {
+
+                    if (hijoLI.tagName !== 'LI') return;
+
+                    var a = hijoLI.querySelector(':scope > a');
+
+                    if (!a) return;
+
+                    var texto = limpiarTexto(a.textContent);
+
+                    if (!texto) return;
+
+                    /*
+                     * No queremos enlaces auxiliares
+                     * como "Ver todo en..."
+                     */
+                    if (/^ver todo en/i.test(texto)) return;
+
+                    resultado.push({
+                        li: hijoLI,
+                        a: a
+                    });
+
+                });
 
             });
-
-
-            /*
-             * Caso 2:
-             * Empretienda puede poner el menú dentro de
-             * .desktop-list__menu.
-             */
-
-            Array.from(li.children).forEach(function (elemento) {
-
-                if (
-                    elemento.classList &&
-                    elemento.classList.contains(
-                        'desktop-list__menu'
-                    )
-                ) {
-
-                    Array.from(elemento.children).forEach(
-                        function (hijo) {
-
-                            if (
-                                hijo.tagName &&
-                                hijo.tagName.toLowerCase() === 'ul'
-                            ) {
-                                resultado.push(hijo);
-                            }
-
-                        }
-                    );
-
-                }
-
-            });
-
-
-            /*
-             * Eliminar duplicados.
-             */
-
-            return resultado.filter(function (item, index) {
-
-                return resultado.indexOf(item) === index;
-
-            });
-        }
-
-
-        /* =====================================================
-           OBTENER EL ENLACE DIRECTO DE UN LI
-           ===================================================== */
-
-        function obtenerEnlaceDirecto(li) {
-
-            /*
-             * Primero buscamos un <a> directamente dentro
-             * del LI.
-             */
-
-            for (
-                var i = 0;
-                i < li.children.length;
-                i++
-            ) {
-
-                var elemento = li.children[i];
-
-                if (
-                    elemento.tagName &&
-                    elemento.tagName.toLowerCase() === 'a'
-                ) {
-                    return elemento;
-                }
-            }
-
-
-            /*
-             * Algunos wrappers pueden poner el enlace
-             * dentro de un DIV.
-             */
-
-            for (
-                var j = 0;
-                j < li.children.length;
-                j++
-            ) {
-
-                var hijo = li.children[j];
-
-                if (
-                    hijo.children &&
-                    hijo.children.length
-                ) {
-
-                    for (
-                        var k = 0;
-                        k < hijo.children.length;
-                        k++
-                    ) {
-
-                        var nieto = hijo.children[k];
-
-                        if (
-                            nieto.tagName &&
-                            nieto.tagName.toLowerCase() === 'a'
-                        ) {
-                            return nieto;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-
-        /* =====================================================
-           OBTENER HIJOS REALES
-           ===================================================== */
-
-        function obtenerHijos(liOriginal) {
-
-            var resultado = [];
-
-            var uls = obtenerULDirectos(liOriginal);
-
-            uls.forEach(function (ul) {
-
-                Array.from(ul.children).forEach(
-                    function (item) {
-
-                        if (
-                            !item.tagName ||
-                            item.tagName.toLowerCase() !== 'li'
-                        ) {
-                            return;
-                        }
-
-                        var enlace = obtenerEnlaceDirecto(item);
-
-                        if (!enlace) return;
-
-
-                        var texto = (
-                            enlace.textContent || ''
-                        ).trim();
-
-
-                        /*
-                         * No mostrar "Ver todo en..."
-                         */
-
-                        if (
-                            texto
-                                .toLowerCase()
-                                .indexOf('ver todo en') === 0
-                        ) {
-                            return;
-                        }
-
-
-                        resultado.push(enlace);
-
-                    }
-                );
-
-            });
-
 
             return resultado;
         }
 
 
-        /* =====================================================
-           CREAR RAMA
-           ===================================================== */
+        /*
+         * Construcción RECURSIVA.
+         *
+         * Esto es lo que permite:
+         *
+         * UNIVERSO
+         *   DC
+         *     BATMAN
+         *
+         * y no:
+         *
+         * UNIVERSO
+         *   DC
+         *   BATMAN
+         */
+        function construirNivel(liOrigen, nivel) {
 
-        function crearRama(enlace, nivel) {
+            var ul = document.createElement('ul');
+            ul.className = nivel === 0
+                ? 'cat-hijos nivel-1'
+                : 'cat-hijos nivel-' + (nivel + 1);
 
-            if (!enlace) return null;
+            var hijos = obtenerHijos(liOrigen);
 
-            var liOriginal = enlace.closest('li');
+            hijos.forEach(function (item) {
 
-            if (!liOriginal) return null;
+                var li = document.createElement('li');
+                var aOrigen = item.a;
+
+                var hijosDeEste = obtenerHijos(item.li);
+
+                if (hijosDeEste.length > 0) {
+
+                    /*
+                     * CATEGORÍA CON HIJOS
+                     */
+                    li.className = 'cat-rama';
+                    li.setAttribute('data-tiene-hijos', '1');
+
+                    var cabeza = document.createElement('div');
+                    cabeza.className = 'cat-cabeza cat-subcabeza';
+
+                    var a = document.createElement('a');
+
+                    a.href = aOrigen.href;
+                    a.textContent = limpiarTexto(aOrigen.textContent);
+
+                    cabeza.appendChild(a);
+
+                    var flecha = document.createElement('span');
+                    flecha.className = 'flechita';
+                    flecha.textContent = '▼';
+
+                    cabeza.appendChild(flecha);
+
+                    li.appendChild(cabeza);
+
+                    /*
+                     * RECURSIVIDAD
+                     */
+                    var subnivel = construirNivel(item.li, nivel + 1);
+
+                    li.appendChild(subnivel);
+
+                } else {
+
+                    /*
+                     * CATEGORÍA FINAL / HOJA
+                     */
+                    li.className = 'cat-hoja';
+
+                    var enlace = document.createElement('a');
+
+                    enlace.href = aOrigen.href;
+                    enlace.textContent = limpiarTexto(aOrigen.textContent);
+
+                    li.appendChild(enlace);
+                }
+
+                ul.appendChild(li);
+            });
+
+            return ul;
+        }
 
 
-            var hijos = obtenerHijos(liOriginal);
+        /*
+         * Guardamos las 20 categorías principales
+         * del listado nativo.
+         *
+         * Así respetamos EXACTAMENTE el orden
+         * que tiene tu catálogo lateral.
+         */
+        var categoriasPrincipales = Array.from(
+            lista.querySelectorAll(':scope > li')
+        );
+
+        /*
+         * Si Empretienda tiene otra estructura interna,
+         * hacemos una segunda búsqueda segura.
+         */
+        if (!categoriasPrincipales.length) {
+            categoriasPrincipales = Array.from(
+                lista.children
+            ).filter(function (el) {
+                return el.tagName === 'LI';
+            });
+        }
 
 
-            var li = document.createElement('li');
+        /*
+         * VACIAMOS SOLAMENTE EL LISTADO NATIVO
+         * de la barra izquierda.
+         */
+        lista.innerHTML = '';
 
 
-            /* =================================================
-               RAMA CON HIJOS
-               ================================================= */
+        /*
+         * RECONSTRUIMOS EL ÁRBOL
+         */
+        categoriasPrincipales.forEach(function (liOriginal) {
 
-            if (hijos.length) {
+            var enlaceOriginal = liOriginal.querySelector('a');
 
-                li.className = 'cat-rama';
+            if (!enlaceOriginal) return;
 
-                li.setAttribute(
-                    'data-tiene-hijos',
-                    '1'
-                );
+            var texto = limpiarTexto(enlaceOriginal.textContent);
+            var url = normalizarURL(enlaceOriginal.getAttribute('href'));
 
+            if (!texto || !url) return;
+
+            var liNuevo = document.createElement('li');
+            liNuevo.className = 'cat-rama cat-raiz';
+
+            /*
+             * Buscamos la categoría correspondiente
+             * en el menú superior.
+             */
+            var liMenu = mapaRaices[url];
+
+            var hijos = liMenu
+                ? obtenerHijos(liMenu)
+                : [];
+
+            if (hijos.length > 0) {
+
+                liNuevo.setAttribute('data-tiene-hijos', '1');
 
                 var cabeza = document.createElement('div');
-
                 cabeza.className = 'cat-cabeza';
-
 
                 var a = document.createElement('a');
 
-                a.href = enlace.href;
-
-                a.textContent = (
-                    enlace.textContent || ''
-                ).trim();
-
-
-                var flecha = document.createElement('span');
-
-                flecha.className = 'flechita';
-
-                flecha.innerHTML = '▼';
-
+                a.href = enlaceOriginal.href;
+                a.textContent = texto;
 
                 cabeza.appendChild(a);
 
+                var flecha = document.createElement('span');
+                flecha.className = 'flechita';
+                flecha.textContent = '▼';
+
                 cabeza.appendChild(flecha);
 
-                li.appendChild(cabeza);
+                liNuevo.appendChild(cabeza);
 
+                /*
+                 * Construimos TODO el árbol inferior.
+                 */
+                var subarbol = construirNivel(liMenu, 0);
 
-                var ul = document.createElement('ul');
+                liNuevo.appendChild(subarbol);
 
-                ul.className = 'cat-hijos';
+            } else {
 
+                /*
+                 * Categoría sin hijos:
+                 * MELMAKEADAS, SIMPSONS, MAYORISTA,
+                 * PERSONALIZADOS, PACKS, etc.
+                 */
+                liNuevo.className = 'cat-rama cat-raiz cat-sin-hijos';
 
-                hijos.forEach(function (hijo) {
+                var cabezaSimple = document.createElement('div');
+                cabezaSimple.className = 'cat-cabeza';
 
-                    var rama = crearRama(
-                        hijo,
-                        nivel + 1
-                    );
+                var enlaceSimple = document.createElement('a');
 
-                    if (rama) {
-                        ul.appendChild(rama);
-                    }
+                enlaceSimple.href = enlaceOriginal.href;
+                enlaceSimple.textContent = texto;
 
-                });
+                cabezaSimple.appendChild(enlaceSimple);
 
-
-                li.appendChild(ul);
-
+                liNuevo.appendChild(cabezaSimple);
             }
 
-
-            /* =================================================
-               CATEGORÍA SIN HIJOS
-               ================================================= */
-
-            else {
-
-                var simple = document.createElement('a');
-
-                simple.href = enlace.href;
-
-                simple.textContent = (
-                    enlace.textContent || ''
-                ).trim();
-
-                li.appendChild(simple);
-
-            }
-
-
-            return li;
-        }
-
-
-        /* =====================================================
-           CREAR CONTENEDOR
-           ===================================================== */
-
-        var contenedor = document.createElement('div');
-
-        contenedor.className = 'cat-arbol';
-
-
-        var lista = document.createElement('ul');
-
-        lista.className = 'cat-lista';
-
-
-        /* =====================================================
-           CONSTRUIR LAS RAÍCES
-           ===================================================== */
-
-        raices.forEach(function (raiz) {
-
-            var enlaceMenu = buscarEnMenu(
-                raiz.href
-            );
-
-            if (!enlaceMenu) return;
-
-
-            var rama = crearRama(
-                enlaceMenu,
-                0
-            );
-
-            if (rama) {
-                lista.appendChild(rama);
-            }
-
+            lista.appendChild(liNuevo);
         });
 
 
-        contenedor.appendChild(lista);
+        /*
+         * Marca de control para evitar que el script
+         * vuelva a reconstruir el árbol.
+         */
+        lista.setAttribute('data-arbol-final', '1');
 
 
-        filtro.insertBefore(
-            contenedor,
-            filtro.firstChild
-        );
+        /*
+         * EVENTOS DE APERTURA / CIERRE
+         */
+        if (!lista.dataset.eventosArbol) {
 
+            lista.addEventListener('click', function (evento) {
 
-        /* =====================================================
-           INTERACCIÓN
-           ===================================================== */
-
-        contenedor.addEventListener(
-            'click',
-            function (ev) {
-
-                var cabeza = ev.target.closest
-                    ? ev.target.closest('.cat-cabeza')
-                    : null;
+                var cabeza = evento.target.closest('.cat-cabeza');
 
                 if (!cabeza) return;
 
-
                 var rama = cabeza.parentElement;
 
-                if (!rama) return;
-
-
-                /*
-                 * Evitar navegación cuando se pulsa
-                 * el nombre de una categoría que tiene hijos.
-                 */
-
-                if (
-                    ev.target.tagName &&
-                    ev.target.tagName.toLowerCase() === 'a'
-                ) {
-                    ev.preventDefault();
+                if (!rama || !rama.classList.contains('cat-rama')) {
+                    return;
                 }
 
-
-                var estabaAbierta =
-                    rama.classList.contains(
-                        'cat-abierta'
-                    );
-
-
                 /*
-                 * Solo cerramos los hermanos del mismo nivel.
+                 * Si es una categoría con hijos,
+                 * el primer click abre/cierra.
                  */
+                if (rama.getAttribute('data-tiene-hijos') === '1') {
 
-                var padre = rama.parentElement;
+                    evento.preventDefault();
 
-                if (padre) {
+                    /*
+                     * Cerramos ramas abiertas del mismo nivel.
+                     */
+                    var nivel = rama.parentElement;
 
-                    Array.from(
-                        padre.children
-                    ).forEach(function (hermano) {
+                    if (nivel) {
 
-                        if (
-                            hermano !== rama &&
-                            hermano.classList &&
-                            hermano.classList.contains(
-                                'cat-rama'
-                            )
-                        ) {
+                        Array.from(
+                            nivel.children
+                        ).forEach(function (otraRama) {
 
-                            hermano.classList.remove(
-                                'cat-abierta'
-                            );
+                            if (
+                                otraRama !== rama &&
+                                otraRama.classList.contains('cat-abierta')
+                            ) {
+                                otraRama.classList.remove('cat-abierta');
+                            }
 
-                        }
+                        });
+                    }
 
-                    });
-
+                    rama.classList.toggle('cat-abierta');
                 }
 
+            });
 
-                rama.classList.toggle(
-                    'cat-abierta',
-                    !estabaAbierta
-                );
-
-            }
-        );
-
-
-        /* =====================================================
-           OCULTAR NATIVO
-           ===================================================== */
-
-        var titulo = filtro.querySelector(
-            '.products-feed__filter-title'
-        );
-
-        var hr = filtro.querySelector('hr');
-
-        var categorias = filtro.querySelector(
-            '.products-feed__categories-list'
-        );
-
-
-        if (titulo) {
-            titulo.style.display = 'none';
+            lista.dataset.eventosArbol = '1';
         }
-
-        if (hr) {
-            hr.style.display = 'none';
-        }
-
-        if (categorias) {
-            categorias.style.display = 'none';
-        }
-
-
-        console.log(
-            '[ARBOL FINAL] Árbol construido correctamente.',
-            lista.children.length,
-            'categorías raíz.'
-        );
-
 
         return true;
     }
 
 
-    /* =======================================================
-       ESPERAR A QUE EMPRETIENDA TERMINE DE CARGAR EL MENÚ
-       ======================================================= */
-
-    function esperar(n) {
-
-        if (construir()) return;
-
-
-        if (n >= 80) {
-
-            console.warn(
-                '[ARBOL FINAL] No se pudo construir.'
-            );
-
-            return;
-        }
-
-
-        setTimeout(
-            function () {
-                esperar(n + 1);
-            },
-            250
-        );
-
+    function limpiarTexto(texto) {
+        return (texto || '')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
 
-    esperar(0);
+    function normalizarURL(url) {
+
+        if (!url) return '';
+
+        try {
+
+            var u = new URL(
+                url,
+                window.location.origin
+            );
+
+            return u.pathname
+                .replace(/\/+$/, '')
+                .toLowerCase();
+
+        } catch (e) {
+
+            return url
+                .split('?')[0]
+                .split('#')[0]
+                .replace(/\/+$/, '')
+                .toLowerCase();
+        }
+    }
+
+
+    /*
+     * Esperamos a que Empretienda termine de construir
+     * el menú.
+     */
+    var intentos = 0;
+
+    function esperar() {
+
+        if (iniciarArbol()) return;
+
+        intentos++;
+
+        if (intentos < 100) {
+            setTimeout(esperar, 200);
+        }
+    }
+
+    esperar();
 
 })();
 </script>
 
-<script>
-/* ARBOL_CATEGORIAS_CSS_FINAL */
-(function () {
+<style id="arbol-categorias-css-final">
+/* =========================================================
+   ARBOL CATEGORIAS FINAL
+   ========================================================= */
 
-    var anterior = document.getElementById(
-        'arbol-categorias-css-final'
-    );
-
-    if (anterior) {
-        anterior.remove();
-    }
-
-
-    var css = `
-
-/* ==========================================================
-   ÁRBOL
-   ========================================================== */
-
-.cat-arbol {
-    list-style:none !important;
-    margin:0 0 8px !important;
-    padding:0 !important;
+/* El listado nativo ahora es nuestro árbol */
+.products-feed__filter > .products-feed__categories-list.cat-arbol-lista {
+    display: block !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-.cat-arbol ul,
-.cat-arbol li {
-    list-style:none !important;
-    margin:0 !important;
-}
-
-.cat-lista {
-    margin:0 !important;
-    padding:0 !important;
+/* Ocultamos solamente el título y separadores
+   originales del filtro */
+.products-feed__filter > .products-feed__filter-title,
+.products-feed__filter > hr {
+    display: none !important;
 }
 
 
-/* ==========================================================
-   CATEGORÍAS PRINCIPALES
-   ========================================================== */
+/* =========================================================
+   CATEGORIAS PRINCIPALES
+   ========================================================= */
 
-.cat-lista > .cat-rama > .cat-cabeza {
+.products-feed__categories-list.cat-arbol-lista > .cat-rama {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
-    display:flex;
 
-    align-items:center;
+/* Encabezado */
+.products-feed__categories-list.cat-arbol-lista .cat-cabeza {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
 
-    justify-content:space-between;
+    min-height: 38px;
 
-    gap:8px;
+    margin: 0;
+    padding: 7px 3px;
 
-    width:100%;
+    border-bottom: 1px solid rgba(53,53,53,.25);
 
-    box-sizing:border-box;
-
-    padding:7px 0;
-
-    border-bottom:
-        1px solid rgba(53,53,53,.25);
-
-    cursor:pointer;
+    cursor: pointer;
 
     transition:
-        padding .20s ease,
-        background .20s ease;
-
-}
-
-.cat-lista > .cat-rama > .cat-cabeza:hover {
-
-    padding-left:5px;
-    padding-right:5px;
-
+        background .20s ease,
+        padding-left .20s ease,
+        border-color .20s ease;
 }
 
 
-/* Título raíz */
+/* Texto categoría */
+.products-feed__categories-list.cat-arbol-lista .cat-cabeza > a {
+    flex: 1;
 
-.cat-lista > .cat-rama > .cat-cabeza a {
+    color: #353535 !important;
 
-    flex:1;
+    font-weight: 700;
+    font-size: .86rem;
 
-    color:#353535 !important;
+    line-height: 1.2;
 
-    font-weight:700;
-
-    text-transform:uppercase;
-
-    text-decoration:none !important;
-
-}
-
-
-/* ==========================================================
-   FLECHA
-   ========================================================== */
-
-.cat-cabeza .flechita {
-
-    display:inline-block;
-
-    color:#353535;
-
-    font-size:.72rem;
-
-    line-height:1;
-
-    flex-shrink:0;
+    text-transform: uppercase;
+    text-decoration: none !important;
 
     transition:
-        transform .30s ease;
-
+        transform .20s ease,
+        opacity .20s ease;
 }
 
+
+/* Hover categoría */
+.products-feed__categories-list.cat-arbol-lista .cat-cabeza:hover {
+    padding-left: 7px;
+    border-color: rgba(53,53,53,.5);
+}
+
+.products-feed__categories-list.cat-arbol-lista .cat-cabeza:hover > a {
+    transform: translateX(2px);
+    opacity: .78;
+}
+
+
+/* =========================================================
+   FLECHAS
+   ========================================================= */
+
+.products-feed__categories-list.cat-arbol-lista .flechita {
+    flex: 0 0 auto;
+
+    font-size: .68rem;
+
+    line-height: 1;
+
+    transition:
+        transform .28s ease,
+        opacity .20s ease;
+}
+
+.products-feed__categories-list.cat-arbol-lista
 .cat-abierta > .cat-cabeza .flechita {
-
-    transform:rotate(180deg);
-
+    transform: rotate(180deg);
 }
 
 
-/* ==========================================================
-   HIJOS
-   ========================================================== */
+/* =========================================================
+   SUBCATEGORIAS
+   ========================================================= */
 
-.cat-hijos {
+.products-feed__categories-list.cat-arbol-lista .cat-hijos {
+    list-style: none !important;
 
-    list-style:none !important;
+    margin: 0 !important;
+    padding: 0 0 0 5px !important;
 
-    margin:0 !important;
+    max-height: 0;
 
-    padding:
-        0 0 0 5px !important;
+    overflow: hidden;
 
-    max-height:0;
-
-    overflow:hidden;
-
-    opacity:0;
+    opacity: 0;
 
     transition:
         max-height .35s ease,
         opacity .25s ease;
-
-}
-
-.cat-abierta > .cat-hijos {
-
-    max-height:12000px;
-
-    opacity:1;
-
 }
 
 
-/* ==========================================================
-   BOTONES — CATEGORÍAS FINALES
-   ========================================================== */
+/* Rama abierta */
+.products-feed__categories-list.cat-arbol-lista
+.cat-rama.cat-abierta > .cat-hijos {
+    max-height: 10000px;
+    opacity: 1;
+}
 
-.cat-hijos > li:not(.cat-rama) > a {
 
-    display:block;
+/* =========================================================
+   BOTONES / HOJAS
+   ========================================================= */
 
-    box-sizing:border-box;
+.products-feed__categories-list.cat-arbol-lista
+.cat-hoja {
+    list-style: none !important;
 
-    width:100%;
+    margin: 3px 0 !important;
+    padding: 0 !important;
+}
 
-    margin:3px 0;
 
-    padding:6px 10px;
+.products-feed__categories-list.cat-arbol-lista
+.cat-hoja > a {
 
-    border-radius:8px;
+    display: block;
 
-    background:#fff;
+    margin: 3px 0;
+    padding: 7px 10px;
 
-    color:#353535 !important;
+    border-radius: 8px;
 
-    font-size:.82rem;
+    background: #fff;
 
-    line-height:1.2;
+    color: #353535 !important;
 
-    text-decoration:none !important;
+    font-size: .79rem;
+    line-height: 1.25;
+
+    text-decoration: none !important;
 
     box-shadow:
-        0 1px 3px rgba(0,0,0,.10);
+        0 1px 2px rgba(0,0,0,.08);
+
+    transform: translateX(0);
 
     transition:
         transform .20s ease,
         box-shadow .20s ease,
-        padding-left .20s ease,
-        opacity .20s ease;
-
+        background .20s ease,
+        padding-left .20s ease;
 }
 
 
-/* Hover animado */
+/* Hover de botones */
+.products-feed__categories-list.cat-arbol-lista
+.cat-hoja > a:hover {
 
-.cat-hijos > li:not(.cat-rama) > a:hover {
+    transform: translateX(4px);
 
-    transform:translateX(4px);
-
-    padding-left:14px;
+    padding-left: 14px;
 
     box-shadow:
-        0 4px 10px rgba(0,0,0,.15);
+        0 3px 8px rgba(0,0,0,.13);
 
+    background: #fff;
+
+    opacity: .88;
 }
 
 
-/* ==========================================================
-   RAMAS INTERMEDIAS
-   DC / MARVEL / TORNASOL / ETC.
-   ========================================================== */
+/* =========================================================
+   SUBCATEGORIAS QUE TAMBIEN TIENEN HIJOS
+   Ejemplo:
+   UNIVERSO
+      DC
+         BATMAN
+   ========================================================= */
 
-.cat-hijos > .cat-rama > .cat-cabeza {
+.products-feed__categories-list.cat-arbol-lista
+.cat-subcabeza {
 
-    display:flex;
+    margin-top: 2px;
 
-    align-items:center;
+    padding-left: 8px;
 
-    justify-content:space-between;
+    min-height: 34px;
 
-    gap:7px;
+    border-bottom: 0;
 
-    box-sizing:border-box;
-
-    width:100%;
-
-    margin:3px 0;
-
-    padding:6px 10px;
-
-    border:0;
-
-    border-radius:8px;
-
-    background:#fff;
-
-    box-shadow:
-        0 1px 3px rgba(0,0,0,.10);
-
-    cursor:pointer;
+    border-radius: 7px;
 
     transition:
-        transform .20s ease,
-        box-shadow .20s ease,
-        background .20s ease;
-
+        background .20s ease,
+        padding-left .20s ease;
 }
 
 
-/* Hover de botón */
+.products-feed__categories-list.cat-arbol-lista
+.cat-subcabeza > a {
 
-.cat-hijos > .cat-rama > .cat-cabeza:hover {
-
-    transform:translateX(4px);
-
-    box-shadow:
-        0 4px 10px rgba(0,0,0,.15);
-
+    font-size: .78rem;
 }
 
 
-/* Texto de botón */
+.products-feed__categories-list.cat-arbol-lista
+.cat-subcabeza:hover {
 
-.cat-hijos > .cat-rama > .cat-cabeza a {
+    padding-left: 12px;
 
-    flex:1;
-
-    color:#353535 !important;
-
-    font-size:.82rem;
-
-    font-weight:500;
-
-    line-height:1.2;
-
-    text-decoration:none !important;
-
-    text-transform:none;
-
+    background: rgba(255,255,255,.55);
 }
 
 
-/* ==========================================================
-   FLECHA DE SUB-RAMA
-   ========================================================== */
+/* =========================================================
+   NIVELES PROFUNDOS
+   ========================================================= */
 
-.cat-hijos > .cat-rama > .cat-cabeza .flechita {
+.products-feed__categories-list.cat-arbol-lista
+.nivel-2 {
+    padding-left: 8px !important;
+}
 
-    font-size:.62rem;
+.products-feed__categories-list.cat-arbol-lista
+.nivel-3 {
+    padding-left: 8px !important;
+}
 
+.products-feed__categories-list.cat-arbol-lista
+.nivel-4 {
+    padding-left: 8px !important;
 }
 
 
-/* ==========================================================
-   NIVEL 3
-   ========================================================== */
+/* =========================================================
+   CATEGORIAS SIN HIJOS
+   ========================================================= */
 
-.cat-hijos .cat-hijos {
+.products-feed__categories-list.cat-arbol-lista
+.cat-sin-hijos > .cat-cabeza {
 
-    padding-left:7px !important;
-
+    cursor: pointer;
 }
 
 
-.cat-hijos .cat-hijos > li:not(.cat-rama) > a {
+/* =========================================================
+   ANIMACION SUAVE DE APERTURA
+   ========================================================= */
 
-    font-size:.77rem;
-
-    padding:
-        6px 9px;
-
+.products-feed__categories-list.cat-arbol-lista
+.cat-rama > .cat-hijos {
+    will-change: max-height, opacity;
 }
 
 
-.cat-hijos .cat-hijos > .cat-rama > .cat-cabeza {
+/* =========================================================
+   EVITAR QUE EL LISTADO NATIVO DEL FOOTER SE ALTERE
+   ========================================================= */
 
-    padding:
-        6px 9px;
-
-}
-
-
-.cat-hijos .cat-hijos > .cat-rama > .cat-cabeza a {
-
-    font-size:.77rem;
-
-}
-
-
-/* ==========================================================
-   RAMA ABIERTA
-   ========================================================== */
-
-.cat-rama.cat-abierta >
-.cat-cabeza {
-
-    box-shadow:
-        0 3px 8px rgba(0,0,0,.12);
-
-}
-
-
-/* ==========================================================
-   OCULTAR NATIVO
-   ========================================================== */
-
-.products-feed__filter >
-.products-feed__filter-title,
-
-.products-feed__filter > hr,
-
-.products-feed__filter >
-.products-feed__categories-list {
-
-    display:none !important;
-
-}
-
-`;
-
-
-    var style = document.createElement('style');
-
-    style.id =
-        'arbol-categorias-css-final';
-
-    style.type =
-        'text/css';
-
-    style.appendChild(
-        document.createTextNode(css)
-    );
-
-    document.head.appendChild(style);
-
-})();
-</script>
+/*
+   No tocamos:
+   .products-feed__categories-list
+   que esté fuera de .products-feed__filter
+*/
+</style>
