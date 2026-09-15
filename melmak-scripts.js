@@ -115,239 +115,257 @@
     ];
 
     function normalize(path) {
-        return path.replace(/\/+$/, '') || '/';
+        return path
+            .split('?')[0]
+            .split('#')[0]
+            .replace(/\/+$/, '') || '/';
     }
 
-    function findMenuRootItem(path) {
-
-        const anchors = document.querySelectorAll(
-            '.desktop-list__menu a[href]'
-        );
-
-        for (const a of anchors) {
-
-            const url = new URL(
-                a.href,
-                window.location.origin
+    function getPath(anchor) {
+        try {
+            return normalize(
+                new URL(anchor.href, window.location.origin).pathname
             );
+        } catch (e) {
+            return '';
+        }
+    }
 
-            if (normalize(url.pathname) !== path) {
+    /*
+     * Busca el <li> RAÍZ real dentro del menú superior.
+     *
+     * No usamos closest() para subir arbitrariamente.
+     * Buscamos el enlace exacto y después subimos hasta
+     * encontrar el <li> que pertenece directamente al
+     * primer <ul> del menú.
+     */
+    function findRootLI(path) {
+
+        const menu = document.querySelector('.desktop-list__menu');
+
+        if (!menu) {
+            return null;
+        }
+
+        const anchors = menu.querySelectorAll('a[href]');
+
+        for (const anchor of anchors) {
+
+            if (getPath(anchor) !== path) {
+                continue;
+            }
+
+            let li = anchor.closest('li');
+
+            if (!li) {
                 continue;
             }
 
             /*
-             * Subimos hasta encontrar el <li> que representa
-             * la categoría completa del menú.
+             * Subimos hasta que el UL padre sea el UL
+             * principal del menú.
              */
-            let li = a.closest('li');
+            while (li.parentElement) {
 
-            if (!li) continue;
+                const parent = li.parentElement;
 
-            /*
-             * Para una categoría raíz queremos el <li>
-             * cuyo enlace es el encabezado de esa categoría.
-             */
-            while (
-                li.parentElement &&
-                li.parentElement.closest('.desktop-list__menu')
-            ) {
+                if (
+                    parent.matches('ul') &&
+                    parent.closest('.desktop-list__menu') === menu
+                ) {
+                    return li;
+                }
 
-                const parentLi = li.parentElement.closest('li');
+                const parentLI = parent.closest('li');
 
-                if (!parentLi) break;
-
-                const parentAnchor =
-                    parentLi.querySelector(':scope > a[href]');
-
-                /*
-                 * Si el enlace directo del li padre tiene
-                 * otra URL, ya llegamos al nodo correcto.
-                 */
-                if (!parentAnchor) break;
-
-                const parentUrl = new URL(
-                    parentAnchor.href,
-                    window.location.origin
-                );
-
-                const parentPath =
-                    normalize(parentUrl.pathname);
-
-                /*
-                 * Si el padre no tiene una de nuestras raíces,
-                 * dejamos de subir.
-                 */
-                if (ROOTS.includes(parentPath)) {
-                    li = parentLi;
-                } else {
+                if (!parentLI) {
                     break;
                 }
-            }
 
-            return li;
+                li = parentLI;
+            }
         }
 
         return null;
     }
 
-    function buildSidebar() {
 
-        const sidebar = document.querySelector('.cat-arbol');
+    /*
+     * Convierte el elemento clonado del menú superior
+     * en un elemento del árbol lateral.
+     */
+    function prepareTree(rootLI) {
 
-        if (!sidebar) return false;
-
-        const menu = document.querySelector('.desktop-list__menu');
-
-        if (!menu) return false;
-
-        /*
-         * Evitar doble ejecución.
-         */
-        if (sidebar.dataset.clonadoDesdeMenu === '1') {
-            return true;
-        }
-
-        const newList = document.createElement('ul');
+        rootLI.classList.add('cat-rama');
 
         /*
-         * Mismo formato que usa tu árbol lateral.
+         * Todas las listas descendientes pasan a ser
+         * listas de hijos del árbol.
          */
-        newList.className = 'cat-raices';
+        rootLI.querySelectorAll('ul').forEach(function (ul) {
+            ul.classList.add('cat-hijos');
+        });
 
-        let encontrados = 0;
 
-        ROOTS.forEach(function (path) {
+        /*
+         * Creamos el encabezado con la flecha solamente
+         * para elementos que realmente tienen hijos DIRECTOS.
+         */
+        rootLI.querySelectorAll('li').forEach(function (li) {
 
-            const original = findMenuRootItem(path);
+            const directLink = li.querySelector(':scope > a[href]');
+            const directUL = li.querySelector(':scope > ul');
 
-            if (!original) {
-                console.warn(
-                    '[Categorias] No encontrada:',
-                    path
-                );
+            if (!directLink || !directUL) {
                 return;
             }
 
+            let header = li.querySelector(':scope > .cat-cabeza');
+
+            if (!header) {
+
+                header = document.createElement('div');
+                header.className = 'cat-cabeza';
+
+                directLink.parentNode.insertBefore(
+                    header,
+                    directLink
+                );
+
+                header.appendChild(directLink);
+            }
+
             /*
-             * Clonamos TODO el árbol de esa categoría:
-             *
-             * categoría
-             * ├─ subcategoría
-             * ├─ subcategoría
-             * └─ subcategoría
-             *
-             * incluyendo niveles posteriores.
+             * No duplicar flechas.
+             */
+            if (!header.querySelector(':scope > .flechita')) {
+
+                const arrow = document.createElement('span');
+
+                arrow.className = 'flechita';
+                arrow.textContent = '▼';
+
+                header.appendChild(arrow);
+            }
+        });
+
+
+        /*
+         * IMPORTANTE:
+         * Eliminamos la segunda MUSICA-PORTADAS que está
+         * dentro de MAS CATEGORIAS.
+         *
+         * La raíz /musica-portadas queda intacta.
+         */
+        rootLI.querySelectorAll('a[href]').forEach(function (a) {
+
+            const path = getPath(a);
+
+            if (
+                path === '/mas-categorias-actualizando/musica-portadas'
+            ) {
+                const li = a.closest('li');
+
+                if (li) {
+                    li.remove();
+                }
+            }
+        });
+    }
+
+
+    function buildSidebar() {
+
+        const sidebar = document.querySelector('.cat-arbol');
+        const menu = document.querySelector('.desktop-list__menu');
+
+        if (!sidebar || !menu) {
+            return false;
+        }
+
+
+        /*
+         * Si ya construimos el árbol, no volver a hacerlo.
+         */
+        if (sidebar.dataset.menuTreeReady === '1') {
+            return true;
+        }
+
+
+        const newList = document.createElement('ul');
+
+        newList.className = 'cat-raices';
+
+
+        let found = 0;
+
+
+        ROOTS.forEach(function (path) {
+
+            const original = findRootLI(path);
+
+            if (!original) {
+
+                console.warn(
+                    '[Categorias] No se encontró raíz:',
+                    path
+                );
+
+                return;
+            }
+
+
+            /*
+             * Clonamos únicamente el <li> raíz correcto.
+             * Todo su árbol interno viene con él.
              */
             const clone = original.cloneNode(true);
 
-            /*
-             * Adaptamos las clases al árbol lateral.
-             */
-            adaptarClases(clone);
+            prepareTree(clone);
 
             newList.appendChild(clone);
 
-            encontrados++;
+            found++;
         });
 
+
         /*
-         * Sólo reemplazar si conseguimos las categorías.
+         * No destruir el sidebar si Empretienda todavía
+         * no terminó de cargar el menú.
          */
-        if (encontrados !== ROOTS.length) {
+        if (found !== ROOTS.length) {
+
             console.warn(
-                '[Categorias] Sólo se encontraron',
-                encontrados,
-                'de',
-                ROOTS.length
+                '[Categorias] Árbol incompleto:',
+                found + '/' + ROOTS.length
             );
 
             return false;
         }
 
+
+        /*
+         * Reemplazamos el contenido anterior.
+         */
         sidebar.innerHTML = '';
+
         sidebar.appendChild(newList);
 
-        sidebar.dataset.clonadoDesdeMenu = '1';
+        sidebar.dataset.menuTreeReady = '1';
+
 
         console.log(
-            '[Categorias] Sidebar reconstruido correctamente'
+            '[Categorias] Árbol lateral reconstruido:',
+            found + ' raíces'
         );
+
 
         return true;
     }
 
-    function adaptarClases(elemento) {
-
-        /*
-         * Convertimos las clases del menú superior
-         * en las clases que usa tu árbol lateral.
-         */
-
-        elemento.classList.add('cat-rama');
-
-        const nestedLists =
-            elemento.querySelectorAll('ul');
-
-        nestedLists.forEach(function (ul) {
-            ul.classList.add('cat-hijos');
-        });
-
-        /*
-         * Agregar flechas a categorías que tienen hijos.
-         */
-        elemento.querySelectorAll('li').forEach(function (li) {
-
-            const enlace = li.querySelector(':scope > a');
-
-            if (!enlace) return;
-
-            const tieneHijos =
-                li.querySelector(':scope > ul');
-
-            if (!tieneHijos) return;
-
-            /*
-             * El menú superior no necesita nuestra flechita,
-             * pero el sidebar sí.
-             */
-            let cabeza =
-                li.querySelector(':scope > .cat-cabeza');
-
-            if (!cabeza) {
-
-                cabeza =
-                    document.createElement('div');
-
-                cabeza.className = 'cat-cabeza';
-
-                enlace.parentNode.insertBefore(
-                    cabeza,
-                    enlace
-                );
-
-                cabeza.appendChild(enlace);
-            }
-
-            if (
-                !cabeza.querySelector(
-                    ':scope > .flechita'
-                )
-            ) {
-
-                const flecha =
-                    document.createElement('span');
-
-                flecha.className = 'flechita';
-                flecha.textContent = '▼';
-
-                cabeza.appendChild(flecha);
-            }
-        });
-    }
 
     /*
-     * Empretienda puede insertar el menú después del
-     * primer evento de carga.
+     * Empretienda puede cargar el menú después.
      */
     let attempts = 0;
 
@@ -357,14 +375,23 @@
 
         if (buildSidebar()) {
             clearInterval(timer);
+            return;
         }
 
-        if (attempts >= 40) {
+        if (attempts >= 80) {
             clearInterval(timer);
+
+            console.warn(
+                '[Categorias] Se agotaron los intentos de carga.'
+            );
         }
 
     }, 250);
 
+
+    /*
+     * Intento inmediato.
+     */
     buildSidebar();
 
 })();
