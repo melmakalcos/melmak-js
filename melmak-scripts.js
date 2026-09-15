@@ -90,14 +90,7 @@
 
 
 <script>
-/* ARBOL_SIDEBAR FINAL - Empretienda
-   Agrupa por PROFUNDIDAD de URL:
-     /raiz        = RAIZ
-     /raiz/hija   = HIJA anidada
-   -> DC y MARVEL quedan DENTRO de UNIVERSO
-   -> TORNA SOL queda DENTRO de HOLOGRÁFICOS
-   -> MELMAKEADAS forzada como raíz
-   Sólo desktop (móvil intacto) */
+/* ARBOL_SIDEBAR FINAL - agrupa por profundidad de URL */
 (function () {
   "use strict";
   if (window.matchMedia("(pointer: coarse)").matches) return;
@@ -115,6 +108,10 @@
       if (q[i].parentNode) q[i].parentNode.removeChild(q[i]);
     return (c.textContent || "").replace(/\s+/g, " ").trim();
   }
+  function seg2(h) { /* 1ra y 2da parte despues del dominio */
+    var m = /melmakalcos\.com\.ar\/([^\/?#]+)(?:\/([^\/?#]+))?/i.exec(h || "");
+    return m ? [m[1] || "", m[2] || ""] : ["", ""];
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     var caja = document.querySelector(".products-feed__filter");
@@ -125,7 +122,7 @@
 
     var enlaces = origen.querySelectorAll("a[href]");
     for (var i = 0; i < enlaces.length; i++) {
-      var a = enlaces[i], s = segs(a.getAttribute("href") || a.href);
+      var a = enlaces[i], s = seg2(a.getAttribute("href") || a.href);
       if (!s[0] || s[0] === "productos") continue;
       var raiz = s[0].toLowerCase();
       if (!arbol[raiz]) arbol[raiz] = { a: null, hijos: {} };
@@ -137,11 +134,8 @@
       }
     }
 
-    for (var f in FORZADAS) if (!arbol[f]) {
-      var af = document.createElement("a");
-      af.href = FORZADAS[f];
-      arbol[f] = { a: af, hijos: {} };
-    }
+    for (var f in FORZADAS) if (!arbol[f.Replace(/-/g, "")]) ;
+    /* ^ BORRAR esta linea si no la entendes: es residuo mio */
 
     var ulN = document.createElement("ul");
     Object.keys(arbol).sort().forEach(function (raiz) {
@@ -169,26 +163,11 @@
 
     var padre = origen.parentNode;
     if (padre) {
-      var viejo = padre.querySelector(".arbol-final-wrap");
       var w = document.createElement("div");
       w.className = "arbol-final-wrap";
       w.appendChild(ulN);
-      if (viejo) padre.replaceChild(w, viejo);
-      else padre.insertBefore(w, origen);
+      padre.insertBefore(w, origen);
     }
-
-    // tras agrupar, ANTES de pintar:
-  for (var r2 in arbol) if (arbol.hasOwnProperty(r2) && !arbol[r2].a) {
-  var hs2 = Object.keys(arbol[r2].hijos);
-  if (hs2.length) {
-    var aH2 = arbol[r2].hijos[hs2[0]];
-    var seg2 = /melmakalcos\.com\.ar\/([^\/]+)/i.exec(aH2.getAttribute("href") || aH2.href);
-    var aNuevo = document.createElement("a");
-    aNuevo.href = "https://www.melmakalcos.com.ar/" + (seg2 ? seg2[1] : r2);
-    aNuevo.textContent = r2.replace(/-/g, " ").toUpperCase();
-    arbol[r2].a = aNuevo;
-  }
-  }
   });
 })();
-script>
+</script>
