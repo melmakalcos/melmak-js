@@ -90,129 +90,149 @@
 <script>
 (function () {
 
-    const ROOTS = [
-        '/animados',
-        '/animanga',
-        '/cine-y-tv',
-        '/color',
-        '/dragon-ball',
-        '/harry-potter',
-        '/melmakeadas',
-        '/musica',
-        '/musica-portadas',
-        '/pokemon-todos',
-        '/star-wars',
-        '/simpsons',
-        '/universo',
-        '/zapas-todas',
-        '/mas-categorias-actualizando',
-        '/stickers-portadas',
-        '/holograficos',
-        '/mayorista',
-        '/personalizados',
-        '/packs'
-    ];
+    function construirArbol() {
 
-    function normalize(path) {
-        return path.replace(/\/+$/, '') || '/';
-    }
+        const sidebar = document.querySelector('.cat-arbol');
 
-    /*
-     * Busca una categoría directamente en el menú superior.
-     *
-     * NO usamos .desktop-list__menu porque comprobamos
-     * que el menú real contiene:
-     *
-     * .desktop-list-link__text
-     * .desktop-list__subitem
-     */
-    function findRootItem(path) {
-
-        const links = document.querySelectorAll(
-            'a.desktop-list-link__text[href]'
-        );
-
-        for (const link of links) {
-
-            let url;
-
-            try {
-                url = new URL(
-                    link.href,
-                    window.location.origin
-                );
-            } catch (e) {
-                continue;
-            }
-
-            if (normalize(url.pathname) !== path) {
-                continue;
-            }
-
-            const li = link.closest('li');
-
-            if (!li) {
-                continue;
-            }
-
-            return li;
+        if (!sidebar) {
+            return false;
         }
 
-        return null;
-    }
+        /*
+         * MENÚ REAL DE EMPRETIENDA
+         */
+        const menu = document.querySelector(
+            'ul.header-menu__desktop-list'
+        );
 
-    /*
-     * Convierte la estructura original del menú
-     * en la estructura que utiliza nuestro árbol amarillo.
-     */
-    function adaptarClases(root) {
-
-        root.classList.add('cat-rama');
+        if (!menu) {
+            console.warn(
+                '[Categorias] No encuentro el menú superior.'
+            );
+            return false;
+        }
 
         /*
-         * Todas las listas UL que vienen dentro
-         * del elemento original pasan a ser hijos.
+         * Tomamos solamente los LI que son hijos directos
+         * del menú principal.
+         *
+         * Esto evita que DC, MARVEL, TORNASOL, etc.
+         * sean tratados como categorías raíz.
          */
-        root.querySelectorAll('ul').forEach(function (ul) {
-            ul.classList.add('cat-hijos');
+        const raices = [
+            ...menu.querySelectorAll(':scope > li')
+        ];
+
+        if (!raices.length) {
+            console.warn(
+                '[Categorias] El menú existe pero no tiene raíces.'
+            );
+            return false;
+        }
+
+        console.log(
+            '[Categorias] Raíces encontradas:',
+            raices.length
+        );
+
+        /*
+         * Creamos un árbol completamente nuevo.
+         */
+        const lista = document.createElement('ul');
+
+        lista.className = 'cat-raices';
+
+        /*
+         * Clonamos cada categoría raíz completa.
+         */
+        raices.forEach(function (original) {
+
+            const copia =
+                original.cloneNode(true);
+
+            prepararArbol(copia);
+
+            lista.appendChild(copia);
         });
 
         /*
-         * A cada LI que tenga un UL hijo le ponemos
-         * su encabezado + flecha.
+         * Reemplazamos el contenido viejo.
          */
-        root.querySelectorAll('li').forEach(function (li) {
+        sidebar.innerHTML = '';
 
-            const link = li.querySelector(':scope > a');
+        sidebar.appendChild(lista);
 
-            if (!link) {
+        sidebar.dataset.clonadoDesdeMenu = '1';
+
+        console.log(
+            '[Categorias] NAVEGADOR AMARILLO ACTUALIZADO DESDE EL MENÚ REAL.'
+        );
+
+        return true;
+    }
+
+
+    function prepararArbol(elemento) {
+
+        elemento.classList.add('cat-rama');
+
+        /*
+         * Las listas internas del menú superior
+         * pasan a ser listas de hijos.
+         */
+        elemento.querySelectorAll('ul').forEach(function (ul) {
+
+            ul.classList.add('cat-hijos');
+
+        });
+
+
+        /*
+         * Para cada LI que tenga hijos:
+         *
+         * ENLACE + FLECHA
+         */
+        elemento.querySelectorAll('li').forEach(function (li) {
+
+            const enlace =
+                li.querySelector(':scope > a');
+
+            const hijos =
+                li.querySelector(':scope > ul');
+
+            if (!enlace || !hijos) {
                 return;
             }
 
-            const hijos = li.querySelector(':scope > ul');
 
-            if (!hijos) {
-                return;
-            }
-
+            /*
+             * Creamos el encabezado solamente una vez.
+             */
             let cabeza =
-                li.querySelector(':scope > .cat-cabeza');
+                li.querySelector(
+                    ':scope > .cat-cabeza'
+                );
 
             if (!cabeza) {
 
                 cabeza =
                     document.createElement('div');
 
-                cabeza.className = 'cat-cabeza';
+                cabeza.className =
+                    'cat-cabeza';
 
-                link.parentNode.insertBefore(
+                enlace.parentNode.insertBefore(
                     cabeza,
-                    link
+                    enlace
                 );
 
-                cabeza.appendChild(link);
+                cabeza.appendChild(enlace);
             }
 
+
+            /*
+             * Flecha
+             */
             if (
                 !cabeza.querySelector(
                     ':scope > .flechita'
@@ -222,144 +242,68 @@
                 const flecha =
                     document.createElement('span');
 
-                flecha.className = 'flechita';
+                flecha.className =
+                    'flechita';
 
                 flecha.textContent = '▼';
 
                 cabeza.appendChild(flecha);
             }
-        });
-    }
 
-    function construirSidebar() {
-
-        const sidebar =
-            document.querySelector('.cat-arbol');
-
-        if (!sidebar) {
-            return false;
-        }
-
-        /*
-         * Si ya fue construido, no lo volvemos a hacer.
-         */
-        if (
-            sidebar.dataset.clonadoDesdeMenu === '1'
-        ) {
-            return true;
-        }
-
-        const nuevaLista =
-            document.createElement('ul');
-
-        nuevaLista.className =
-            'cat-raices';
-
-        let encontrados = 0;
-
-        ROOTS.forEach(function (path) {
-
-            const original =
-                findRootItem(path);
-
-            if (!original) {
-
-                console.warn(
-                    '[Categorias] No encontrada:',
-                    path
-                );
-
-                return;
-            }
-
-            /*
-             * CLONAMOS EL LI COMPLETO.
-             *
-             * Esto es fundamental:
-             *
-             * UNIVERSO
-             *   └─ DC
-             *      ├─ BATICHICA
-             *      ├─ BATMAN-JOKER
-             *      └─ ...
-             *
-             * se conserva exactamente como está
-             * en el menú superior.
-             */
-            const copia =
-                original.cloneNode(true);
-
-            adaptarClases(copia);
-
-            nuevaLista.appendChild(copia);
-
-            encontrados++;
         });
 
-        /*
-         * No reemplazamos el árbol si no encontramos
-         * las 20 categorías. Así evitamos dejarlo vacío
-         * por un problema momentáneo de carga.
-         */
-        if (encontrados !== ROOTS.length) {
-
-            console.warn(
-                '[Categorias] Encontradas',
-                encontrados,
-                'de',
-                ROOTS.length,
-                'categorías raíz.'
-            );
-
-            return false;
-        }
-
-        sidebar.innerHTML = '';
-
-        sidebar.appendChild(nuevaLista);
-
-        sidebar.dataset.clonadoDesdeMenu = '1';
-
-        console.log(
-            '[Categorias] Árbol amarillo reconstruido desde el menú superior.'
-        );
-
-        return true;
     }
+
 
     /*
-     * Empretienda carga parte del menú después de
-     * cargar la página, por eso esperamos.
+     * Esperamos porque Empretienda construye
+     * el menú después de cargar parte del DOM.
      */
     let intentos = 0;
 
-    const timer =
-        setInterval(function () {
+    const timer = setInterval(function () {
 
-            intentos++;
+        intentos++;
 
-            if (construirSidebar()) {
+        /*
+         * Si ya lo construimos, terminamos.
+         */
+        const sidebar =
+            document.querySelector('.cat-arbol');
 
-                clearInterval(timer);
+        if (
+            sidebar &&
+            sidebar.dataset.clonadoDesdeMenu === '1'
+        ) {
+            clearInterval(timer);
+            return;
+        }
 
-                return;
-            }
 
-            if (intentos >= 80) {
+        if (construirArbol()) {
 
-                clearInterval(timer);
+            clearInterval(timer);
 
-                console.warn(
-                    '[Categorias] Se agotaron los intentos de carga.'
-                );
-            }
+            return;
+        }
 
-        }, 250);
+
+        if (intentos >= 80) {
+
+            clearInterval(timer);
+
+            console.warn(
+                '[Categorias] No se pudo construir el árbol.'
+            );
+        }
+
+    }, 250);
+
 
     /*
-     * También probamos inmediatamente.
+     * Intento inmediato.
      */
-    construirSidebar();
+    construirArbol();
 
 })();
 </script>
