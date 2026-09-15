@@ -87,48 +87,626 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
+<script>
 (function () {
 
-    const textos = [
-        'UNIVERSO',
-        'DC',
-        'TORNASOL'
+    const ROOT_ORDER = [
+        '/animados',
+        '/animanga',
+        '/cine-y-tv',
+        '/color',
+        '/dragon-ball',
+        '/harry-potter',
+        '/melmakeadas',
+        '/musica',
+        '/musica-portadas',
+        '/pokemon-todos',
+        '/star-wars',
+        '/simpsons',
+        '/universo',
+        '/zapas-todas',
+        '/mas-categorias-actualizando',
+        '/stickers-portadas',
+        '/holograficos',
+        '/mayorista',
+        '/personalizados',
+        '/packs'
     ];
 
-    textos.forEach(function (texto) {
+    function normalize(path) {
 
-        console.log('\n==============================');
-        console.log('BUSCANDO:', texto);
-        console.log('==============================');
+        if (!path) {
+            return '/';
+        }
 
-        const elementos = [...document.querySelectorAll('*')]
-            .filter(el =>
-                el.children.length === 0 &&
-                el.textContent.trim().toUpperCase() === texto
+        return path
+            .split('?')[0]
+            .split('#')[0]
+            .replace(/\/+$/, '') || '/';
+    }
+
+
+    function getPath(link) {
+
+        try {
+
+            return normalize(
+                new URL(
+                    link.href,
+                    window.location.origin
+                ).pathname
             );
 
-        elementos.forEach(function (el, i) {
+        } catch (e) {
 
-            console.log('\nELEMENTO', i + 1, el);
+            return null;
 
-            let padre = el;
+        }
+    }
 
-            for (let nivel = 1; nivel <= 6; nivel++) {
 
-                padre = padre.parentElement;
+    /*
+     * Busca el menú real de Empretienda.
+     */
+    function obtenerMenu() {
 
-                if (!padre) break;
+        return document.querySelector(
+            'ul.header-menu__desktop-list'
+        );
 
-                console.log(
-                    'NIVEL ' + nivel + ':',
-                    padre.tagName,
-                    padre.className,
-                    padre
-                );
+    }
+
+
+    /*
+     * Extrae TODOS los enlaces de categorías del menú.
+     *
+     * No utilizamos .cat-arbol.
+     * No utilizamos la lista vieja.
+     */
+    function obtenerCategorias() {
+
+        const menu = obtenerMenu();
+
+        if (!menu) {
+
+            console.warn(
+                '[Categorias] No se encontró header-menu__desktop-list'
+            );
+
+            return [];
+
+        }
+
+
+        const enlaces = [
+            ...menu.querySelectorAll('a[href]')
+        ];
+
+
+        const categorias = [];
+
+
+        enlaces.forEach(function (link) {
+
+            const path = getPath(link);
+
+            if (!path || path === '/') {
+                return;
             }
+
+
+            const texto =
+                link.textContent
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+
+            if (!texto) {
+                return;
+            }
+
+
+            /*
+             * Evitamos duplicados.
+             */
+            if (
+                categorias.some(
+                    x => x.path === path
+                )
+            ) {
+                return;
+            }
+
+
+            categorias.push({
+                path: path,
+                texto: texto,
+                link: link
+            });
 
         });
 
-    });
+
+        return categorias;
+
+    }
+
+
+    /*
+     * Construye un índice por URL.
+     */
+    function crearIndice(categorias) {
+
+        const indice = {};
+
+        categorias.forEach(function (categoria) {
+
+            indice[categoria.path] =
+                categoria;
+
+        });
+
+        return indice;
+
+    }
+
+
+    /*
+     * Devuelve los segmentos de una URL.
+     *
+     * /universo/dc/batichica
+     *
+     * => ["universo", "dc", "batichica"]
+     */
+    function segmentos(path) {
+
+        return path
+            .replace(/^\/+/, '')
+            .split('/')
+            .filter(Boolean);
+
+    }
+
+
+    /*
+     * Determina el padre REAL según la URL.
+     *
+     * /universo/dc/batichica
+     *        ↓
+     * /universo/dc
+     *
+     * /universo/dc
+     *        ↓
+     * /universo
+     *
+     * /universo
+     *        ↓
+     * raíz
+     */
+    function obtenerPadre(path, indice) {
+
+        const partes = segmentos(path);
+
+
+        if (partes.length <= 1) {
+            return null;
+        }
+
+
+        partes.pop();
+
+
+        const posiblePadre =
+            '/' + partes.join('/');
+
+
+        /*
+         * Solo aceptamos el padre si realmente
+         * existe en el menú.
+         */
+        if (indice[posiblePadre]) {
+            return posiblePadre;
+        }
+
+
+        return null;
+
+    }
+
+
+    /*
+     * Crea un nodo visual.
+     */
+    function crearNodo(categoria) {
+
+        const li =
+            document.createElement('li');
+
+        li.className = 'cat-rama';
+
+
+        const a =
+            document.createElement('a');
+
+        a.href =
+            categoria.link.href;
+
+        a.textContent =
+            categoria.texto;
+
+
+        li.appendChild(a);
+
+
+        return li;
+
+    }
+
+
+    /*
+     * Construye la jerarquía completa.
+     */
+    function construir() {
+
+        const sidebar =
+            document.querySelector('.cat-arbol');
+
+
+        if (!sidebar) {
+
+            return false;
+
+        }
+
+
+        const categorias =
+            obtenerCategorias();
+
+
+        if (!categorias.length) {
+
+            return false;
+
+        }
+
+
+        const indice =
+            crearIndice(categorias);
+
+
+        console.log(
+            '[Categorias] Categorías encontradas:',
+            categorias.length
+        );
+
+
+        /*
+         * Creamos un nodo para cada categoría.
+         */
+        const nodos = {};
+
+
+        categorias.forEach(function (categoria) {
+
+            nodos[categoria.path] =
+                crearNodo(categoria);
+
+        });
+
+
+        /*
+         * Listas de hijos.
+         */
+        const listas = {};
+
+
+        /*
+         * Primero construimos las relaciones
+         * padre → hijo.
+         */
+        categorias.forEach(function (categoria) {
+
+            const padre =
+                obtenerPadre(
+                    categoria.path,
+                    indice
+                );
+
+
+            if (!padre) {
+                return;
+            }
+
+
+            if (!listas[padre]) {
+
+                listas[padre] =
+                    document.createElement('ul');
+
+                listas[padre].className =
+                    'cat-hijos';
+
+            }
+
+
+            listas[padre].appendChild(
+                nodos[categoria.path]
+            );
+
+        });
+
+
+        /*
+         * Agregamos las listas de hijos
+         * a sus respectivos nodos.
+         */
+        Object.keys(listas).forEach(function (path) {
+
+            if (!nodos[path]) {
+                return;
+            }
+
+
+            nodos[path].appendChild(
+                listas[path]
+            );
+
+        });
+
+
+        /*
+         * Creamos encabezados + flechas
+         * para categorías que tienen hijos.
+         */
+        Object.keys(listas).forEach(function (path) {
+
+            const li =
+                nodos[path];
+
+
+            if (!li) {
+                return;
+            }
+
+
+            const enlace =
+                li.querySelector(
+                    ':scope > a'
+                );
+
+
+            if (!enlace) {
+                return;
+            }
+
+
+            const cabeza =
+                document.createElement('div');
+
+            cabeza.className =
+                'cat-cabeza';
+
+
+            cabeza.appendChild(
+                enlace
+            );
+
+
+            const flecha =
+                document.createElement('span');
+
+            flecha.className =
+                'flechita';
+
+            flecha.textContent =
+                '▼';
+
+
+            cabeza.appendChild(
+                flecha
+            );
+
+
+            li.insertBefore(
+                cabeza,
+                li.querySelector(
+                    ':scope > ul'
+                )
+            );
+
+        });
+
+
+        /*
+         * Raíces reales.
+         *
+         * Solo las categorías de primer nivel.
+         */
+        const raices =
+            categorias.filter(function (categoria) {
+
+                return segmentos(
+                    categoria.path
+                ).length === 1;
+
+            });
+
+
+        /*
+         * Ordenamos las raíces según tu orden.
+         */
+        raices.sort(function (a, b) {
+
+            const ia =
+                ROOT_ORDER.indexOf(a.path);
+
+            const ib =
+                ROOT_ORDER.indexOf(b.path);
+
+
+            /*
+             * Las que están en ROOT_ORDER
+             * van primero y en ese orden.
+             */
+            if (ia !== -1 && ib !== -1) {
+                return ia - ib;
+            }
+
+
+            if (ia !== -1) {
+                return -1;
+            }
+
+
+            if (ib !== -1) {
+                return 1;
+            }
+
+
+            /*
+             * Las nuevas categorías que no están
+             * en ROOT_ORDER quedan al final.
+             */
+            return a.texto.localeCompare(
+                b.texto,
+                'es'
+            );
+
+        });
+
+
+        const nuevaLista =
+            document.createElement('ul');
+
+        nuevaLista.className =
+            'cat-raices';
+
+
+        /*
+         * Insertamos las raíces.
+         */
+        raices.forEach(function (categoria) {
+
+            nuevaLista.appendChild(
+                nodos[categoria.path]
+            );
+
+        });
+
+
+        /*
+         * Reemplazamos el árbol anterior.
+         */
+        sidebar.innerHTML = '';
+
+        sidebar.appendChild(
+            nuevaLista
+        );
+
+
+        sidebar.dataset.clonadoDesdeMenu =
+            '1';
+
+
+        console.log(
+            '[Categorias] Árbol reconstruido correctamente.'
+        );
+
+
+        /*
+         * Comprobaciones útiles.
+         */
+        const comprobarDC =
+            document.querySelector(
+                '.cat-arbol a[href$="/universo/dc"]'
+            );
+
+
+        const comprobarMarvel =
+            document.querySelector(
+                '.cat-arbol a[href$="/universo/marvel"]'
+            );
+
+
+        const comprobarTornasol =
+            document.querySelector(
+                '.cat-arbol a[href$="/holograficos/tornasol"]'
+            );
+
+
+        const comprobarNiIdea =
+            document.querySelector(
+                '.cat-arbol a[href$="/ni-idea"]'
+            );
+
+
+        console.log(
+            '[Categorias] DC:',
+            !!comprobarDC
+        );
+
+        console.log(
+            '[Categorias] MARVEL:',
+            !!comprobarMarvel
+        );
+
+        console.log(
+            '[Categorias] TORNASOL:',
+            !!comprobarTornasol
+        );
+
+        console.log(
+            '[Categorias] NI IDEA:',
+            !!comprobarNiIdea
+        );
+
+
+        return true;
+
+    }
+
+
+    /*
+     * Esperamos al menú de Empretienda.
+     */
+    let intentos = 0;
+
+
+    const timer =
+        setInterval(function () {
+
+            intentos++;
+
+
+            if (construir()) {
+
+                clearInterval(timer);
+
+                return;
+
+            }
+
+
+            if (intentos >= 80) {
+
+                clearInterval(timer);
+
+                console.warn(
+                    '[Categorias] No se pudo construir el árbol.'
+                );
+
+                clearInterval(timer);
+
+            }
+
+        }, 250);
+
+
+    /*
+     * Primer intento inmediato.
+     */
+    construir();
+
 
 })();
+</script>
