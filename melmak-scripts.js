@@ -87,7 +87,6 @@
   document.addEventListener('DOMContentLoaded', atar);
 })();
 
-<script>
   /* ARBOL_CATEGORIAS_RECURSIVO */
   (function () {
     function textoLimpio(elemento) {
@@ -314,9 +313,9 @@
       iniciar();
     }
   })();
-</script>
 
-<script>
+
+
   /* ARBOL_CATEGORIAS_CSS */
   (function () {
     var c = [
@@ -353,4 +352,4 @@
 
     document.head.appendChild(s);
   })();
-</script>
+
