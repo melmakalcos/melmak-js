@@ -468,7 +468,7 @@
 
 <!-- Estructura -->
 <div id="floating-mascot">
-  <img src="URL_DE_TU_IMAGEN_ANIMADA.png" alt="Melmak Mascot">
+  <img src="https://d22fxaf9t8d39k.cloudfront.net/369b012771ed0c5f47679a9c4efe0c24bc9156fade92550e4292e508b45355e220700.png" alt="Melmak Mascot">
 </div>
 
 <!-- Lógica de tiempo -->
