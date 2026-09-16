@@ -494,16 +494,11 @@
 (function () {
   const styleRGB_Square = document.createElement('style');
   styleRGB_Square.textContent = /* css */ `
-    /* ==========================================
-       1. CONTENEDOR BASE Y HOVER DESDE PADRES
-       ========================================== */
+    /* Contenedor principal */
     .desktop-list__text,
     .desktop-list__text:hover,
     .desktop-list__text:focus,
-    .desktop-list__text:active,
-    .desktop-list__item:hover .desktop-list__text,
-    .desktop-list__link:hover .desktop-list__text,
-    a:hover .desktop-list__text {
+    .desktop-list__text:active {
       position: relative !important;
       z-index: 1 !important;
       display: inline-block !important;
@@ -515,16 +510,10 @@
       border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      text-decoration: none !important;
     }
 
-    /* ==========================================
-       2. CAPA RGB ROTATORIA (::before)
-       ========================================== */
-    .desktop-list__text::before,
-    .desktop-list__text:hover::before,
-    .desktop-list__item:hover .desktop-list__text::before,
-    .desktop-list__link:hover .desktop-list__text::before {
+    /* Cuadrado rotatorio centrado (Gradiente RGB) */
+    .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
       top: 50% !important;
@@ -538,15 +527,9 @@
       z-index: -2 !important;
     }
 
-    /* ==========================================
-       3. TAPA BLANCA CENTRO (::after)
-       Bloquea cualquier franja o amarillo de Empretienda
-       ========================================== */
+    /* Tapa central blanca (Mantiene el centro limpio en hover) */
     .desktop-list__text::after,
-    .desktop-list__text:hover::after,
-    .desktop-list__item:hover .desktop-list__text::after,
-    .desktop-list__link:hover .desktop-list__text::after,
-    a:hover .desktop-list__text::after {
+    .desktop-list__text:hover::after {
       content: '' !important;
       position: absolute !important;
       inset: 3px !important;
@@ -554,13 +537,9 @@
       background: #ffffff !important;
       border-radius: 5px !important;
       z-index: -1 !important;
-      border: none !important;
-      box-shadow: none !important;
     }
 
-    /* ==========================================
-       4. ANIMACIÓN ROTATORIA CENTRADA
-       ========================================== */
+    /* Animación con pivote en el centro */
     @keyframes rotateRGB_Square {
       0% {
         transform: translate(-50%, -50%) rotate(0deg);
