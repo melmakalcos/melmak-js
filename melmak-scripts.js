@@ -449,7 +449,7 @@
   style.textContent = `
     #floating-mascot {
       position: fixed;
-      bottom: -170px;
+      bottom: 0;
       left: 20px;
       z-index: 9998;
       transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -487,9 +487,6 @@
         container.classList.remove('show');
       }, 3500);
     }
-
-    setTimeout(triggerPeeking, 5000);
-    setInterval(triggerPeeking, 5000);
   }
 
   if (document.readyState === 'loading') {
