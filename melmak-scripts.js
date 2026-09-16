@@ -443,52 +443,58 @@
   document.head.appendChild(estilo);
 })();
 
-<!-- logoanimado_quesaledeabajo -->
-<style>
-  #floating-mascot {
-    position: fixed;
-    bottom: -120px; /* Oculto fuera de la pantalla */
-    left: 20px;
-    z-index: 9998;
-    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
-    pointer-events: none; /* No interfiere con clics */
-  }
+(function() {
+  // 1. Inyectar estilos CSS
+  const style = document.createElement('style');
+  style.textContent = `
+    #floating-mascot {
+      position: fixed;
+      bottom: -120px;
+      left: 20px;
+      z-index: 9998;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+    #floating-mascot img {
+      width: 85px;
+      height: auto;
+      display: block;
+    }
+    #floating-mascot.show {
+      transform: translateY(-120px);
+    }
+  `;
+  document.head.appendChild(style);
 
-  #floating-mascot img {
-    width: 85px;
-    height: auto;
-    display: block;
-  }
+  // 2. Crear e inyectar el HTML cuando el DOM esté listo
+  function createMascot() {
+    if (document.getElementById('floating-mascot')) return;
 
-  /* Clase que lo hace asomar */
-  #floating-mascot.show {
-    transform: translateY(-120px);
-  }
-</style>
+    const container = document.createElement('div');
+    container.id = 'floating-mascot';
 
-<!-- Estructura -->
-<div id="floating-mascot">
-  <img src="https://d22fxaf9t8d39k.cloudfront.net/369b012771ed0c5f47679a9c4efe0c24bc9156fade92550e4292e508b45355e220700.png" alt="Melmak Mascot">
-</div>
+    const img = document.createElement('img');
+    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/369b012771ed0c5f47679a9c4efe0c24bc9156fade92550e4292e508b45355e220700.png';
+    img.alt = 'Melmak Mascot';
 
-<!-- Lógica de tiempo -->
-  (function() {
-    const mascot = document.getElementById('floating-mascot');
-    if (!mascot) return;
+    container.appendChild(img);
+    document.body.appendChild(container);
 
+    // 3. Lógica de animación
     function triggerPeeking() {
-      mascot.classList.add('show');
-      
-      // Permanece visible 3.5 segundos y vuelve a esconderse
+      container.classList.add('show');
       setTimeout(() => {
-        mascot.classList.remove('show');
+        container.classList.remove('show');
       }, 3500);
     }
 
-    // Primera aparición a los 5 segundos de carga
     setTimeout(triggerPeeking, 5000);
-
-    // Se repite cada 35 segundos
     setInterval(triggerPeeking, 35000);
-  })();
+  }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', createMascot);
+  } else {
+    createMascot();
+  }
+})();
