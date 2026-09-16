@@ -466,6 +466,11 @@
       height: auto;
       display: block;
     }
+      @media (max-width: 150px) {
+      #floating-mascot img {
+      width: 60px;
+  }
+}
   `;
   document.head.appendChild(style);
 
