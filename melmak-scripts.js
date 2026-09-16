@@ -443,7 +443,7 @@
   document.head.appendChild(estilo);
 })();
 
-<!-- Estilos del elemento -->
+<!-- logoanimado_quesaledeabajo -->
 <style>
   #floating-mascot {
     position: fixed;
@@ -492,4 +492,4 @@
     // Se repite cada 35 segundos
     setInterval(triggerPeeking, 35000);
   })();
-</script>
+
