@@ -444,29 +444,32 @@
 })();
 
 (function() {
-  // 1. Inyectar estilos CSS
+  // 1. Verificar si el usuario está en el Home
+  const pathname = window.location.pathname;
+  const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
+
+  // Si NO estamos en el home, cortamos la ejecución del script aquí
+  if (!isHomePage) return;
+
+  // 2. Estilos CSS para el personaje
   const style = document.createElement('style');
   style.textContent = `
     #floating-mascot {
       position: fixed;
-      bottom: 0;
+      bottom: 0px; /* Cambiá a -180px si preferís la versión animada que asoma */
       left: 20px;
       z-index: 9998;
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       pointer-events: none;
     }
     #floating-mascot img {
-      width: 200px;
+      width: 150px; /* Ajustá el tamaño del personaje */
       height: auto;
       display: block;
-    }
-    #floating-mascot.show {
-      transform: translateY(-170px);
     }
   `;
   document.head.appendChild(style);
 
-  // 2. Crear e inyectar el HTML cuando el DOM esté listo
+  // 3. Crear e inyectar la mascota solo en el Home
   function createMascot() {
     if (document.getElementById('floating-mascot')) return;
 
@@ -474,19 +477,11 @@
     container.id = 'floating-mascot';
 
     const img = document.createElement('img');
-    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/af2b89bf5852a5149c6662f2b9b31bad160f48187062804c370b0093f7dbc50120700.gif';
+    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/369b012771ed0c5f47679a9c4efe0c24bc9156fade92550e4292e508b45355e220700.png';
     img.alt = 'Melmak Mascot';
 
     container.appendChild(img);
     document.body.appendChild(container);
-
-    // 3. Lógica de animación
-    function triggerPeeking() {
-      container.classList.add('show');
-      setTimeout(() => {
-        container.classList.remove('show');
-      }, 3500);
-    }
   }
 
   if (document.readyState === 'loading') {
