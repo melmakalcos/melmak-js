@@ -491,15 +491,17 @@
   }
 })();
 
-// Efecto RGB para el botón (Ver todo)
-(function() {
+// ==========================================
+// EFECTO RGB PARA EL BOTÓN (VER TODO)
+// ==========================================
+(function () {
   const styleRGB = document.createElement('style');
   styleRGB.textContent = `
     .desktop-list__text {
       position: relative;
       display: inline-block;
-      padding: 6px 14px; /* Ajustá el relleno del botón según necesites */
-      background: #ffffff;
+      padding: 6px 14px;
+      background: transparent !important;
       border-radius: 8px;
       overflow: hidden;
       z-index: 1;
@@ -515,16 +517,16 @@
       background: conic-gradient(
         #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
       );
-      animation: rotateRGB 1s linear infinite;
+      animation: rotateRGB 3s linear infinite;
       z-index: -2;
     }
 
     .desktop-list__text::after {
       content: '';
       position: absolute;
-      inset: 3px; /* Grosor del borde brillante */
-      background: #ffffff; /* Fondo interno */
-      border-radius: 6px;
+      inset: 3px;
+      background: #ffffff;
+      border-radius: 5px;
       z-index: -1;
     }
 
