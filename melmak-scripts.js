@@ -495,31 +495,25 @@
   const styleRGB_Square = document.createElement('style');
   styleRGB_Square.textContent = /* css */ `
     /* Contenedor principal */
-    .desktop-list__text,
-    .desktop-list__text:hover,
-    .desktop-list__text:focus,
-    .desktop-list__text:active {
+    .desktop-list__text {
       position: relative !important;
       z-index: 1 !important;
       display: inline-block !important;
       padding: 6px 14px !important;
-      background: transparent !important;
       background-color: transparent !important;
       border-radius: 8px !important;
       overflow: hidden !important;
       border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
     }
 
-    /* Cuadrado rotatorio centrado (Gradiente RGB) */
+    /* Cuadrado rotatorio centrado */
     .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
-      width: 350% !important;
-      aspect-ratio: 1 / 1 !important;
+      width: 350% !important; /* Cubre toda la diagonal del botón */
+      aspect-ratio: 1 / 1 !important; /* Fuerza un cuadrado perfecto */
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
@@ -527,14 +521,12 @@
       z-index: -2 !important;
     }
 
-    /* Tapa central blanca (Mantiene el centro limpio en hover) */
-    .desktop-list__text::after,
-    .desktop-list__text:hover::after {
+    /* Tapa central blanca */
+    .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
       inset: 3px !important;
       background-color: #ffffff !important;
-      background: #ffffff !important;
       border-radius: 5px !important;
       z-index: -1 !important;
     }
