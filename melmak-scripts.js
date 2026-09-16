@@ -442,3 +442,54 @@
   estilo.appendChild(document.createTextNode(css));
   document.head.appendChild(estilo);
 })();
+
+<!-- Estilos del elemento -->
+<style>
+  #floating-mascot {
+    position: fixed;
+    bottom: -120px; /* Oculto fuera de la pantalla */
+    left: 20px;
+    z-index: 9998;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
+    pointer-events: none; /* No interfiere con clics */
+  }
+
+  #floating-mascot img {
+    width: 85px;
+    height: auto;
+    display: block;
+  }
+
+  /* Clase que lo hace asomar */
+  #floating-mascot.show {
+    transform: translateY(-120px);
+  }
+</style>
+
+<!-- Estructura -->
+<div id="floating-mascot">
+  <img src="URL_DE_TU_IMAGEN_ANIMADA.png" alt="Melmak Mascot">
+</div>
+
+<!-- Lógica de tiempo -->
+<script>
+  (function() {
+    const mascot = document.getElementById('floating-mascot');
+    if (!mascot) return;
+
+    function triggerPeeking() {
+      mascot.classList.add('show');
+      
+      // Permanece visible 3.5 segundos y vuelve a esconderse
+      setTimeout(() => {
+        mascot.classList.remove('show');
+      }, 3500);
+    }
+
+    // Primera aparición a los 5 segundos de carga
+    setTimeout(triggerPeeking, 5000);
+
+    // Se repite cada 35 segundos
+    setInterval(triggerPeeking, 35000);
+  })();
+</script>
