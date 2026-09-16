@@ -449,7 +449,7 @@
   style.textContent = `
     #floating-mascot {
       position: fixed;
-      bottom: -120px;
+      bottom: -170px;
       left: 20px;
       z-index: 9998;
       transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -461,7 +461,7 @@
       display: block;
     }
     #floating-mascot.show {
-      transform: translateY(-120px);
+      transform: translateY(-170px);
     }
   `;
   document.head.appendChild(style);
@@ -489,7 +489,7 @@
     }
 
     setTimeout(triggerPeeking, 5000);
-    setInterval(triggerPeeking, 35000);
+    setInterval(triggerPeeking, 5000);
   }
 
   if (document.readyState === 'loading') {
