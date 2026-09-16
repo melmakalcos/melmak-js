@@ -515,7 +515,7 @@
       background: conic-gradient(
         #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
       );
-      animation: rotateRGB 3s linear infinite;
+      animation: rotateRGB 1s linear infinite;
       z-index: -2;
     }
 
