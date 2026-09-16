@@ -456,7 +456,7 @@
       pointer-events: none;
     }
     #floating-mascot img {
-      width: 300px;
+      width: 200px;
       height: auto;
       display: block;
     }
