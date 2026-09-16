@@ -474,7 +474,7 @@
     container.id = 'floating-mascot';
 
     const img = document.createElement('img');
-    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/369b012771ed0c5f47679a9c4efe0c24bc9156fade92550e4292e508b45355e220700.png';
+    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/af2b89bf5852a5149c6662f2b9b31bad160f48187062804c370b0093f7dbc50120700.gif';
     img.alt = 'Melmak Mascot';
 
     container.appendChild(img);
