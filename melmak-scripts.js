@@ -494,44 +494,85 @@
 (function () {
   const styleRGB_Square = document.createElement('style');
   styleRGB_Square.textContent = /* css */ `
-    /* Contenedor principal */
-    .desktop-list__text {
+    /* ==========================================
+       1. CONTENEDOR BASE Y HOVER DESDE PADRES
+       ========================================== */
+    .desktop-list__text,
+    .desktop-list__text:hover,
+    .desktop-list__text:focus,
+    .desktop-list__text:active,
+    .desktop-list__item:hover .desktop-list__text,
+    .desktop-list__link:hover .desktop-list__text,
+    a:hover .desktop-list__text {
       position: relative !important;
       z-index: 1 !important;
       display: inline-block !important;
       padding: 6px 14px !important;
+      background: transparent !important;
       background-color: transparent !important;
       border-radius: 8px !important;
       overflow: hidden !important;
       border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
     }
 
-    /* Cuadrado rotatorio centrado */
-    .desktop-list__text::before {
+    /* Asegura la visibilidad del texto */
+    .desktop-list__text span,
+    .desktop-list__text a {
+      background: transparent !important;
+      position: relative !important;
+      z-index: 2 !important;
+    }
+
+    /* ==========================================
+       2. CAPA RGB ROTATORIA (300px x 300px Fijo)
+       Imposible que colapse a 0px de alto
+       ========================================== */
+    .desktop-list__text::before,
+    .desktop-list__text:hover::before,
+    .desktop-list__item:hover .desktop-list__text::before,
+    .desktop-list__link:hover .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
-      width: 350% !important; /* Cubre toda la diagonal del botón */
-      aspect-ratio: 1 / 1 !important; /* Fuerza un cuadrado perfecto */
+      width: 300px !important;
+      height: 300px !important;
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
       animation: rotateRGB_Square 3s linear infinite !important;
       z-index: -2 !important;
+      transform-origin: center center !important;
     }
 
-    /* Tapa central blanca */
-    .desktop-list__text::after {
+    /* ==========================================
+       3. TAPA BLANCA CENTRAL (Posición individual)
+       ========================================== */
+    .desktop-list__text::after,
+    .desktop-list__text:hover::after,
+    .desktop-list__item:hover .desktop-list__text::after,
+    .desktop-list__link:hover .desktop-list__text::after,
+    a:hover .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
-      inset: 3px !important;
+      top: 3px !important;
+      bottom: 3px !important;
+      left: 3px !important;
+      right: 3px !important;
+      background: #ffffff !important;
       background-color: #ffffff !important;
       border-radius: 5px !important;
       z-index: -1 !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
-    /* Animación con pivote en el centro */
+    /* ==========================================
+       4. ANIMACIÓN ROTATORIA
+       ========================================== */
     @keyframes rotateRGB_Square {
       0% {
         transform: translate(-50%, -50%) rotate(0deg);
