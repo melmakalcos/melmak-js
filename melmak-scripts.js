@@ -492,49 +492,57 @@
 })();
 
 // ==========================================
-// EFECTO RGB PARA EL BOTÓN (VER TODO)
+// EFECTO RGB ROBUSTO PARA EL BOTÓN (A3 FIX)
 // ==========================================
 (function () {
-  const styleRGB = document.createElement('style');
-  styleRGB.textContent = `
+  const styleRGB_Robust = document.createElement('style');
+  styleRGB_Robust.textContent = `
+    /* CAPA 1: El contenedor principal (Botón) */
     .desktop-list__text {
-      position: relative;
-      display: inline-block;
-      padding: 6px 14px;
-      background: transparent !important;
-      border-radius: 8px;
-      overflow: hidden;
-      z-index: 1;
+      position: relative !important;
+      z-index: 1 !important; /* Mantiene el texto y capas encima */
+      display: inline-block !important;
+      padding: 6px 14px !important; /* Asegura padding uniforme */
+      background-color: transparent !important; /* El fondo lo manejamos en ::after */
+      border-radius: 8px !important;
+      overflow: hidden !important; /* Corta todo lo que salga de la forma redondeada */
+      border: none !important; /* Eliminamos bordes viejos */
     }
 
+    /* CAPA 2: El gradiente rotatorio (Unificar tamaño y giro) */
     .desktop-list__text::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
+      content: '' !important;
+      position: absolute !important;
+      top: -50% !important; /* Incrementado para cubrir las esquinas sin cortes */
+      left: -50% !important;
+      width: 200% !important;
+      height: 200% !important;
+      /* Gradiente cónico simplificado */
       background: conic-gradient(
-        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
-      );
-      animation: rotateRGB 3s linear infinite;
-      z-index: -2;
+        #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
+      ) !important;
+      animation: rotateRGB_Robust 3s linear infinite !important; /* 3s es más suave */
+      z-index: -2 !important; /* Capa más profunda */
+      transform-origin: center center !important; /* Eje de giro perfecto */
     }
 
+    /* CAPA 3: El centro del botón (Tapa blanca y padding interior) */
     .desktop-list__text::after {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      background: #ffffff;
-      border-radius: 5px;
-      z-index: -1;
+      content: '' !important;
+      position: absolute !important;
+      /* ESTA ES LA CLAVE: El grosor del borde es de 3px */
+      inset: 3px !important; 
+      background-color: #ffffff !important; /* Color de fondo del centro */
+      /* Radio de borde calculado: 8px de contorno - 3px de grosor = 5px */
+      border-radius: 5px !important; 
+      z-index: -1 !important; /* Encima del gradiente, debajo del texto */
     }
 
-    @keyframes rotateRGB {
-      100% {
-        transform: rotate(360deg);
-      }
+    /* Animación optimizada */
+    @keyframes rotateRGB_Robust {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   `;
-  document.head.appendChild(styleRGB);
+  document.head.appendChild(styleRGB_Robust);
 })();
