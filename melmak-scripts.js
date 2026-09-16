@@ -492,54 +492,39 @@
 })();
 
 // ==========================================
-// EFECTO RGB ROBUSTO PARA EL BOTÓN (A3 FIX)
+// EFECTO RGB - ARO GIRATORIO SOBRE EL BOTÓN CATÁLOGO
 // ==========================================
 (function () {
-  const styleRGB_Robust = document.createElement('style');
-  styleRGB_Robust.textContent = /* css */ `
-    /* CAPA 1: El contenedor principal (Botón) */
-    .desktop-list__text {
-      position: relative !important;
-      z-index: 1 !important;
-      display: inline-block !important;
-      padding: 6px 14px !important;
-      background-color: transparent !important;
-      border-radius: 8px !important;
-      overflow: hidden !important;
-      border: none !important;
+  const css = `
+    .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link {
+      position: relative;
+      border-radius: 999px !important;
     }
-
-    /* CAPA 2: El gradiente rotatorio (Unificar tamaño y giro) */
-    .desktop-list__text::before {
-      content: '' !important;
-      position: absolute !important;
-      top: -50% !important;
-      left: -50% !important;
-      width: 200% !important;
-      height: 200% !important;
-      background: conic-gradient(
-        #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
-      ) !important;
-      animation: rotateRGB_Robust 3s linear infinite !important;
-      z-index: -2 !important;
-      transform-origin: center center !important;
+    .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 5px;
+      border-radius: 999px;
+      background: conic-gradient(from 0deg,
+        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask-composite: exclude;
+      animation: melmakAroRGB 1.6s linear infinite;
+      z-index: 2;
+      pointer-events: none;
     }
-
-    /* CAPA 3: El centro del botón (Tapa blanca y padding interior) */
-    .desktop-list__text::after {
-      content: '' !important;
-      position: absolute !important;
-      inset: 5px !important; 
-      background-color: #ffffff !important;
-      border-radius: 5px !important; 
-      z-index: -1 !important;
+    @keyframes melmakAroRGB {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
-
-    /* Animación optimizada */
-    @keyframes rotateRGB_Robust {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    @media (prefers-reduced-motion: reduce) {
+      .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link::before { animation: none; }
     }
   `;
-  document.head.appendChild(styleRGB_Robust);
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
 })();
