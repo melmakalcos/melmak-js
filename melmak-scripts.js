@@ -444,100 +444,47 @@
 })();
 
 (function () {
-  // Limpiar estilos anteriores si existían
-  const oldStyle = document.getElementById('melmak-rgb-style');
-  if (oldStyle) oldStyle.remove();
-
-  const styleRGB = document.createElement('style');
-  styleRGB.id = 'melmak-rgb-style';
-  styleRGB.textContent = /* css */ `
-    /* ==========================================
-       1. CONTENEDOR PRINCIPAL (.desktop-list__text)
-       ========================================== */
+  const styleRGB_Square = document.createElement('style');
+  styleRGB_Square.textContent = /* css */ `
+    /* Contenedor principal */
     .desktop-list__text {
       position: relative !important;
       z-index: 1 !important;
       display: inline-block !important;
       padding: 6px 14px !important;
-      background: transparent !important;
       background-color: transparent !important;
       border-radius: 8px !important;
       overflow: hidden !important;
       border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
-      text-decoration: none !important;
     }
 
-    /* Texto oscuro y siempre legible encima de las capas */
-    .desktop-list__text,
-    .desktop-list__text * {
-      color: #333333 !important;
-      position: relative !important;
-      z-index: 2 !important;
-    }
-
-    /* ==========================================
-       2. CAPA RGB ROTATORIA (::before)
-       Cuadrado de 300px centrado con translate
-       ========================================== */
+    /* Cuadrado rotatorio centrado */
     .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
-      width: 300px !important;
-      height: 300px !important;
+      width: 350% !important; /* Cubre toda la diagonal del botón */
+      aspect-ratio: 1 / 1 !important; /* Fuerza un cuadrado perfecto */
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
-      animation: rotateRGB_Melmak 3s linear infinite !important;
+      animation: rotateRGB_Square 3s linear infinite !important;
       z-index: -2 !important;
-      transform-origin: center center !important;
     }
 
-    /* ==========================================
-       3. TAPA CENTRO BLANCA (::after)
-       Crea el borde de 3px y mantiene el fondo blanco
-       ========================================== */
+    /* Tapa central blanca */
     .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
-      top: 3px !important;
-      bottom: 3px !important;
-      left: 3px !important;
-      right: 3px !important;
+      inset: 3px !important;
       background-color: #ffffff !important;
-      background: #ffffff !important;
       border-radius: 5px !important;
       z-index: -1 !important;
     }
 
-    /* ==========================================
-       4. NEUTRALIZAR EL HOVER DE EMPRETIENDA
-       Evita el resaltado/fondo amarillo al pasar el cursor
-       ========================================== */
-    .desktop-list__item:hover .desktop-list__text,
-    .desktop-list__link:hover .desktop-list__text,
-    .desktop-list__text:hover {
-      background-color: transparent !important;
-      background: transparent !important;
-    }
-
-    /* Mantiene la tapa blanca intacta durante el hover */
-    .desktop-list__item:hover .desktop-list__text::after,
-    .desktop-list__link:hover .desktop-list__text::after,
-    .desktop-list__text:hover::after {
-      background-color: #ffffff !important;
-      background: #ffffff !important;
-      opacity: 1 !important;
-      display: block !important;
-    }
-
-    /* ==========================================
-       5. ANIMACIÓN ROTATORIA CENTRADA
-       ========================================== */
-    @keyframes rotateRGB_Melmak {
+    /* Animación con pivote en el centro */
+    @keyframes rotateRGB_Square {
       0% {
         transform: translate(-50%, -50%) rotate(0deg);
       }
@@ -546,6 +493,5 @@
       }
     }
   `;
-
-  document.head.appendChild(styleRGB);
+  document.head.appendChild(styleRGB_Square);
 })();
