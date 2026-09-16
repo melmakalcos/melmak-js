@@ -491,12 +491,20 @@
   }
 })();
 
+// ==========================================
+// BOTÓN RGB ROBUSTO - MELMAK
+// ==========================================
 (function () {
-  const styleRGB_Square = document.createElement('style');
-  styleRGB_Square.textContent = /* css */ `
-    /* ==========================================
-       1. CONTENEDOR BASE Y HOVER DESDE PADRES
-       ========================================== */
+  // Evitar duplicación si el script se ejecuta más de una vez
+  const existingStyle = document.getElementById('melmak-rgb-style');
+  if (existingStyle) {
+    existingStyle.remove();
+  }
+
+  const styleRGB = document.createElement('style');
+  styleRGB.id = 'melmak-rgb-style';
+  styleRGB.textContent = /* css */ `
+    /* 1. CONTENEDOR PRINCIPAL (Anula estilos y hovers de Empretienda) */
     .desktop-list__text,
     .desktop-list__text:hover,
     .desktop-list__text:focus,
@@ -518,38 +526,43 @@
       text-decoration: none !important;
     }
 
-    /* ==========================================
-       2. CAPA RGB ROTATORIA (::before)
-       ========================================== */
-    .desktop-list__text::before,
-    .desktop-list__text:hover::before,
-    .desktop-list__item:hover .desktop-list__text::before,
-    .desktop-list__link:hover .desktop-list__text::before {
+    /* Asegura que el texto permanezca visible y oscuro */
+    .desktop-list__text,
+    .desktop-list__text *,
+    .desktop-list__item:hover .desktop-list__text {
+      color: #333333 !important;
+      position: relative !important;
+      z-index: 2 !important;
+    }
+
+    /* 2. CAPA RGB ROTATORIA (Cubre todo el botón en 360°) */
+    .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
-      width: 350% !important;
-      aspect-ratio: 1 / 1 !important;
+      width: 300px !important;
+      height: 300px !important;
+      margin-top: -150px !important;
+      margin-left: -150px !important;
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
-      animation: rotateRGB_Square 3s linear infinite !important;
+      animation: rotateRGB_Melmak 3s linear infinite !important;
       z-index: -2 !important;
     }
 
-    /* ==========================================
-       3. TAPA BLANCA CENTRO (::after)
-       Bloquea cualquier franja o amarillo de Empretienda
-       ========================================== */
+    /* 3. TAPA CENTRO BLANCA (Mantiene el fondo limpio y bloquea el amarillo) */
     .desktop-list__text::after,
     .desktop-list__text:hover::after,
     .desktop-list__item:hover .desktop-list__text::after,
-    .desktop-list__link:hover .desktop-list__text::after,
-    a:hover .desktop-list__text::after {
+    .desktop-list__link:hover .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
-      inset: 3px !important;
+      top: 3px !important;
+      bottom: 3px !important;
+      left: 3px !important;
+      right: 3px !important;
       background-color: #ffffff !important;
       background: #ffffff !important;
       border-radius: 5px !important;
@@ -558,17 +571,16 @@
       box-shadow: none !important;
     }
 
-    /* ==========================================
-       4. ANIMACIÓN ROTATORIA CENTRADA
-       ========================================== */
-    @keyframes rotateRGB_Square {
+    /* 4. ANIMACIÓN ROTATORIA */
+    @keyframes rotateRGB_Melmak {
       0% {
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: rotate(0deg);
       }
       100% {
-        transform: translate(-50%, -50%) rotate(360deg);
+        transform: rotate(360deg);
       }
     }
   `;
-  document.head.appendChild(styleRGB_Square);
+
+  document.head.appendChild(styleRGB);
 })();
