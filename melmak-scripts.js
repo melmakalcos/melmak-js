@@ -491,51 +491,55 @@
   }
 })();
 
-// ==========================================
-// EFECTO RGB: TODO EL RECUADRO "(VER TODO)" gira
-// ==========================================
 (function () {
-  const styleRGB = document.createElement('style');
-  styleRGB.textContent = `
+  const styleRGB_Square = document.createElement('style');
+  styleRGB_Square.textContent = /* css */ `
+    /* Contenedor principal */
     .desktop-list__text {
-      position: relative;
-      display: inline-block;
-      padding: 6px 14px;
-      background: transparent !important;
-      border-radius: 8px;
-      overflow: hidden;
+      position: relative !important;
+      z-index: 1 !important;
+      display: inline-block !important;
+      padding: 6px 14px !important;
+      background-color: transparent !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      border: none !important;
     }
 
-    /* Disco RGB girando: cubre TODO el recuadro */
+    /* Cuadrado rotatorio centrado */
     .desktop-list__text::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      z-index: -1;
+      content: '' !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      width: 350% !important; /* Cubre toda la diagonal del botón */
+      aspect-ratio: 1 / 1 !important; /* Fuerza un cuadrado perfecto */
       background: conic-gradient(
-        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
-      );
-      animation: rotateRGB_LLENO 2s linear infinite;
+        #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
+      ) !important;
+      animation: rotateRGB_Square 3s linear infinite !important;
+      z-index: -2 !important;
     }
 
-    /* Velo suave para que el texto se lea (igual se ve el RGB girando).
-       Sacalo si lo querés 100% puro. */
+    /* Tapa central blanca */
     .desktop-list__text::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      background: rgba(255, 255, 255, 0.55);
-      border-radius: 8px;
+      content: '' !important;
+      position: absolute !important;
+      inset: 3px !important;
+      background-color: #ffffff !important;
+      border-radius: 5px !important;
+      z-index: -1 !important;
     }
 
-    @keyframes rotateRGB_LLENO {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
+    /* Animación con pivote en el centro */
+    @keyframes rotateRGB_Square {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
   `;
-  document.head.appendChild(styleRGB);
+  document.head.appendChild(styleRGB_Square);
 })();
