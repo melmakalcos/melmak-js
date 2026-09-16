@@ -472,7 +472,6 @@
 </div>
 
 <!-- Lógica de tiempo -->
-<script>
   (function() {
     const mascot = document.getElementById('floating-mascot');
     if (!mascot) return;
