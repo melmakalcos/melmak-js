@@ -490,3 +490,49 @@
     createMascot();
   }
 })();
+
+// Efecto RGB para el botón (Ver todo)
+(function() {
+  const styleRGB = document.createElement('style');
+  styleRGB.textContent = `
+    .desktop-list__text {
+      position: relative;
+      display: inline-block;
+      padding: 6px 14px; /* Ajustá el relleno del botón según necesites */
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .desktop-list__text::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
+      );
+      animation: rotateRGB 3s linear infinite;
+      z-index: -2;
+    }
+
+    .desktop-list__text::after {
+      content: '';
+      position: absolute;
+      inset: 3px; /* Grosor del borde brillante */
+      background: #ffffff; /* Fondo interno */
+      border-radius: 6px;
+      z-index: -1;
+    }
+
+    @keyframes rotateRGB {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  `;
+  document.head.appendChild(styleRGB);
+})();
