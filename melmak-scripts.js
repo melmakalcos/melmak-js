@@ -443,75 +443,18 @@
   document.head.appendChild(estilo);
 })();
 
-(function() {
-  // 1. Verificar si el usuario está en el Home
-  const pathname = window.location.pathname;
-  const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
-
-  // Si NO estamos en el home, cortamos la ejecución del script aquí
-  if (!isHomePage) return;
-
-  // 2. Estilos CSS para el personaje
-  const style = document.createElement('style');
-  style.textContent = `
-    #floating-mascot {
-      position: fixed;
-      bottom: 0px; /* Cambiá a -180px si preferís la versión animada que asoma */
-      left: 20px;
-      z-index: 9998;
-      pointer-events: none;
-    }
-    #floating-mascot img {
-      width: 150px; /* Ajustá el tamaño del personaje */
-      height: auto;
-      display: block;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // 3. Crear e inyectar la mascota solo en el Home
-  function createMascot() {
-    if (document.getElementById('floating-mascot')) return;
-
-    const container = document.createElement('div');
-    container.id = 'floating-mascot';
-
-    const img = document.createElement('img');
-    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/af2b89bf5852a5149c6662f2b9b31bad160f48187062804c370b0093f7dbc50120700.gif';
-    img.alt = 'Melmak Mascot';
-
-    container.appendChild(img);
-    document.body.appendChild(container);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createMascot);
-  } else {
-    createMascot();
-  }
-})();
-
-// ==========================================
-// BOTÓN RGB ROBUSTO - MELMAK
-// ==========================================
 (function () {
-  // Evitar duplicación si el script se ejecuta más de una vez
-  const existingStyle = document.getElementById('melmak-rgb-style');
-  if (existingStyle) {
-    existingStyle.remove();
-  }
+  // Limpiar estilos anteriores si existían
+  const oldStyle = document.getElementById('melmak-rgb-style');
+  if (oldStyle) oldStyle.remove();
 
   const styleRGB = document.createElement('style');
   styleRGB.id = 'melmak-rgb-style';
   styleRGB.textContent = /* css */ `
-    /* 1. CONTENEDOR PRINCIPAL (Anula estilos y hovers de Empretienda) */
-    .desktop-list__text,
-    .desktop-list__text:hover,
-    .desktop-list__text:focus,
-    .desktop-list__text:active,
-    .desktop-list__item:hover .desktop-list__text,
-    .desktop-list__link:hover .desktop-list__text,
-    a:hover .desktop-list__text {
+    /* ==========================================
+       1. CONTENEDOR PRINCIPAL (.desktop-list__text)
+       ========================================== */
+    .desktop-list__text {
       position: relative !important;
       z-index: 1 !important;
       display: inline-block !important;
@@ -526,16 +469,18 @@
       text-decoration: none !important;
     }
 
-    /* Asegura que el texto permanezca visible y oscuro */
+    /* Texto oscuro y siempre legible encima de las capas */
     .desktop-list__text,
-    .desktop-list__text *,
-    .desktop-list__item:hover .desktop-list__text {
+    .desktop-list__text * {
       color: #333333 !important;
       position: relative !important;
       z-index: 2 !important;
     }
 
-    /* 2. CAPA RGB ROTATORIA (Cubre todo el botón en 360°) */
+    /* ==========================================
+       2. CAPA RGB ROTATORIA (::before)
+       Cuadrado de 300px centrado con translate
+       ========================================== */
     .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
@@ -543,20 +488,19 @@
       left: 50% !important;
       width: 300px !important;
       height: 300px !important;
-      margin-top: -150px !important;
-      margin-left: -150px !important;
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
       animation: rotateRGB_Melmak 3s linear infinite !important;
       z-index: -2 !important;
+      transform-origin: center center !important;
     }
 
-    /* 3. TAPA CENTRO BLANCA (Mantiene el fondo limpio y bloquea el amarillo) */
-    .desktop-list__text::after,
-    .desktop-list__text:hover::after,
-    .desktop-list__item:hover .desktop-list__text::after,
-    .desktop-list__link:hover .desktop-list__text::after {
+    /* ==========================================
+       3. TAPA CENTRO BLANCA (::after)
+       Crea el borde de 3px y mantiene el fondo blanco
+       ========================================== */
+    .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
       top: 3px !important;
@@ -567,17 +511,38 @@
       background: #ffffff !important;
       border-radius: 5px !important;
       z-index: -1 !important;
-      border: none !important;
-      box-shadow: none !important;
     }
 
-    /* 4. ANIMACIÓN ROTATORIA */
+    /* ==========================================
+       4. NEUTRALIZAR EL HOVER DE EMPRETIENDA
+       Evita el resaltado/fondo amarillo al pasar el cursor
+       ========================================== */
+    .desktop-list__item:hover .desktop-list__text,
+    .desktop-list__link:hover .desktop-list__text,
+    .desktop-list__text:hover {
+      background-color: transparent !important;
+      background: transparent !important;
+    }
+
+    /* Mantiene la tapa blanca intacta durante el hover */
+    .desktop-list__item:hover .desktop-list__text::after,
+    .desktop-list__link:hover .desktop-list__text::after,
+    .desktop-list__text:hover::after {
+      background-color: #ffffff !important;
+      background: #ffffff !important;
+      opacity: 1 !important;
+      display: block !important;
+    }
+
+    /* ==========================================
+       5. ANIMACIÓN ROTATORIA CENTRADA
+       ========================================== */
     @keyframes rotateRGB_Melmak {
       0% {
-        transform: rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg);
       }
       100% {
-        transform: rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
       }
     }
   `;
