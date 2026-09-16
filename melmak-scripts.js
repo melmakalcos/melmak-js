@@ -492,7 +492,7 @@
 })();
 
 // ==========================================
-// EFECTO RGB - ARO GIRATORIO SOBRE EL BOTÓN CATÁLOGO
+// EFECTO RGB - ARO GIRATORIO SOBRE EL BOTÓN CATÁLOGOssssssssssssssss
 // ==========================================
 (function () {
   const css = `
