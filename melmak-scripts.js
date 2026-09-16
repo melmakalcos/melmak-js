@@ -496,46 +496,43 @@
 // ==========================================
 (function () {
   const styleRGB_Robust = document.createElement('style');
-  styleRGB_Robust.textContent = `
+  styleRGB_Robust.textContent = /* css */ `
     /* CAPA 1: El contenedor principal (Botón) */
     .desktop-list__text {
       position: relative !important;
-      z-index: 1 !important; /* Mantiene el texto y capas encima */
+      z-index: 1 !important;
       display: inline-block !important;
-      padding: 6px 14px !important; /* Asegura padding uniforme */
-      background-color: transparent !important; /* El fondo lo manejamos en ::after */
+      padding: 6px 14px !important;
+      background-color: transparent !important;
       border-radius: 8px !important;
-      overflow: hidden !important; /* Corta todo lo que salga de la forma redondeada */
-      border: none !important; /* Eliminamos bordes viejos */
+      overflow: hidden !important;
+      border: none !important;
     }
 
     /* CAPA 2: El gradiente rotatorio (Unificar tamaño y giro) */
     .desktop-list__text::before {
       content: '' !important;
       position: absolute !important;
-      top: -50% !important; /* Incrementado para cubrir las esquinas sin cortes */
+      top: -50% !important;
       left: -50% !important;
       width: 200% !important;
       height: 200% !important;
-      /* Gradiente cónico simplificado */
       background: conic-gradient(
         #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
       ) !important;
-      animation: rotateRGB_Robust 3s linear infinite !important; /* 3s es más suave */
-      z-index: -2 !important; /* Capa más profunda */
-      transform-origin: center center !important; /* Eje de giro perfecto */
+      animation: rotateRGB_Robust 3s linear infinite !important;
+      z-index: -2 !important;
+      transform-origin: center center !important;
     }
 
     /* CAPA 3: El centro del botón (Tapa blanca y padding interior) */
     .desktop-list__text::after {
       content: '' !important;
       position: absolute !important;
-      /* ESTA ES LA CLAVE: El grosor del borde es de 3px */
-      inset: 3px !important; 
-      background-color: #ffffff !important; /* Color de fondo del centro */
-      /* Radio de borde calculado: 8px de contorno - 3px de grosor = 5px */
+      inset: 5px !important; 
+      background-color: #ffffff !important;
       border-radius: 5px !important; 
-      z-index: -1 !important; /* Encima del gradiente, debajo del texto */
+      z-index: -1 !important;
     }
 
     /* Animación optimizada */
