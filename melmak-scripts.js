@@ -492,39 +492,50 @@
 })();
 
 // ==========================================
-// EFECTO RGB - ARO GIRATORIO SOBRE EL BOTÓN CATÁLOGOssssssssssssssss
+// EFECTO RGB: TODO EL RECUADRO "(VER TODO)" gira
 // ==========================================
 (function () {
-  const css = `
-    .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link {
+  const styleRGB = document.createElement('style');
+  styleRGB.textContent = `
+    .desktop-list__text {
       position: relative;
-      border-radius: 999px !important;
+      display: inline-block;
+      padding: 6px 14px;
+      background: transparent !important;
+      border-radius: 8px;
+      overflow: hidden;
     }
-    .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link::before {
+
+    /* Disco RGB girando: cubre TODO el recuadro */
+    .desktop-list__text::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      z-index: -1;
+      background: conic-gradient(
+        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000
+      );
+      animation: rotateRGB_LLENO 2s linear infinite;
+    }
+
+    /* Velo suave para que el texto se lea (igual se ve el RGB girando).
+       Sacalo si lo querés 100% puro. */
+    .desktop-list__text::after {
       content: '';
       position: absolute;
       inset: 0;
-      padding: 5px;
-      border-radius: 999px;
-      background: conic-gradient(from 0deg,
-        #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-              mask-composite: exclude;
-      animation: melmakAroRGB 1.6s linear infinite;
-      z-index: 2;
-      pointer-events: none;
+      z-index: -1;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 8px;
     }
-    @keyframes melmakAroRGB {
+
+    @keyframes rotateRGB_LLENO {
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
     }
-    @media (prefers-reduced-motion: reduce) {
-      .header-menu__desktop-list li.desktop-list__item:has(> a.desktop-list__link .desktop-list__down-icon) > a.desktop-list__link::before { animation: none; }
-    }
   `;
-  const style = document.createElement('style');
-  style.textContent = css;
-  document.head.appendChild(style);
+  document.head.appendChild(styleRGB);
 })();
