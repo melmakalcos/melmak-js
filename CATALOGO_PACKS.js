@@ -7,13 +7,13 @@
     if (document.getElementById('melschool')) return;
 
     // =============== DATOS (EDITAR AQUI) ================
-    var MELSCHOOL_TITLE = 'PROXIMOS LANZAMIENTOS';
+    var MELSCHOOL_TITLE = 'CATÁLOGO';
 
     var MELSCHOOL_VOLS = [
         {
             status: '',          // '' | 'is-coming-soon' | 'is-reception' | 'is-end'
             vol: 1,
-            dateText: '9.16',
+            dateText: '',
             datetime: '2026-09-16',
             youbi: 'Mie',
             headHead: 'Participan',
