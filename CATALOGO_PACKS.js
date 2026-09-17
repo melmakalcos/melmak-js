@@ -15,9 +15,9 @@
             vol: 1,
             dateText: '',
             datetime: '2026-09-16',
-            youbi: 'Mie',
-            headHead: 'Participan',
-            headBody: 'Photocards',
+            youbi: '',
+            headHead: '',
+            headBody: '',
             join: ['is-red'],
             notes: [
                 {
