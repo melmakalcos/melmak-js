@@ -1,7 +1,7 @@
 // =============================================
 // CATALOGO - Seccion del catalogo de productos
 //
-// EDITAR: TITULO_CATALOGO y VOLUMENES
+// EDITAR: TITULO_CATALOGO y VOLUMENE
 //         (un objeto por volumen, con sus cajas)
 // CONFIG: ANCLA_INSERCION = selector del bloque
 //         banner, despues del cual se inserta
