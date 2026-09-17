@@ -25,7 +25,7 @@
                     title: 'COMPRÁ POR UNIDAD',
                     text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1',
-                    link: { href: 'https://www.melmakalcos.com.ar/productos' }
+                    link: { href: 'URL_LINK_1' }
                 },
                 {
                     id: 'beauty',
@@ -50,7 +50,7 @@
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
         '.melk-catalogo { padding: 20px 16px 32px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melk-catalogo__wrap { max-width: 1150px; margin: 0 auto; }',
-        '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; }',
+        '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
         '.melk-catalogo .melk-headline__text { display: flex; gap: 5px; align-items: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
         '.melk-catalogo .melk-headline .melk-headline__char { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 2px; animation: melk-char-jump 1.1s ease-in-out infinite; animation-delay: var(--char-delay, 0s); }',
         '@keyframes melk-char-jump { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-16px); } 60% { transform: translateY(2px); } 80% { transform: translateY(-2px); } }',
@@ -109,6 +109,7 @@
         '@media (min-width: 768px) {',
         '.melk-catalogo { padding: 36px 40px 56px; }',
         '.melk-catalogo .melk-headline__text { gap: 6px; font-size: 76px; }',
+        '.melk-catalogo .melk-headline { margin: 26px 0 38px; }',
         '.melk-catalogo .melk-headline .melk-headline__char.is-space { width: 32px; }',
         '.melk-catalogo .melk-list { gap: 80px; margin-top: 30px; }',
         '.melk-catalogo .melk-item__inner { border-radius: 26px 26px 42px 42px; }',
