@@ -12,9 +12,8 @@
     var MELSCHOOL_VOLS = [
         {
             status: '',          // '' | 'is-coming-soon' | 'is-reception' | 'is-end'
-            vol: 1,
             dateText: '',
-            datetime: '2026-09-16',
+            datetime: '',
             youbi: '',
             headHead: '',
             headBody: '',
@@ -23,15 +22,15 @@
                 {
                     id: 'food',
                     cat: 'Fotocards',
-                    title: 'Titulo de la actividad 1',
-                    text: 'Descripcion corta de la actividad 1.',
+                    title: 'COMPRÁ POR UNIDAD',
+                    text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1'
                 },
                 {
                     id: 'beauty',
                     cat: 'Fotocards',
-                    title: 'Titulo de la actividad 2',
-                    text: 'Descripcion corta de la actividad 2.',
+                    title: 'COMPRÁ POR PACK',
+                    text: 'Stickers temáticos en un solo set. La forma más fácil y rápida de llevarte colecciones completas.',
                     img: 'URL_IMAGEN_2'
                 }
             ],
