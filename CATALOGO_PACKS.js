@@ -20,15 +20,15 @@
             join: ['is-red'],
             notes: [
                 {
-                    id: 'food',
+                    id: 'melmak_unidad',
                     cat: 'Fotocards',
                     title: 'COMPRÁ POR UNIDAD',
                     text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1',
-                    link: { href: 'https://www.melmakalcos.com.ar/productos' }
+                    link: { href: 'URL_LINK_1' }
                 },
                 {
-                    id: 'beauty',
+                    id: 'melmak_pack',
                     cat: 'Fotocards',
                     title: 'COMPRÁ POR PACK',
                     text: 'Stickers temáticos en un solo set. La forma más fácil y rápida de llevarte colecciones completas.',
@@ -82,8 +82,8 @@
         '.melk-catalogo .melk-note:hover .melk-note__arrow { opacity: 0; visibility: hidden; transition: opacity .25s ease; }',
         '.melk-catalogo .melk-note:hover .melk-note__card { opacity: 0; }',
         '.melk-catalogo .melk-item.is-end .melk-note__arrow, .melk-catalogo .melk-item.is-reception .melk-note__arrow { display: none; }',
-        '.melk-catalogo .melk-note--food { --background-color: #fff; --title-background-color: #50ceff; border-radius: 0; }',
-        '.melk-catalogo .melk-note--beauty { --background-color: #fff; --title-background-color: #fd3c26; border-radius: 0 0 23px 23px; }',
+        '.melk-catalogo .melk-note--melmak_unidad { --background-color: #fff; --title-background-color: #50ceff; border-radius: 0; }',
+        '.melk-catalogo .melk-note--melmak_pack { --background-color: #fff; --title-background-color: #fd3c26; border-radius: 0 0 23px 23px; }',
         '@keyframes melk-stars-rain { from { background-position: 0 -190px, 43px -130px, 77px -80px; } to { background-position: 0 0, 43px 0, 77px 0; } }',
         '.melk-catalogo .melk-note__linker { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }',
         '.melk-catalogo .melk-link { --background-color: #ff4566; width: 240px; height: 54px; margin: 18px auto 0; }',
@@ -117,9 +117,9 @@
         '.melk-catalogo .melk-item__body { display: flex; flex-direction: row; align-items: stretch; justify-content: flex-start; background-color: transparent; background-image: none; animation: none; border-radius: 0; }',
         '.melk-catalogo .melk-note__hoverimg { border-radius: 0; }',
         '.melk-catalogo .melk-note { width: 100%; padding: 36px 48px 36px; min-height: 400px; border: 3px solid #353535; background-color: var(--background-color); }',
-        '.melk-catalogo .melk-note--food { border-radius: 0 0 0 42px; }',
-        '.melk-catalogo .melk-note--beauty { border-radius: 0 0 42px 0; }',
-        '.melk-catalogo .melk-note--food, .melk-catalogo .melk-note--beauty { background-image: url("https://d22fxaf9t8d39k.cloudfront.net/d01fd4d9104d589a5a8564963f4fb4c4a270b5ec9ed1a0686cae8e706e4ed68120700.gif"); background-size: cover; background-position: center; background-repeat: no-repeat; animation: none; }',
+        '.melk-catalogo .melk-note--melmak_unidad { border-radius: 0 0 0 42px; }',
+        '.melk-catalogo .melk-note--melmak_pack { border-radius: 0 0 42px 0; }',
+        '.melk-catalogo .melk-note--melmak_unidad, .melk-catalogo .melk-note--melmak_pack { background-image: url("https://d22fxaf9t8d39k.cloudfront.net/d01fd4d9104d589a5a8564963f4fb4c4a270b5ec9ed1a0686cae8e706e4ed68120700.gif"); background-size: cover; background-position: center; background-repeat: no-repeat; animation: none; }',
         '.melk-catalogo .melk-note__thumbnail-image { height: 150px; }',
         '.melk-catalogo .melk-note__card { position: absolute; left: 50%; top: 100%; transform: translate(-50%, -50%); width: 80%; max-width: 340px; }',
         '.melk-catalogo .melk-note__card::before { display: block; content: ""; position: absolute; z-index: -1; inset: 0; background-color: #353535; border-radius: 14px; transform: translate(7px, 8px); }',
@@ -158,7 +158,7 @@
     }
 
     function renderCaja(n) {
-        var cls = n.id === 'beauty' ? 'melk-note--beauty' : 'melk-note--food';
+        var cls = n.id === 'melmak_pack' ? 'melk-note--melmak_pack' : 'melk-note--melmak_unidad';
         var href = n.link && n.link.href ? n.link.href : '';
         var linkA = (href && href.indexOf('URL_') !== 0)
             ? '<a class="melk-note__linker" href="' + href + '" aria-label="' + n.title + '"></a>' : '';
