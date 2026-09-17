@@ -25,7 +25,7 @@
                     title: 'COMPRÁ POR UNIDAD',
                     text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1',
-                    link: { href: 'URL_LINK_1' }
+                    link: { href: 'https://www.melmakalcos.com.ar/productos' }
                 },
                 {
                     id: 'beauty',
