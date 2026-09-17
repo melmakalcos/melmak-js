@@ -48,7 +48,7 @@
     var style = document.createElement('style');
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
-        '.melk-catalogo { padding: 20px 16px 32px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+        '.melk-catalogo { padding: 20px 16px 90px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melk-catalogo__wrap { max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
         '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
@@ -103,7 +103,7 @@
         '.melk-catalogo .melk-bounce-target.melk-bounce-in { opacity: 1; transform: none; }',
         '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } }',
         '@media (min-width: 768px) {',
-        '.melk-catalogo { padding: 36px 40px 56px; }',
+        '.melk-catalogo { padding: 36px 40px 120px; }',
         '.melk-catalogo .melk-headline__text { font-size: 76px; }',
         '.melk-catalogo .melk-headline { margin: 26px 0 38px; }',
         '.melk-catalogo .melk-list { gap: 80px; margin-top: 30px; }',
