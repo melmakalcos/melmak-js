@@ -25,7 +25,7 @@
                     title: 'COMPRÁ POR UNIDAD',
                     text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1',
-                    link: { href: 'https://www.melmakalcos.com.ar/productos' }
+                    link: { href: 'URL_LINK_1' }
                 },
                 {
                     id: 'beauty',
@@ -284,6 +284,20 @@
             })(cajas[i]);
         }
     }
+
+    // ---------------- RESET AL VOLVER ATRAS (bfcache) ----------------
+    function reiniciarSeccion() {
+        seccion.innerHTML = '<div class="melk-catalogo__wrap">'
+            + renderTitulo(TITULO_CATALOGO)
+            + '<ul class="melk-list">' + lista + '</ul>'
+            + '</div>';
+        animarEntrada();
+        efectoPaso();
+    }
+
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) reiniciarSeccion();
+    });
 
     // ---------------- ARRANQUE ----------------
     function iniciar() {
