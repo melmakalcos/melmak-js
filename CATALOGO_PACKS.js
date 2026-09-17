@@ -51,11 +51,7 @@
         '.melk-catalogo { padding: 20px 16px 32px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melk-catalogo__wrap { max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
-        '.melk-catalogo .melk-headline__text { display: flex; gap: 5px; align-items: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
-        '.melk-catalogo .melk-headline .melk-headline__char { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 2px; animation: melk-char-jump 1.1s ease-in-out infinite; animation-delay: var(--char-delay, 0s); }',
-        '@keyframes melk-char-jump { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-16px); } 60% { transform: translateY(2px); } 80% { transform: translateY(-2px); } }',
-        '.melk-catalogo .melk-headline .melk-headline__char.is-space { width: 20px; }',
-        '.melk-catalogo .melk-headline.is-paused .melk-headline__char { animation-play-state: paused; }',
+        '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
         '.melk-catalogo .melk-list { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 40px; }',
         '.melk-catalogo .melk-item { width: 100%; }',
         '.melk-catalogo .melk-note:hover { background-color: #ffee26; background-image: none; filter: brightness(1.06); box-shadow: inset 0 0 60px rgba(53,53,53,.55), inset 0 0 120px rgba(53,53,53,.35); }',
@@ -105,12 +101,11 @@
         '.melk-catalogo .melk-item.is-reception .melk-link { display: none; }',
         '.melk-catalogo .melk-bounce-target { opacity: 0; transform: scale(.88) translateY(40px); transition: opacity .7s ease var(--bounce-delay, 0s), transform .7s cubic-bezier(.165,.84,.44,1) var(--bounce-delay, 0s); }',
         '.melk-catalogo .melk-bounce-target.melk-bounce-in { opacity: 1; transform: none; }',
-        '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-headline__char { animation: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } }',
         '@media (min-width: 768px) {',
         '.melk-catalogo { padding: 36px 40px 56px; }',
-        '.melk-catalogo .melk-headline__text { gap: 6px; font-size: 76px; }',
+        '.melk-catalogo .melk-headline__text { font-size: 76px; }',
         '.melk-catalogo .melk-headline { margin: 26px 0 38px; }',
-        '.melk-catalogo .melk-headline .melk-headline__char.is-space { width: 32px; }',
         '.melk-catalogo .melk-list { gap: 80px; margin-top: 30px; }',
         '.melk-catalogo .melk-item__inner { border-radius: 26px 26px 42px 42px; }',
         '.melk-catalogo .melk-item__head { display: flex; align-items: center; justify-content: flex-start; padding: 24px 40px 12px; }',
@@ -152,16 +147,7 @@
 
     // ---------------- RENDER ----------------
     function renderTitulo(title) {
-        var chars = '';
-        for (var i = 0; i < title.length; i++) {
-            var ch = title.charAt(i);
-            if (ch === ' ') {
-                chars += '<span class="melk-headline__char is-space"></span>';
-            } else {
-                chars += '<span class="melk-headline__char" style="animation-delay:' + (i * 0.1).toFixed(2) + 's">' + ch + '</span>';
-            }
-        }
-        return '<div class="melk-headline"><p class="melk-headline__text">' + chars + '</p></div>';
+        return '<div class="melk-headline"><p class="melk-headline__text">' + title + '</p></div>';
     }
 
     function renderCaja(n) {
@@ -262,18 +248,6 @@
         for (var i = 0; i < targets.length; i++) obs.observe(targets[i]);
     }
 
-    // ---------------- TITULO FUERA DE VISTA ----------------
-    function pausarTitulo() {
-        var head = seccion.querySelector('.melk-headline');
-        if (!head || !('IntersectionObserver' in window)) return;
-        var obs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                head.classList.toggle('is-paused', !e.isIntersecting);
-            });
-        }, { threshold: 0.05 });
-        obs.observe(head);
-    }
-
     // ---------------- VIBRACION + ZOOM AL HOVER (segun tiempo) ----------------
     function efectoPaso() {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -312,7 +286,6 @@
     function iniciar() {
         insertarSeccion();
         animarEntrada();
-        pausarTitulo();
         efectoPaso();
     }
     if (document.readyState === 'loading') {
