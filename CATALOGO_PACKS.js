@@ -1,7 +1,7 @@
 // =============================================
 // CATALOGO - Seccion del catalogo de productos
 //
-// EDITAR: TITULO_CATALOGO y VOLUMENE
+// EDITAR: TITULO_CATALOGO y VOLUMENES
 //         (un objeto por volumen, con sus cajas)
 // CONFIG: ANCLA_INSERCION = selector del bloque
 //         banner, despues del cual se inserta
@@ -51,7 +51,7 @@
         '.melk-catalogo { padding: 20px 16px 32px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melk-catalogo__wrap { max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
-        '.melk-catalogo .melk-headline__text { display: flex; gap: 5px; align-items: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
+        '.melk-catalogo .melk-headline__text { display: flex; gap: 5px; align-items: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
         '.melk-catalogo .melk-headline .melk-headline__char { position: relative; display: flex; align-items: center; justify-content: center; padding-bottom: 2px; animation: melk-char-jump 1.1s ease-in-out infinite; animation-delay: var(--char-delay, 0s); }',
         '@keyframes melk-char-jump { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-16px); } 60% { transform: translateY(2px); } 80% { transform: translateY(-2px); } }',
         '.melk-catalogo .melk-headline .melk-headline__char.is-space { width: 20px; }',
