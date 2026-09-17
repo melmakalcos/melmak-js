@@ -25,7 +25,7 @@
                     title: 'COMPRÁ POR UNIDAD',
                     text: 'Explorá toda nuestra colección. Elegí tus diseños favoritos de a uno y armá tu combinación perfecta.',
                     img: 'URL_IMAGEN_1',
-                    link: { href: 'https://www.melmakalcos.com.ar/productos' }
+                    link: { href: 'URL_LINK_1' }
                 },
                 {
                     id: 'beauty',
@@ -85,7 +85,7 @@
         '.melk-catalogo .melk-note--food { --background-color: #fff; --title-background-color: #50ceff; border-radius: 0; }',
         '.melk-catalogo .melk-note--beauty { --background-color: #fff; --title-background-color: #fd3c26; border-radius: 0 0 23px 23px; }',
         '@keyframes melk-stars-rain { from { background-position: 0 -190px, 43px -130px, 77px -80px; } to { background-position: 0 0, 43px 0, 77px 0; } }',
-        '.melk-catalogo .melk-note__linker { display: block; width: 100%; text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }',
+        '.melk-catalogo .melk-note__linker { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }',
         '.melk-catalogo .melk-link { --background-color: #ff4566; width: 240px; height: 54px; margin: 18px auto 0; }',
         '.melk-catalogo .melk-link a { display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%; height: 100%; background-color: var(--background-color); border: 2px solid rgba(0,0,0,.12); border-radius: 50vh; color: #fff; text-decoration: none; transition: transform .3s ease; }',
         '.melk-catalogo .melk-link a:hover { transform: scale(1.04); }',
@@ -159,6 +159,9 @@
 
     function renderCaja(n) {
         var cls = n.id === 'beauty' ? 'melk-note--beauty' : 'melk-note--food';
+        var href = n.link && n.link.href ? n.link.href : '';
+        var linkA = (href && href.indexOf('URL_') !== 0)
+            ? '<a class="melk-note__linker" href="' + href + '" aria-label="' + n.title + '"></a>' : '';
         var cuerpo = '<div class="melk-note ' + cls + '">'
             + '<div class="melk-note__hoverimg"></div>'
             + '<div class="melk-note__thumbnail">'
@@ -172,11 +175,8 @@
             + '<div class="melk-note__card-text">' + n.text + '</div>'
             + '</div>'
             + '</div>'
+            + linkA
             + '</div>';
-        var href = n.link && n.link.href ? n.link.href : '';
-        if (href && href.indexOf('URL_') !== 0) {
-            return '<a class="melk-note__linker" href="' + href + '">' + cuerpo + '</a>';
-        }
         return cuerpo;
     }
 
