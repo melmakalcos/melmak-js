@@ -72,7 +72,7 @@
         '.melk-catalogo .melk-note__thumbnail-title { display: none; }',
         '.melk-catalogo .melk-note__thumbnail-image { width: 264px; height: 72px; overflow: hidden; }',
         '.melk-catalogo .melk-note__thumbnail-image img { display: block; width: 100%; height: 100%; object-fit: cover; }',
-        '.melk-catalogo .melk-note__card { position: static; left: auto; top: auto; transform: none; z-index: 5; width: 80%; max-width: 360px; margin: 0 auto; }',
+        '.melk-catalogo .melk-note__card { position: static; left: auto; top: auto; transform: none; z-index: 5; width: 80%; max-width: 360px; margin: 0 auto; transition: opacity .35s ease; }',
         '.melk-catalogo .melk-note__card::before { display: none; }',
         '.melk-catalogo .melk-note__card-inner { padding: 14px 18px 16px; -webkit-box-sizing: border-box; box-sizing: border-box; background-color: #ffee26; border: 3px solid #353535; border-radius: 14px; }',
         '.melk-catalogo .melk-note__card-title { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 20px; font-weight: 800; line-height: 1.3; text-transform: uppercase; color: #353535; text-align: center; }',
@@ -80,6 +80,7 @@
         '.melk-catalogo .melk-note__arrow { display: none; position: absolute; left: 50%; bottom: 100%; z-index: 6; width: 42px; height: 29px; background: #ffee26; clip-path: polygon(14px 0px, 28px 0px, 28px 13px, 42px 13px, 21px 29px, 0px 13px, 14px 13px); animation: melk-arrow-bob .9s ease-in-out infinite; }',
         '@keyframes melk-arrow-bob { 0%, 100% { transform: translate(-50%, -10px); } 50% { transform: translate(-50%, -16px); } }',
         '.melk-catalogo .melk-note:hover .melk-note__arrow { opacity: 0; visibility: hidden; transition: opacity .25s ease; }',
+        '.melk-catalogo .melk-note:hover .melk-note__card { opacity: 0; }',
         '.melk-catalogo .melk-item.is-end .melk-note__arrow, .melk-catalogo .melk-item.is-reception .melk-note__arrow { display: none; }',
         '.melk-catalogo .melk-note--food { --background-color: #fff; --title-background-color: #50ceff; border-radius: 0; }',
         '.melk-catalogo .melk-note--beauty { --background-color: #fff; --title-background-color: #fd3c26; border-radius: 0 0 26px 26px; }',
@@ -121,6 +122,7 @@
         '.melk-catalogo .melk-note__card { position: absolute; left: 50%; top: 100%; transform: translate(-50%, -50%); width: 80%; max-width: 340px; }',
         '.melk-catalogo .melk-note__card::before { display: block; content: ""; position: absolute; z-index: -1; inset: 0; background-color: #353535; border-radius: 14px; transform: translate(7px, 8px); }',
         '.melk-catalogo .melk-note__arrow { display: block; }',
+        '.melk-catalogo .melk-note:hover .melk-note__card { opacity: 1; }',
         '.melk-catalogo .melk-note__card-inner { padding: 20px 24px 22px; }',
         '.melk-catalogo .melk-note__card-title { font-size: 24px; }',
         '.melk-catalogo .melk-note__card-text { margin-top: 8px; font-size: 16px; }',
@@ -295,8 +297,10 @@
         efectoPaso();
     }
 
-    window.addEventListener('pageshow', function (e) {
-        if (e.persisted) reiniciarSeccion();
+    var primeraCarga = true;
+    window.addEventListener('pageshow', function () {
+        if (primeraCarga) { primeraCarga = false; return; }
+        reiniciarSeccion();
     });
 
     // ---------------- ARRANQUE ----------------
