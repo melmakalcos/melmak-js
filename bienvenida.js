@@ -28,7 +28,8 @@
 
     var style = document.createElement('style');
     style.textContent = [
-        '@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:normal;font-style:normal;font-display:swap;}',
+        '@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap;}',
+        '@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:700;font-style:normal;font-display:swap;}',
         '#melmak-bienvenida{position:fixed;inset:0;z-index:2147483600;',
         '  background:#ffee26;overflow:hidden;',
         '  display:flex;flex-direction:column;align-items:center;justify-content:center;',
@@ -237,10 +238,15 @@
 
     /* ---------- Efecto máquina de escribir ---------- */
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) {
-        tipeado.textContent = TEXTO.texto;
-    } else {
+
+    function iniciarTipeo() {
+        if (reduceMotion) {
+            tipeado.textContent = TEXTO.texto;
+            return;
+        }
+
         var txtCompleto = TEXTO.texto;
+
         var iTxt = 0;
         function tipear() {
             if (iTxt < txtCompleto.length) {
@@ -261,7 +267,7 @@
     btn.addEventListener('click', function () {
         overlay.classList.add('is-saliendo');
         document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
+        if (document.body) document.body.style.overflow = '';
         setTimeout(function () {
             overlay.remove();
             window.location.href = LINK_ENTRAR;
@@ -272,13 +278,14 @@
     function mostrar() {
         if (overlay.parentNode) return;
         document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        document.body.appendChild(overlay);
+        if (document.body) document.body.style.overflow = 'hidden';
+        document.documentElement.appendChild(overlay);
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', mostrar);
-    } else {
-        mostrar();
-    }
+    mostrar();
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.body) document.body.style.overflow = 'hidden';
+    });
+
+    iniciarTipeo();
 })();
