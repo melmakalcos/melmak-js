@@ -123,33 +123,6 @@
             '  filter: drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.8));',
             '  animation: melmak-burst-spin 12s linear infinite;',
             '}',
-            '.melmak-curva-hero__burst__content {',
-            '  position: absolute;',
-            '  top: 0;',
-            '  left: 0;',
-            '  width: 100%;',
-            '  height: 100%;',
-            '  display: flex;',
-            '  flex-direction: column;',
-            '  justify-content: center;',
-            '  align-items: center;',
-            '  text-align: center;',
-            '  color: #000;',
-            '  padding: 20px;',
-            '  box-sizing: border-box;',
-            '}',
-            '.melmak-curva-hero__burst-titulo {',
-            '  margin: 0;',
-            '  font-size: 24px;',
-            '  font-weight: 900;',
-            '  text-transform: uppercase;',
-            '  line-height: 1;',
-            '}',
-            '.melmak-curva-hero__burst-sub {',
-            '  margin: 5px 0 0 0;',
-            '  font-size: 14px;',
-            '  font-weight: bold;',
-            '}',
             '@keyframes melmak-burst-in {',
             '  0% { opacity: 0; transform: translateX(-50%) scale(0.2) rotate(-12deg); }',
             '  60% { opacity: 1; transform: translateX(-50%) scale(1.08) rotate(3deg); }',
@@ -237,18 +210,7 @@
         var clipPicos = generarClipPath(16, 50, 33);
         burstShape.style.clipPath = clipPicos;
         burstShape.style.webkitClipPath = clipPicos;
-        var burstContent = document.createElement('div');
-        burstContent.className = 'melmak-curva-hero__burst__content';
-        var burstTitulo = document.createElement('span');
-        burstTitulo.className = 'melmak-curva-hero__burst-titulo';
-        burstTitulo.textContent = '¡OFERTA!';
-        var burstSub = document.createElement('span');
-        burstSub.className = 'melmak-curva-hero__burst-sub';
-        burstSub.textContent = '¡IMPERDIBLE!';
-        burstContent.appendChild(burstTitulo);
-        burstContent.appendChild(burstSub);
         burst.appendChild(burstShape);
-        burst.appendChild(burstContent);
         hero.insertBefore(burst, cara);
 
         /* Se coloca justo después del header (logo + menú). */
@@ -491,10 +453,15 @@
         function posicionarBurst() {
             var hCara = parseFloat(cara.style.height) || 120;
             var topCara = parseFloat(cara.style.top) || 0;
+            var bottomCara = topCara + hCara;
             var hBurst = Math.max(hCara * 1.85, 200);
+            var top = topCara + hCara * 0.72 - hBurst * 0.5;
+            var clipBottom = Math.max(0, (top + hBurst) - bottomCara);
             burst.style.width = hBurst + 'px';
             burst.style.height = hBurst + 'px';
-            burst.style.top = (topCara + hCara * 0.72 - hBurst * 0.5) + 'px';
+            burst.style.top = top + 'px';
+            burst.style.clipPath = clipBottom > 0 ? 'inset(0 0 ' + clipBottom + 'px 0)' : '';
+            burst.style.webkitClipPath = burst.style.clipPath;
         }
         posicionarCara();
         posicionarBurst();
