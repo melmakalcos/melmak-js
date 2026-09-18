@@ -256,6 +256,7 @@
         });
 
         var runAnim = 0;
+        var animacionCorriendo = false;
 
         var burstMostrado = false;
         function mostrarBurst() {
@@ -350,15 +351,22 @@
                 svg.style.opacity = head <= 0 ? '0' : String(Math.min(1, head / (V * 0.05)));
             }
 
-            /* ---------- Animación de aparición (timeline con setTimeout) ---------- */
+            /* ---------- Animación de aparición (timeline con requestAnimationFrame) ---------- */
             var id = ++runAnim;
             var reduce = window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (reduce) {
+
+            function asentar() {
                 setPos(WcF);
                 svg.style.opacity = '1';
                 mostrarBurst();
+            }
+
+            if (reduce || animacionCorriendo) {
+                asentar();
             } else {
+                animacionCorriendo = true;
+
                 function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
                 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
@@ -378,13 +386,13 @@
                     if (t0 === null) t0 = performance.now();
                     var d = performance.now() - t0;
 
-                    if (d < delayA) { setTimeout(paso, 17); return; }
+                    if (d < delayA) { requestAnimationFrame(paso); return; }
 
                     var uA = (d - delayA) / durA;
                     if (uA < 1) {
                         var wcA = WcL + (WcR - WcL) * easeA(uA);
                         setPos(wcA);
-                        setTimeout(paso, 17);
+                        requestAnimationFrame(paso);
                         return;
                     }
 
@@ -392,7 +400,7 @@
                     if (d2 < holdB) {            // pausa fuera (derecha)
                         setPos(WcR);
                         svg.style.opacity = '1';
-                        setTimeout(paso, 17);
+                        requestAnimationFrame(paso);
                         return;
                     }
 
@@ -410,16 +418,14 @@
                         wcC = Math.max(WcF - overPx, wcC);
                         setPos(wcC);
                         svg.style.opacity = '1';
-                        setTimeout(paso, 17);
+                        requestAnimationFrame(paso);
                         return;
                     }
 
-                    setPos(WcF);                 // asentado en la corona
-                    svg.style.opacity = '1';
-                    mostrarBurst();
+                    asentar();
                 }
 
-                setTimeout(paso, 17);
+                requestAnimationFrame(paso);
             }
         }
 
