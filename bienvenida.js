@@ -8,6 +8,9 @@
    · Caja central (blanca, sin borde) + botón ENTRAR.
    · Al tocar ENTRAR se desvanece y se elimina.
    · Se muestra 1 vez por sesión (sessionStorage).
+   · FUENTES PRECARGADAS: el overlay se muestra recién cuando
+     "Curda Gouda" y "vinyl" ya están cargadas, para que el texto
+     no cambie de tamaño/tipo a mitad de pantalla.
    ========================================================= */
 (function () {
     'use strict';
@@ -24,12 +27,13 @@
     var LINK_ENTRAR = 'https://www.melmakalcos.com.ar';
     var BANDA_TEXTO = 'MELMAK';
     var CHAR_URL = 'https://d22fxaf9t8d39k.cloudfront.net/8bc37ffe9fdd82d49e3913270e289f2ec8ea2654cd2c633514cb9ede3f28077d20700.png';
+    var CURDA_URL = 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf';
     /* ============================================================ */
 
     var style = document.createElement('style');
     style.textContent = [
-        '@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap;}',
-        '@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:700;font-style:normal;font-display:swap;}',
+        '@font-face{font-family:"Curda Gouda";src:url("' + CURDA_URL + '") format("truetype");font-weight:400;font-style:normal;font-display:block;}',
+        '@font-face{font-family:"Curda Gouda";src:url("' + CURDA_URL + '") format("truetype");font-weight:700;font-style:normal;font-display:block;}',
         '#melmak-bienvenida{position:fixed;inset:0;z-index:2147483600;',
         '  background:#ffee26;overflow:hidden;',
         '  display:flex;flex-direction:column;align-items:center;justify-content:center;',
@@ -123,169 +127,208 @@
     ].join('\n');
     document.head.appendChild(style);
 
-    /* Tipografía "vinyl" usada en el home (Typekit) */
-    if (!document.getElementById('melk-typekit-vinyl')) {
-        var tk = document.createElement('link');
-        tk.id = 'melk-typekit-vinyl';
-        tk.rel = 'stylesheet';
-        tk.href = 'https://use.typekit.net/tdt2nii.css';
-        document.head.appendChild(tk);
+    /* ============ PRECARGA DE FUENTES ============ */
+    function precargarCurda() {
+        return Promise.all([
+            new Promise(function (res) {
+                try {
+                    document.fonts.load('400 20px "Curda Gouda"').then(res, res);
+                } catch (e) { res(); }
+            }),
+            new Promise(function (res) {
+                try {
+                    document.fonts.load('700 20px "Curda Gouda"').then(res, res);
+                } catch (e) { res(); }
+            })
+        ]);
     }
 
-    var overlay = document.createElement('div');
-    overlay.id = 'melmak-bienvenida';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-label', 'Bienvenida');
-
-    /* ---------- Franjas laterales ---------- */
-    var fs = Math.max(18, Math.min(Math.round(window.innerWidth * 0.035), 34));
-    var banda = fs + 16;
-    overlay.style.setProperty('--banda', banda + 'px');
-
-    function crearPalabra() {
-        var w = document.createElement('div');
-        w.className = 'mw-banda__palabra';
-        w.style.fontSize = fs + 'px';
-        var letras = BANDA_TEXTO.split('');
-        for (var i = 0; i < letras.length; i++) {
-            var s = document.createElement('span');
-            s.textContent = letras[i];
-            if (i % 2 === 1) s.className = 'c-amarillo';
-            w.appendChild(s);
-        }
-        return w;
-    }
-
-    function construirBanda(lado) {
-        var bandaEl = document.createElement('div');
-        bandaEl.className = 'mw-banda mw-banda--' + lado;
-        var track = document.createElement('div');
-        track.className = 'mw-banda__track';
-
-        var lh = Math.round(fs * 1.1);
-        var palabraH = BANDA_TEXTO.length * lh + 16;
-        var half = Math.max(2, Math.ceil(window.innerHeight / palabraH) + 2);
-
-        for (var i = 0; i < half; i++) track.appendChild(crearPalabra());
-        for (var j = 0; j < half; j++) track.appendChild(crearPalabra());
-
-        bandaEl.appendChild(track);
-        return bandaEl;
-    }
-
-    overlay.appendChild(construirBanda('izq'));
-    overlay.appendChild(construirBanda('der'));
-
-    /* ---------- Partículas negras subiendo ---------- */
-    var N_PARTICULAS = 50;
-    for (var p = 0; p < N_PARTICULAS; p++) {
-        var part = document.createElement('div');
-        part.className = 'mw-particula';
-        var size = 2 + Math.random() * 5;
-        var dur = 2.5 + Math.random() * 2.5;
-        var amp = 6 + Math.random() * 16;
-        var ondaDur = 1.2 + Math.random() * 1.8;
-        part.style.width = size + 'px';
-        part.style.height = size + 'px';
-        part.style.left = (Math.random() * 100) + '%';
-        part.style.animationDuration = dur + 's';
-        part.style.animationDelay = (-Math.random() * dur) + 's';
-        var core = document.createElement('i');
-        core.style.setProperty('--amp', amp + 'px');
-        core.style.animationDuration = ondaDur + 's';
-        part.appendChild(core);
-        overlay.appendChild(part);
-    }
-
-    /* ---------- Personaje que cae y vibra ---------- */
-    var charWrap = document.createElement('div');
-    charWrap.className = 'mw-char';
-    var charInner = document.createElement('div');
-    charInner.className = 'mw-char__inner';
-    var charGlitch = document.createElement('div');
-    charGlitch.className = 'mw-char__glitch';
-
-    var charImg = document.createElement('img');
-    charImg.src = CHAR_URL;
-    charImg.alt = '';
-    charGlitch.appendChild(charImg);
-    charInner.appendChild(charGlitch);
-
-    charWrap.appendChild(charInner);
-    overlay.appendChild(charWrap);
-
-    /* ---------- Caja central ---------- */
-    var caja = document.createElement('div');
-    caja.className = 'mw-caja';
-
-    var label = document.createElement('p');
-    label.className = 'mw-caja__label';
-    label.textContent = TEXTO.etiqueta;
-    caja.appendChild(label);
-
-    var texto = document.createElement('p');
-    texto.className = 'mw-caja__text';
-    var tipeado = document.createElement('span');
-    tipeado.className = 'mw-caja__tipeado';
-    texto.appendChild(tipeado);
-    var cursor = document.createElement('span');
-    cursor.className = 'mw-cursor';
-    cursor.setAttribute('aria-hidden', 'true');
-    texto.appendChild(cursor);
-    caja.appendChild(texto);
-
-    overlay.appendChild(caja);
-
-    /* ---------- Efecto máquina de escribir ---------- */
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function iniciarTipeo() {
-        if (reduceMotion) {
-            tipeado.textContent = TEXTO.texto;
-            return;
-        }
-
-        var txtCompleto = TEXTO.texto;
-
-        var iTxt = 0;
-        function tipear() {
-            if (iTxt < txtCompleto.length) {
-                iTxt++;
-                tipeado.textContent = txtCompleto.slice(0, iTxt);
-                var demora = (txtCompleto.charAt(iTxt - 1) === '\n') ? 450 : 30;
-                setTimeout(tipear, demora);
+    function cargarVinyl() {
+        return new Promise(function (res) {
+            var tk = document.getElementById('melk-typekit-vinyl');
+            function listo() {
+                var vin = [document.fonts.load('16px vinyl'), document.fonts.load('400 16px "matt-b"')];
+                Promise.all(vin).then(res, res);
             }
+            if (tk) {
+                if (tk.sheet && tk.sheet.cssRules.length) listo();
+                else { tk.addEventListener('load', listo); tk.addEventListener('error', res); }
+            } else {
+                tk = document.createElement('link');
+                tk.id = 'melk-typekit-vinyl';
+                tk.rel = 'stylesheet';
+                tk.href = 'https://use.typekit.net/tdt2nii.css';
+                tk.onload = listo;
+                tk.onerror = res;
+                document.head.appendChild(tk);
+            }
+        });
+    }
+
+    function construir() {
+        var overlay = document.createElement('div');
+        overlay.id = 'melmak-bienvenida';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-label', 'Bienvenida');
+
+        /* ---------- Franjas laterales ---------- */
+        var fs = Math.max(18, Math.min(Math.round(window.innerWidth * 0.035), 34));
+        var banda = fs + 16;
+        overlay.style.setProperty('--banda', banda + 'px');
+
+        function crearPalabra() {
+            var w = document.createElement('div');
+            w.className = 'mw-banda__palabra';
+            w.style.fontSize = fs + 'px';
+            var letras = BANDA_TEXTO.split('');
+            for (var i = 0; i < letras.length; i++) {
+                var s = document.createElement('span');
+                s.textContent = letras[i];
+                if (i % 2 === 1) s.className = 'c-amarillo';
+                w.appendChild(s);
+            }
+            return w;
         }
-        setTimeout(tipear, 700);
+
+        function construirBanda(lado) {
+            var bandaEl = document.createElement('div');
+            bandaEl.className = 'mw-banda mw-banda--' + lado;
+            var track = document.createElement('div');
+            track.className = 'mw-banda__track';
+
+            var lh = Math.round(fs * 1.1);
+            var palabraH = BANDA_TEXTO.length * lh + 16;
+            var half = Math.max(2, Math.ceil(window.innerHeight / palabraH) + 2);
+
+            for (var i = 0; i < half; i++) track.appendChild(crearPalabra());
+            for (var j = 0; j < half; j++) track.appendChild(crearPalabra());
+
+            bandaEl.appendChild(track);
+            return bandaEl;
+        }
+
+        overlay.appendChild(construirBanda('izq'));
+        overlay.appendChild(construirBanda('der'));
+
+        /* ---------- Partículas negras subiendo ---------- */
+        var N_PARTICULAS = 50;
+        for (var p = 0; p < N_PARTICULAS; p++) {
+            var part = document.createElement('div');
+            part.className = 'mw-particula';
+            var size = 2 + Math.random() * 5;
+            var dur = 2.5 + Math.random() * 2.5;
+            var amp = 6 + Math.random() * 16;
+            var ondaDur = 1.2 + Math.random() * 1.8;
+            part.style.width = size + 'px';
+            part.style.height = size + 'px';
+            part.style.left = (Math.random() * 100) + '%';
+            part.style.animationDuration = dur + 's';
+            part.style.animationDelay = (-Math.random() * dur) + 's';
+            var core = document.createElement('i');
+            core.style.setProperty('--amp', amp + 'px');
+            core.style.animationDuration = ondaDur + 's';
+            part.appendChild(core);
+            overlay.appendChild(part);
+        }
+
+        /* ---------- Personaje que cae y vibra ---------- */
+        var charWrap = document.createElement('div');
+        charWrap.className = 'mw-char';
+        var charInner = document.createElement('div');
+        charInner.className = 'mw-char__inner';
+        var charGlitch = document.createElement('div');
+        charGlitch.className = 'mw-char__glitch';
+
+        var charImg = document.createElement('img');
+        charImg.src = CHAR_URL;
+        charImg.alt = '';
+        charGlitch.appendChild(charImg);
+        charInner.appendChild(charGlitch);
+
+        charWrap.appendChild(charInner);
+        overlay.appendChild(charWrap);
+
+        /* ---------- Caja central ---------- */
+        var caja = document.createElement('div');
+        caja.className = 'mw-caja';
+
+        var label = document.createElement('p');
+        label.className = 'mw-caja__label';
+        label.textContent = TEXTO.etiqueta;
+        caja.appendChild(label);
+
+        var texto = document.createElement('p');
+        texto.className = 'mw-caja__text';
+        var tipeado = document.createElement('span');
+        tipeado.className = 'mw-caja__tipeado';
+        texto.appendChild(tipeado);
+        var cursor = document.createElement('span');
+        cursor.className = 'mw-cursor';
+        cursor.setAttribute('aria-hidden', 'true');
+        texto.appendChild(cursor);
+        caja.appendChild(texto);
+
+        overlay.appendChild(caja);
+
+        /* ---------- Efecto máquina de escribir ---------- */
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function iniciarTipeo() {
+            if (reduceMotion) {
+                tipeado.textContent = TEXTO.texto;
+                return;
+            }
+
+            var txtCompleto = TEXTO.texto;
+
+            var iTxt = 0;
+            function tipear() {
+                if (iTxt < txtCompleto.length) {
+                    iTxt++;
+                    tipeado.textContent = txtCompleto.slice(0, iTxt);
+                    var demora = (txtCompleto.charAt(iTxt - 1) === '\n') ? 450 : 30;
+                    setTimeout(tipear, demora);
+                }
+            }
+            setTimeout(tipear, 700);
+        }
+
+        /* ---------- Botón ---------- */
+        var btn = document.createElement('button');
+        btn.className = 'mw-btn';
+        btn.type = 'button';
+        btn.textContent = BOTON;
+        btn.addEventListener('click', function () {
+            overlay.classList.add('is-saliendo');
+            document.documentElement.style.overflow = '';
+            if (document.body) document.body.style.overflow = '';
+            setTimeout(function () {
+                overlay.remove();
+                window.location.href = LINK_ENTRAR;
+            }, 580);
+        });
+        overlay.appendChild(btn);
+
+        function mostrar() {
+            if (overlay.parentNode) return;
+            document.documentElement.style.overflow = 'hidden';
+            if (document.body) document.body.style.overflow = 'hidden';
+            document.documentElement.appendChild(overlay);
+        }
+
+        mostrar();
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.body) document.body.style.overflow = 'hidden';
+        });
+
+        iniciarTipeo();
     }
 
-    /* ---------- Botón ---------- */
-    var btn = document.createElement('button');
-    btn.className = 'mw-btn';
-    btn.type = 'button';
-    btn.textContent = BOTON;
-    btn.addEventListener('click', function () {
-        overlay.classList.add('is-saliendo');
-        document.documentElement.style.overflow = '';
-        if (document.body) document.body.style.overflow = '';
-        setTimeout(function () {
-            overlay.remove();
-            window.location.href = LINK_ENTRAR;
-        }, 580);
+    /* Mostrar solo cuando las fuentes estén listas;
+       red de seguridad por si algo falla en la carga. */
+    var plazoMax = setTimeout(construir, 2500);
+    Promise.all([precargarCurda(), cargarVinyl()]).then(function () {
+        clearTimeout(plazoMax);
+        construir();
     });
-    overlay.appendChild(btn);
-
-    function mostrar() {
-        if (overlay.parentNode) return;
-        document.documentElement.style.overflow = 'hidden';
-        if (document.body) document.body.style.overflow = 'hidden';
-        document.documentElement.appendChild(overlay);
-    }
-
-    mostrar();
-    document.addEventListener('DOMContentLoaded', function () {
-        if (document.body) document.body.style.overflow = 'hidden';
-    });
-
-    iniciarTipeo();
 })();
