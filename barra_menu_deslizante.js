@@ -75,7 +75,7 @@
             '  border-radius: 100%;',
             '  box-sizing: border-box;',
             '  transform-origin: 50% 100%;',
-            '  animation: melmak-curva-in 1.2s cubic-bezier(0.33, 1, 0.68, 1) 0.3s both, melmak-respirar 5s ease-in-out 2s infinite;',
+            '  animation: melmak-curva-in 1.2s cubic-bezier(0.33, 1, 0.68, 1) 0.05s both, melmak-respirar 5s ease-in-out 2s infinite;',
             '}',
             '.melmak-curva-hero__texto {',
             '  position: absolute;',
@@ -100,7 +100,7 @@
             '  height: auto;',
             '  transform: translateX(-50%);',
             '  transform-origin: 50% 100%;',
-            '  animation: melmak-cara-cae 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both;',
+            '  animation: melmak-cara-cae 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;',
             '}',
             '.melmak-curva-hero__burst {',
             '  position: absolute;',
@@ -367,7 +367,7 @@
                 /* Fase B: pausa fuera (derecha) */
                 /* Fase C: vuelta con freno + resbale suave en el centro */
                 var overPx = V * 0.04;
-                var delayA = 350, durA = 1700, holdB = 420, durC = 1300;
+                var delayA = 150, durA = 1700, holdB = 420, durC = 1300;
 
                 setPos(WcL);
                 svg.style.opacity = '0';
