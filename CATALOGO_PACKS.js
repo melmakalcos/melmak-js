@@ -9,6 +9,7 @@
 // =============================================
 (function () {
     if (document.getElementById('melk-catalogo')) return;
+    if (location.pathname.replace(/\/+$/, '') !== '') return;   // solo portada
 
     // =============== DATOS (EDITAR AQUI) ================
     var TITULO_CATALOGO = 'CATÁLOGO';
@@ -41,7 +42,7 @@
     ];
 
     // Selector del bloque banner despues del cual se inserta la seccion.
-    var ANCLA_INSERCION = '.block-carrousel--1339211';
+    var ANCLA_INSERCION = '.header-menu';
     // ====================================================
 
     // ---------------- ESTILOS ----------------
