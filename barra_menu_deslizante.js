@@ -81,6 +81,7 @@
             '  stroke: #353535;',
             '  paint-order: stroke fill;',
             '}',
+            '.melmak-curva-hero__texto text.melmak-curva-hero__sombra { fill: #353535; stroke: none; }',
             '.melmak-curva-hero__cara {',
             '  position: absolute;',
             '  left: 50%;',
@@ -110,7 +111,7 @@
             '}',
             '@keyframes melmak-respirar {',
             '  0%, 100% { transform: scale(1, 1); }',
-            '  50% { transform: scale(1.01, 1.015); }',
+            '  50% { transform: scale(1.025, 1.04); }',
             '}',
             '@media (prefers-reduced-motion: reduce) {',
             '  .melmak-curva-hero__anillo,',
@@ -139,14 +140,24 @@
         var path = document.createElementNS(ns, 'path');
         path.setAttribute('id', 'melmak-texto-path');
         svg.appendChild(path);
+
+        function crearTextPath() {
+            var tp = document.createElementNS(ns, 'textPath');
+            tp.setAttribute('href', '#melmak-texto-path');
+            tp.setAttribute('xlink:href', '#melmak-texto-path');
+            tp.setAttribute('startOffset', '50%');
+            tp.setAttribute('text-anchor', 'middle');
+            tp.textContent = config.texto;
+            return tp;
+        }
+
+        var sombra = document.createElementNS(ns, 'text');
+        sombra.setAttribute('class', 'melmak-curva-hero__sombra');
+        sombra.appendChild(crearTextPath());
+        svg.appendChild(sombra);
+
         var texto = document.createElementNS(ns, 'text');
-        var textPath = document.createElementNS(ns, 'textPath');
-        textPath.setAttribute('href', '#melmak-texto-path');
-        textPath.setAttribute('xlink:href', '#melmak-texto-path');
-        textPath.setAttribute('startOffset', '50%');
-        textPath.setAttribute('text-anchor', 'middle');
-        textPath.textContent = config.texto;
-        texto.appendChild(textPath);
+        texto.appendChild(crearTextPath());
         svg.appendChild(texto);
         hero.appendChild(svg);
 
@@ -194,6 +205,8 @@
             texto.setAttribute('font-size', fz);
             texto.setAttribute('transform', 'translate(0,' + (0.42 * fz) + ')');
             texto.setAttribute('stroke-width', Math.max(2, fz * 0.05));
+            sombra.setAttribute('font-size', fz);
+            sombra.setAttribute('transform', 'translate(0,' + (0.42 * fz + 7) + ')');
 
             var hCara = Math.min(V * (esDesktop ? 0.165 : 0.36), esDesktop ? 195 : 135);
             var bordeTopTexto = apexY + T / 2 + 0.42 * fz - 0.753 * fz;
