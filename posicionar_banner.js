@@ -21,10 +21,10 @@
         return !!banner;
     }
     function iniciar() {
+        if (esPortada ? colocar() : ocultar()) return;
         var intentos = 0;
         var timer = setInterval(function () {
-            var listo = esPortada ? colocar() : ocultar();
-            if (listo || ++intentos >= 100) clearInterval(timer);
+            if ((esPortada ? colocar() : ocultar()) || ++intentos >= 100) clearInterval(timer);
         }, 100);
     }
     if (document.readyState === 'loading') {
