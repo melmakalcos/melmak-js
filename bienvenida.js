@@ -325,18 +325,19 @@
         iniciarTipeo();
     }
 
-    /* Cobertura inmediata para evitar el pantallazo del home;
+    /* Cobertura inmediata (vía CSS en <head>) para evitar el pantallazo del home;
        el overlay completo se arma cuando las fuentes están listas. */
-    var cargando = document.createElement('div');
-    cargando.id = 'melmak-bienvenida-cargando';
-    cargando.setAttribute('aria-hidden', 'true');
-    cargando.style.cssText = 'position:fixed;inset:0;background:#ffee26;z-index:2147483600;';
+    var styleCobertura = document.createElement('style');
+    styleCobertura.id = 'melmak-bienvenida-cobertura';
+    styleCobertura.textContent = 'body::before{content:"";position:fixed;inset:0;background:#ffee26;z-index:2147483599;}';
+    document.head.appendChild(styleCobertura);
     document.documentElement.style.overflow = 'hidden';
-    document.documentElement.appendChild(cargando);
 
     function construirYLimpiar() {
         construir();
-        if (cargando.parentNode) cargando.parentNode.removeChild(cargando);
+        setTimeout(function () {
+            if (styleCobertura.parentNode) styleCobertura.parentNode.removeChild(styleCobertura);
+        }, 550);
     }
 
     var plazoMax = setTimeout(construirYLimpiar, 2500);
