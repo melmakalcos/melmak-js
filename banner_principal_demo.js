@@ -129,7 +129,7 @@
         '.mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:mbbs-sticker .45s cubic-bezier(.34,1.56,.64,1) both;}',
         '@keyframes mbbs-sticker{from{scale:0;}to{scale:1;}}',
         /* ---------- Hero ---------- */
-        '#melmak-bbs__hero{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;',
+        '#melmak-bbs__hero{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;min-height:100vh;min-height:100svh;',
         '  margin-bottom:clamp(36px,5vw,72px);}',
         '#melmak-bbs__kicker{display:inline-block;font-family:"Curda Gouda",Rubik,Arial,sans-serif;',
         '  font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.22em;',
