@@ -9,7 +9,8 @@
 // =============================================
 (function () {
     if (document.getElementById('melk-catalogo')) return;
-    if (location.pathname.replace(/\/+$/, '') !== '') return;   // solo portada
+    var esPortada = location.pathname.replace(/\/+$/, '') === '';
+    if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;   // solo portada (o preview local)
 
     // =============== DATOS (EDITAR AQUI) ================
     var TITULO_CATALOGO = 'CATÁLOGO';
@@ -50,8 +51,14 @@
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
         '@keyframes mmOnda { to { background-position: 26px 0; } }',
-        '.melk-catalogo { padding: 20px 16px 90px; background-color: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-        '.melk-catalogo__wrap { max-width: 1150px; margin: 0 auto; }',
+        '.melk-catalogo { font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+        '.melk-catalogo__fondo { position: relative; padding: 20px 16px 90px; background-color: #ffee26;',
+        '  background-image: radial-gradient(circle at 50% 50%, #ffffff 9px, transparent 10px), radial-gradient(circle at 50% 50%, #ffffff 9px, transparent 10px);',
+        '  background-size: 56px 56px;',
+        '  background-position: 0 0, 28px 28px;',
+        '  animation: melk-lunares 12s linear infinite; }',
+        '@keyframes melk-lunares { from { background-position: 0 0, 28px 28px; } to { background-position: 56px 56px, 84px 84px; } }',
+        '.melk-catalogo__wrap { position: relative; max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
         '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
         '.melk-catalogo .melk-list { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 40px; }',
@@ -107,7 +114,7 @@
         '.melk-catalogo .melk-bounce-target.melk-bounce-in { opacity: 1; transform: none; }',
         '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } .melk-catalogo .melk-item__body { animation: none; } }',
         '@media (min-width: 768px) {',
-        '.melk-catalogo { padding: 36px 40px 120px; }',
+        '.melk-catalogo__fondo { padding: 36px 40px 120px; }',
         '.melk-catalogo .melk-headline__text { font-size: 76px; }',
         '.melk-catalogo .melk-headline { margin: 26px 0 38px; }',
         '.melk-catalogo .melk-list { gap: 80px; margin-top: 30px; }',
@@ -216,9 +223,8 @@
     }
 
     // ---------------- HTML DE LA SECCION ----------------
-    var ONDA = '<div style="width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;line-height:0;">'
-        + '<div style="height:18px;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>'
-        + '</div>';
+    var ONDA_TOP = '<div style="position:absolute;top:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 0 L0 0 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
+    var ONDA_BOTTOM = '<div style="position:absolute;bottom:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
 
     var seccion = document.createElement('div');
     seccion.className = 'melk-catalogo';
@@ -227,9 +233,12 @@
     for (var i = 0; i < VOLUMENES.length; i++) {
         lista += renderVolumen(VOLUMENES[i], i);
     }
-    seccion.innerHTML = ONDA
+    seccion.innerHTML = '<div class="melk-catalogo__fondo">'
+        + ONDA_TOP
+        + ONDA_BOTTOM
         + '<div class="melk-catalogo__wrap">'
         + '<ul class="melk-list">' + lista + '</ul>'
+        + '</div>'
         + '</div>';
 
     // ---------------- INSERTAR DESPUES DEL BANNER ----------------
@@ -297,9 +306,12 @@
 
     // ---------------- RESET AL VOLVER ATRAS (bfcache) ----------------
     function reiniciarSeccion() {
-        seccion.innerHTML = ONDA
+        seccion.innerHTML = '<div class="melk-catalogo__fondo">'
+            + ONDA_TOP
+            + ONDA_BOTTOM
             + '<div class="melk-catalogo__wrap">'
             + '<ul class="melk-list">' + lista + '</ul>'
+            + '</div>'
             + '</div>';
         animarEntrada();
         efectoPaso();
