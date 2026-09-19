@@ -130,7 +130,7 @@
         '@keyframes mbbs-sticker{from{scale:0;}to{scale:1;}}',
         /* ---------- Hero ---------- */
         '#melmak-bbs__hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;',
-        '  margin-bottom:clamp(50px,10vh,150px);}',
+        '  margin-top:clamp(16px,3vh,48px);margin-bottom:clamp(50px,10vh,150px);}',
         '#melmak-bbs__kicker{display:inline-block;font-family:"Curda Gouda",Rubik,Arial,sans-serif;',
         '  font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.22em;',
         '  text-transform:uppercase;color:#fff;background:var(--ink);',
