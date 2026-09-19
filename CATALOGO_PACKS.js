@@ -10,7 +10,7 @@
 (function () {
     if (document.getElementById('melk-catalogo')) return;
     var esPortada = location.pathname.replace(/\/+$/, '') === '';
-    if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;   // solo portada (o preview local)
+    if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;   // solo portada
 
     // =============== DATOS (EDITAR AQUI) ================
     var TITULO_CATALOGO = 'CATÁLOGO';

@@ -1,5 +1,5 @@
 /* =========================================================
-   MELMAK — BANNER PRINCIPAL DEMO  (idea "pBBS" de Ohtake)
+   MELMAK — BANNER PRINCIPAL DEMO
    =========================================================
    · Hero animado: wordmark grande + mascota.
    · Carrusel #353535 debajo de las cajas con las palabras
@@ -552,7 +552,7 @@
         var texto = document.createElement('p');
         texto.className = 'mbms-merit__texto';
         texto.textContent = [
-            'Serigrafía, solvente/ecosolvente, sublimación, láser... existen muchas variedades de materiales y tipo de impresión. ',
+            'Serigrafiados, solvente/ecosolvente, sublimados, láser... existen stickers de todo tipo de materiales e impresión. ',
             'En MELMAK, utilizamos la tecnología UV sobre vinilo, la cual ofrece una alta resistencia a la decoloración por luz solar, ',
             'la humedad, los roces y la intemperie, prolongando su vida útil en exteriores.'
         ].join('').toUpperCase();

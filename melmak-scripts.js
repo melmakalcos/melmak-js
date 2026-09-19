@@ -1,4 +1,4 @@
-/*TILT_MELMAK_FINAL_v14 - Anulación de sombra nativa, Tilt directo y Brillo/Reflejo (Glare)*/(function () {
+/* MELMAK - Tilt y brillo en productos */(function () {
   if (window.matchMedia('(pointer:coarse)').matches) return;
 
 
@@ -78,7 +78,7 @@
 
 
         img.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
-        
+
         // Brillo reactivo a la inclinación vertical (rango 0.85 a 1.20)
         var brightness = 1 + (0.5 - y) * 0.60;
         img.style.filter = 'brightness(' + brightness + ')';
