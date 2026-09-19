@@ -306,7 +306,6 @@
             if (document.body) document.body.style.overflow = '';
             setTimeout(function () {
                 overlay.remove();
-                window.location.href = LINK_ENTRAR;
             }, 580);
         });
         overlay.appendChild(btn);
@@ -326,11 +325,23 @@
         iniciarTipeo();
     }
 
-    /* Mostrar solo cuando las fuentes estén listas;
-       red de seguridad por si algo falla en la carga. */
-    var plazoMax = setTimeout(construir, 2500);
+    /* Cobertura inmediata para evitar el pantallazo del home;
+       el overlay completo se arma cuando las fuentes están listas. */
+    var cargando = document.createElement('div');
+    cargando.id = 'melmak-bienvenida-cargando';
+    cargando.setAttribute('aria-hidden', 'true');
+    cargando.style.cssText = 'position:fixed;inset:0;background:#ffee26;z-index:2147483600;';
+    document.documentElement.style.overflow = 'hidden';
+    document.documentElement.appendChild(cargando);
+
+    function construirYLimpiar() {
+        construir();
+        if (cargando.parentNode) cargando.parentNode.removeChild(cargando);
+    }
+
+    var plazoMax = setTimeout(construirYLimpiar, 2500);
     Promise.all([precargarCurda(), cargarVinyl()]).then(function () {
         clearTimeout(plazoMax);
-        construir();
+        construirYLimpiar();
     });
 })();
