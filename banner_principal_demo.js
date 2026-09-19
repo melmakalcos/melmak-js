@@ -138,7 +138,7 @@
         '#melmak-bbs__title{margin:0;line-height:.92;',
         '  font-family:"Curda Gouda",Rubik,Arial,sans-serif;font-weight:700;',
         '  font-size:clamp(52px,9vw,120px);letter-spacing:-.01em;}',
-        '#melmak-bbs__title span{display:block;width:fit-content;}',
+        '#melmak-bbs__title span{display:block;width:fit-content;font-family:"Curda Gouda",Rubik,Arial,sans-serif;}',
         '#melmak-bbs__title span.mbbs-line2{color:#fff;-webkit-text-stroke:3px var(--ink);',
         '  text-shadow:6px 6px 0 var(--ink);}',
         '#melmak-bbs__art{position:relative;text-align:center;}',
