@@ -129,8 +129,8 @@
         '.mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:mbbs-sticker .45s cubic-bezier(.34,1.56,.64,1) both;}',
         '@keyframes mbbs-sticker{from{scale:0;}to{scale:1;}}',
         /* ---------- Hero ---------- */
-        '#melmak-bbs__hero{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;min-height:100vh;min-height:100svh;',
-        '  margin-bottom:clamp(36px,5vw,72px);}',
+        '#melmak-bbs__hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;',
+        '  margin-bottom:clamp(50px,10vh,150px);}',
         '#melmak-bbs__kicker{display:inline-block;font-family:"Curda Gouda",Rubik,Arial,sans-serif;',
         '  font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.22em;',
         '  text-transform:uppercase;color:#fff;background:var(--ink);',
@@ -143,6 +143,12 @@
         '  text-shadow:6px 6px 0 var(--ink);}',
         '#melmak-bbs__art{position:relative;text-align:center;}',
         '#melmak-bbs__mascot{display:inline-block;width:min(280px,60vw);height:auto;transform:translateX(-48px);}',
+        /* ---------- Indicador de scroll (flecha) ---------- */
+        '.mbbs-scroll-hint{position:absolute;left:50%;bottom:-140px;z-index:4;transform:translateX(-50%);',
+        '  transition:opacity .3s ease;animation:mbbs-hint-bounce 1.7s ease-in-out infinite;}',
+        '.mbbs-scroll-hint::after{content:"";display:block;width:16px;height:16px;',
+        '  border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg);margin:0 auto;}',
+        '@keyframes mbbs-hint-bounce{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,10px);}}',
         /* ---------- Lista de posts ---------- */
         '#melmak-bbs__head{display:flex;align-items:center;gap:16px;margin:clamp(18px,3vw,34px) 0 clamp(22px,3vw,32px);}',
         '#melmak-bbs__head:after{content:"";flex:1;height:3px;background:var(--ink);border-radius:999px;margin-left:8px;}',
@@ -245,6 +251,7 @@
         '  .mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:none;}',
         '  .mbms-merit__aviso{animation:none;opacity:1;}',
         '  .mbms-merit__mascota{animation:none;}',
+        '  .mbbs-scroll-hint{animation:none;}',
         '}'
     ].join('\n');
     (document.head || document.documentElement).appendChild(style);
@@ -301,6 +308,11 @@
         img.decoding = 'async';
         art.appendChild(img);
         hero.appendChild(art);
+
+        var hint = document.createElement('div');
+        hint.className = 'mbbs-scroll-hint';
+        hint.setAttribute('aria-hidden', 'true');
+        hero.appendChild(hint);
 
         inner.appendChild(hero);
 
@@ -622,30 +634,34 @@
         if (!el) { return; }
         var r = el.getBoundingClientRect();
         var vh = window.innerHeight || document.documentElement.clientHeight;
-        var total = r.height;
-        var visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
-        if (visible < 0) { visible = 0; }
-        var p = total ? Math.min(1, visible / total) : 1;
+        var p = (vh * 0.65 - r.top) / (vh * 0.3);
+        if (p < 0) { p = 0; }
+        if (p > 1) { p = 1; }
         el.style.opacity = p.toFixed(3);
         el.style.transform = 'translateY(' + Math.round((1 - p) * 48) + 'px)';
     }
     /* Aparecer/ocultar con el scroll. */
     function animacionScroll() {
         var esMovil = window.innerWidth <= 600;
-        var franja = document.getElementById('melmak-bbs__carrusel');
         if (esMovil) {
             /* Móvil: cada minicaja aparece individualmente. */
             var lis = document.querySelectorAll('#melmak-bbs__post');
             for (var i = 0; i < lis.length; i++) { aplicarScroll(lis[i]); }
             aplicarScroll(document.getElementById('melmak-bbs__head'));
-            aplicarScroll(franja);
             return;
         }
-        /* PC: bloque de preguntas, franja y bloque nuevo. */
+        /* PC: bloque de preguntas. */
         aplicarScroll(document.getElementById('melmak-bbs__scroll-block'));
-        aplicarScroll(franja);
     }
     window.addEventListener('scroll', animacionScroll, { passive: true });
     window.addEventListener('resize', animacionScroll, { passive: true });
     animacionScroll();
+
+    /* ---------- Ocultar la flecha al scrollear ---------- */
+    var hintEl = document.querySelector('.mbbs-scroll-hint');
+    function ocultarHint() {
+        if (hintEl) { hintEl.style.opacity = (window.scrollY > 60) ? '0' : '1'; }
+    }
+    window.addEventListener('scroll', ocultarHint, { passive: true });
+    ocultarHint();
 })();
