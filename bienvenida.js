@@ -42,6 +42,13 @@
         '  padding-left:var(--banda);padding-right:var(--banda);',
         '  animation:mw-in .5s ease both;}',
         '#melmak-bienvenida.is-saliendo{animation:mw-out .55s cubic-bezier(.7,0,.2,1) forwards;}',
+        '#melmak-bienvenida.is-telon{animation:none;background:transparent;}',
+        '#melmak-bienvenida.is-telon > *{animation:none;opacity:0;}',
+        '#melmak-bienvenida.is-telon::before,#melmak-bienvenida.is-telon::after{content:"";position:absolute;top:0;height:100%;width:50%;background:#ffee26;z-index:100;}',
+        '#melmak-bienvenida.is-telon::before{left:0;animation:mw-telon-izq .7s cubic-bezier(.7,0,.2,1) forwards;}',
+        '#melmak-bienvenida.is-telon::after{right:0;animation:mw-telon-der .7s cubic-bezier(.7,0,.2,1) forwards;}',
+        '@keyframes mw-telon-izq{from{transform:translateX(0);}to{transform:translateX(-100%);}}',
+        '@keyframes mw-telon-der{from{transform:translateX(0);}to{transform:translateX(100%);}}',
         '#melmak-bienvenida,#melmak-bienvenida *{font-family:inherit;box-sizing:border-box;}',
         '#melmak-bienvenida .mw-banda{position:absolute;top:0;bottom:0;width:var(--banda);',
         '  background:#353535;overflow:hidden;z-index:0;',
@@ -291,13 +298,15 @@
         btn.type = 'button';
         btn.textContent = BOTON;
         btn.addEventListener('click', function () {
-            overlay.classList.add('is-saliendo');
+            overlay.classList.add('is-telon');
             document.documentElement.style.overflow = '';
             if (document.body) document.body.style.overflow = '';
-            window.dispatchEvent(new CustomEvent('melmak-entrar'));
+            setTimeout(function () {
+                window.dispatchEvent(new CustomEvent('melmak-entrar'));
+            }, 300);
             setTimeout(function () {
                 overlay.remove();
-            }, 580);
+            }, 750);
         });
         overlay.appendChild(btn);
 
