@@ -18,7 +18,7 @@
     var VOLUMENES = [
         {
             status: '',            // '' | 'is-reception' | 'is-end'
-            mainText: 'ELEGÍ LA OPCIÓN QUE MÁS TE GUSTE',
+            mainText: 'HACÉ CLICK EN LA OPCIÓN QUE MÁS TE GUSTE',
             join: ['is-red'],
             notes: [
                 {
