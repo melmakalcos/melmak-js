@@ -43,7 +43,7 @@
         '  animation:mw-in .5s ease both;}',
         '#melmak-bienvenida.is-saliendo{animation:mw-out .55s cubic-bezier(.7,0,.2,1) forwards;}',
         '#melmak-bienvenida.is-telon{animation:none;background:transparent;}',
-        '#melmak-bienvenida.is-telon > *{animation:none;opacity:0;}',
+        '#melmak-bienvenida.is-telon > *{animation:none !important;opacity:0 !important;}',
         '#melmak-bienvenida.is-telon::before,#melmak-bienvenida.is-telon::after{content:"";position:absolute;top:0;height:100%;width:50%;background:#ffee26;z-index:100;}',
         '#melmak-bienvenida.is-telon::before{left:0;animation:mw-telon-izq .7s cubic-bezier(.7,0,.2,1) forwards;}',
         '#melmak-bienvenida.is-telon::after{right:0;animation:mw-telon-der .7s cubic-bezier(.7,0,.2,1) forwards;}',
@@ -219,13 +219,14 @@
         /* ---------- Líneas de velocidad (abajo → arriba, aleatorias) ---------- */
         var lineas = document.createElement('div');
         lineas.className = 'mw-lines';
-        var N_LINEAS = 8;
+        var N_LINEAS = 24;
         for (var q = 0; q < N_LINEAS; q++) {
             var ln = document.createElement('span');
             ln.style.left = (Math.random() * 100) + '%';
-            ln.style.height = (10 + Math.random() * 16) + '%';
-            ln.style.animationDuration = (0.25 + Math.random() * 0.4) + 's';
-            ln.style.animationDelay = (-Math.random() * 1.5) + 's';
+            ln.style.height = (6 + Math.random() * 22) + '%';
+            ln.style.opacity = (0.25 + Math.random() * 0.75);
+            ln.style.animationDuration = (0.2 + Math.random() * 0.5) + 's';
+            ln.style.animationDelay = (-Math.random() * 2) + 's';
             lineas.appendChild(ln);
         }
         overlay.appendChild(lineas);
