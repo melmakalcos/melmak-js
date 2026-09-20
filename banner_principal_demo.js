@@ -130,7 +130,8 @@
         '@keyframes mbbs-sticker{from{scale:0;}to{scale:1;}}',
         /* ---------- Hero ---------- */
         '#melmak-bbs__hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;',
-        '  margin-top:clamp(16px,3vh,48px);margin-bottom:clamp(50px,10vh,150px);}',
+        '  margin-top:clamp(28px,5vh,80px);margin-bottom:clamp(50px,10vh,150px);',
+        '  transition:opacity .6s cubic-bezier(.34,1.56,.64,1),transform .6s cubic-bezier(.34,1.56,.64,1);}',
         '#melmak-bbs__kicker{display:inline-block;font-family:"Curda Gouda",Rubik,Arial,sans-serif;',
         '  font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.22em;',
         '  text-transform:uppercase;color:#fff;background:var(--ink);',
@@ -149,6 +150,7 @@
         '.mbbs-scroll-hint::after{content:"";display:block;width:16px;height:16px;',
         '  border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg);margin:0 auto;}',
         '@keyframes mbbs-hint-bounce{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,10px);}}',
+        '@keyframes mbbs-hero-plop{from{opacity:0;transform:scale(.5);}to{opacity:1;transform:scale(1);}}',
         /* ---------- Lista de posts ---------- */
         '#melmak-bbs__head{display:flex;align-items:center;gap:16px;margin:clamp(18px,3vw,34px) 0 clamp(22px,3vw,32px);}',
         '#melmak-bbs__head:after{content:"";flex:1;height:3px;background:var(--ink);border-radius:999px;margin-left:8px;}',
@@ -185,7 +187,7 @@
         '  #melmak-bbs__posts{grid-template-columns:1fr;justify-items:center;gap:44px;}',
         '  #melmak-bbs__post{width:min(374px,100%);padding:34px 30px 30px;}',
         '  #melmak-bbs__title span.mbbs-line2{transform:none;}',
-        '  #melmak-bbs__hero{gap:18px;}',
+        '  #melmak-bbs__hero{gap:18px;margin-top:clamp(32px,6vh,72px);}',
         '  #melmak-bbs__copy{text-align:center;}',
         '  #melmak-bbs__kicker{margin-right:auto;margin-left:auto;}',
         '  #melmak-bbs__title span{margin-left:auto;margin-right:auto;}',
@@ -252,6 +254,7 @@
         '  .mbms-merit__aviso{animation:none;opacity:1;}',
         '  .mbms-merit__mascota{animation:none;}',
         '  .mbbs-scroll-hint{animation:none;}',
+        '  #melmak-bbs__hero{transition:none;}',
         '}'
     ].join('\n');
     (document.head || document.documentElement).appendChild(style);
@@ -277,6 +280,8 @@
         /* ---------- Hero ---------- */
         var hero = document.createElement('div');
         hero.id = 'melmak-bbs__hero';
+        hero.style.opacity = '0';
+        hero.style.transform = 'scale(.5)';
 
         var copy = document.createElement('div');
         copy.id = 'melmak-bbs__copy';
@@ -585,6 +590,22 @@
     }
 
     root.appendChild(crearSeccion());
+
+    /* Plop del hero: al tocar ENTRAR (si hay bienvenida) o al cargar (si no). */
+    var heroPlop = document.getElementById('melmak-bbs__hero');
+    if (heroPlop) {
+        function plopHero() {
+            heroPlop.style.opacity = '1';
+            heroPlop.style.transform = 'scale(1)';
+        }
+        if (window.__melmakBienvenida) {
+            window.addEventListener('melmak-entrar', plopHero);
+        } else {
+            requestAnimationFrame(function () {
+                requestAnimationFrame(plopHero);
+            });
+        }
+    }
 
     /* ---------- Aparicion divertida del aviso ---------- */
     (function animarMbo() {

@@ -17,6 +17,7 @@
 
     if (sessionStorage.getItem('melmak-bienvenida-visto') === '1') return;
     sessionStorage.setItem('melmak-bienvenida-visto', '1');
+    window.__melmakBienvenida = true;
 
     /* =============== TEXTO / IMAGEN (EDITAR AQUÍ) =============== */
     var TEXTO = {
@@ -55,11 +56,8 @@
         '#melmak-bienvenida .mw-banda__palabra span{font-family:"Curda Gouda",Rubik,Arial,sans-serif;color:#ffffff;}',
         '#melmak-bienvenida .mw-banda__palabra span.c-amarillo{font-family:"Curda Gouda",Rubik,Arial,sans-serif;color:#ffee26;}',
         '#melmak-bienvenida .mw-caja__tipeado{font-family:\'vinyl\',\'matt-b\',Rubik,Arial,sans-serif;}',
-        '#melmak-bienvenida .mw-particula{position:absolute;bottom:-12px;z-index:1;',
-        '  pointer-events:none;animation:mw-sube linear infinite;}',
-        '#melmak-bienvenida .mw-particula i{display:block;width:100%;height:100%;',
-        '  background:#353535;border-radius:50%;',
-        '  animation:mw-onda ease-in-out infinite;}',
+        '#melmak-bienvenida .mw-lines{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}',
+        '#melmak-bienvenida .mw-lines span{position:absolute;width:2px;height:18%;background:#353535;animation:mwsl .5s linear infinite;}',
         '#melmak-bienvenida .mw-char{position:relative;z-index:3;margin-bottom:-8px;',
         '  animation:mw-char-cae .9s cubic-bezier(.22,1,.36,1) .1s both;}',
         '#melmak-bienvenida .mw-char__inner{position:relative;display:inline-block;',
@@ -115,15 +113,14 @@
         '  87%{clip-path:inset(50% 0 26% 0);}90%{clip-path:inset(6% 0 76% 0);}',
         '  93%{clip-path:inset(0 0 100% 0);}}',
         '@keyframes mw-cursor-blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}',
-        '@keyframes mw-sube{0%{transform:translateY(0);opacity:0;}8%{opacity:1;}55%{opacity:1;}82%{transform:translateY(-88vh);opacity:0;}100%{transform:translateY(-108vh);opacity:0;}}',
-        '@keyframes mw-onda{0%,100%{transform:translateX(0);}50%{transform:translateX(var(--amp,10px));}}',
+        '@keyframes mwsl{0%{top:105%;opacity:0;}15%{opacity:1;}100%{top:-105%;opacity:0;}}',
         '@media (max-width:767px){',
         '  #melmak-bienvenida .mw-caja{max-width:96%;}',
         '}',
         '@media (prefers-reduced-motion:reduce){',
         '  #melmak-bienvenida,#melmak-bienvenida .mw-caja,#melmak-bienvenida .mw-btn,',
         '  #melmak-bienvenida .mw-banda__track,#melmak-bienvenida .mw-char,#melmak-bienvenida .mw-char__inner,',
-        '  #melmak-bienvenida .mw-particula,#melmak-bienvenida .mw-particula i{animation:none;}',
+        '  #melmak-bienvenida .mw-lines span{animation:none;}',
         '  #melmak-bienvenida .mw-char__glitch::before,#melmak-bienvenida .mw-char__glitch::after{display:none;}',
         '}'
     ].join('\n');
@@ -212,26 +209,19 @@
         overlay.appendChild(construirBanda('izq'));
         overlay.appendChild(construirBanda('der'));
 
-        /* ---------- Partículas negras subiendo ---------- */
-        var N_PARTICULAS = 50;
-        for (var p = 0; p < N_PARTICULAS; p++) {
-            var part = document.createElement('div');
-            part.className = 'mw-particula';
-            var size = 2 + Math.random() * 5;
-            var dur = 2.5 + Math.random() * 2.5;
-            var amp = 6 + Math.random() * 16;
-            var ondaDur = 1.2 + Math.random() * 1.8;
-            part.style.width = size + 'px';
-            part.style.height = size + 'px';
-            part.style.left = (Math.random() * 100) + '%';
-            part.style.animationDuration = dur + 's';
-            part.style.animationDelay = (-Math.random() * dur) + 's';
-            var core = document.createElement('i');
-            core.style.setProperty('--amp', amp + 'px');
-            core.style.animationDuration = ondaDur + 's';
-            part.appendChild(core);
-            overlay.appendChild(part);
+        /* ---------- Líneas de velocidad (abajo → arriba, aleatorias) ---------- */
+        var lineas = document.createElement('div');
+        lineas.className = 'mw-lines';
+        var N_LINEAS = 8;
+        for (var q = 0; q < N_LINEAS; q++) {
+            var ln = document.createElement('span');
+            ln.style.left = (Math.random() * 100) + '%';
+            ln.style.height = (10 + Math.random() * 16) + '%';
+            ln.style.animationDuration = (0.25 + Math.random() * 0.4) + 's';
+            ln.style.animationDelay = (-Math.random() * 1.5) + 's';
+            lineas.appendChild(ln);
         }
+        overlay.appendChild(lineas);
 
         /* ---------- Personaje que cae y vibra ---------- */
         var charWrap = document.createElement('div');
@@ -304,6 +294,7 @@
             overlay.classList.add('is-saliendo');
             document.documentElement.style.overflow = '';
             if (document.body) document.body.style.overflow = '';
+            window.dispatchEvent(new CustomEvent('melmak-entrar'));
             setTimeout(function () {
                 overlay.remove();
             }, 580);
