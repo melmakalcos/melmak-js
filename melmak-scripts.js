@@ -408,7 +408,9 @@
     } else {
       /*
        * Página de categoría/subcategoría: sin .products-feed__filter.
-       * Creamos un contenedor nuevo y lo insertamos antes de la grilla.
+       * Replicamos la estructura de /productos: una columna lateral
+       * (uk-visible@m uk-width-1-5) con el filtro, y la grilla de productos
+       * pasa a uk-width-4-5@m para quedar al lado (no arriba).
        */
       var filtroNuevo = document.createElement('div');
       filtroNuevo.className = 'products-feed__filter';
@@ -416,12 +418,35 @@
       filtroNuevo.appendChild(armarAviso());
       filtroNuevo.appendChild(arbol);
 
+      var sidebar = document.createElement('div');
+      sidebar.className = 'uk-visible@m uk-width-1-5';
+      sidebar.appendChild(filtroNuevo);
+
       var contenedor = document.querySelector(
         '.category-feed_content.products-feed__content, .products-feed__content'
       );
 
       if (contenedor) {
-        contenedor.insertBefore(filtroNuevo, contenedor.firstChild);
+        var grid = contenedor.querySelector('[uk-grid]');
+
+        // Columna que contiene la grilla de productos.
+        var colProductos = null;
+        if (grid) {
+          var hijos = grid.children;
+          for (var ci = 0; ci < hijos.length; ci++) {
+            if (hijos[ci].querySelector('.products-feed__products')) {
+              colProductos = hijos[ci];
+              break;
+            }
+          }
+        }
+
+        if (grid && colProductos) {
+          colProductos.classList.add('uk-width-4-5@m');
+          grid.insertBefore(sidebar, grid.firstChild);
+        } else {
+          contenedor.insertBefore(sidebar, contenedor.firstChild);
+        }
       }
     }
 
