@@ -352,6 +352,7 @@
      * y el sidenav móvil ("Filtrar"). Hay que inyectar el árbol en ambos,
      * porque el CSS oculta la lista original en todos los filtros.
      */
+    var AVISO_TEXTO = 'HACÉ CLICK EN LA CATEGORÍA PARA VERLA COMPLETA Y EN LAS FLECHAS PARA VER LAS SUBCATEGORÍAS';
     var todosLosFiltros = document.querySelectorAll('.products-feed__filter');
     for (var fi = 0; fi < todosLosFiltros.length; fi++) {
       var listaDeEsteFiltro = todosLosFiltros[fi].querySelector(
@@ -368,6 +369,13 @@
       if (anterior && anterior.classList.contains('cat-arbol')) {
         continue;
       }
+
+
+      // Aviso instructivo arriba del árbol de categorías.
+      var aviso = document.createElement('p');
+      aviso.className = 'cat-aviso';
+      aviso.textContent = AVISO_TEXTO;
+      listaDeEsteFiltro.insertAdjacentElement('beforebegin', aviso);
 
 
       var arbolEste = (todosLosFiltros[fi] === filtro)
@@ -452,7 +460,7 @@
     '.cat-cabeza a { color: #353535 !important; font-weight: 700; text-transform: uppercase; flex: 1; }',
 
 
-    '.flechita { font-size: .8rem; transition: transform .25s ease; }',
+    '.flechita { font-size: .8rem; padding: 10px 12px; margin-right: -8px; transition: transform .25s ease; }',
 
 
     '.cat-abierta > .cat-cabeza .flechita { transform: rotate(180deg); }',
@@ -469,9 +477,11 @@
 
     '.cat-hijos a:hover { opacity: .85; }',
 
+    '.cat-aviso { margin: 0 0 12px; font-size: .72rem; line-height: 1.5; color: #353535; text-transform: uppercase; letter-spacing: .03em; }',
+
 
     '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }',
-    '@media (max-width: 959px) { .products-feed__products { grid-template-columns: repeat(2, 1fr) !important; } }',
+    '@media (max-width: 959px) { .products-feed__products { grid-template-columns: repeat(2, 1fr) !important; } .products-feed__content > .uk-grid > [class*="uk-width-4-5"] { width: 100% !important; } }',
     '.products-feed__product-wrapper, .products-feed__product-wrapper:hover, .block-products-feed__product-wrapper, .block-products-feed__product-wrapper:hover, .block-products-set__product-wrapper, .block-products-set__product-wrapper:hover, .product-vip__carrousel-image { box-shadow: none !important; }'
   ].join('');
 
