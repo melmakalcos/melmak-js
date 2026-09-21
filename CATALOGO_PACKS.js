@@ -116,7 +116,58 @@
         '.melk-catalogo .melk-bounce-target { opacity: 0; transform: scale(.88) translateY(40px); transition: opacity .7s ease var(--bounce-delay, 0s), transform .7s cubic-bezier(.165,.84,.44,1) var(--bounce-delay, 0s); }',
         '.melk-catalogo .melk-bounce-target.melk-bounce-in { opacity: 1; transform: none; }',
         '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } .melk-catalogo .melk-note:hover .melk-note__capa { animation: none; } }',
-        '@media (min-width: 768px) {',
+        '@media (prefers-reduced-motion: reduce) { .melk-dual__target { transform: none !important; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-dual__bono { transform: translate(-50%, -50%) rotate(12deg); animation: none; } .melk-dual__bono--der { transform: translate(-50%, -50%) rotate(-12deg); } }',
+        '.melk-dual { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; background-color: #ffffff; padding: 70px 0; overflow: hidden; }',
+        '.melk-dual__row { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 34px 0; flex-direction: column; gap: 30px; }',
+        '.melk-dual__row + .melk-dual__row { margin-top: 20px; }',
+        '.melk-dual__img { position: relative; flex: 0 0 auto; width: 68%; max-width: 340px; align-self: center; }',
+        '.melk-dual__img--izq { margin-left: 0; }',
+        '.melk-dual__img--der { margin-right: 0; order: 1; }',
+        '.melk-dual__png { display: block; width: 100%; height: auto; }',
+        '.melk-dual__espacio { width: 100%; }',
+        '.melk-dual__texto { width: 100%; margin: 0; padding: 0 24px; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; color: #353535; text-align: center; }',
+        '.melk-dual__texto--mayorista { order: 2; }',
+        '.melk-dual__texto-inner { width: 100%; }',
+        '.melk-dual__texto p { margin: 0; }',
+        '.melk-dual__texto .melk-dual__texto-t1 { margin: 0; font-size: clamp(14px, 4.2vw, 18px); line-height: 1.15; white-space: nowrap; }',
+        '.melk-dual__texto .melk-dual__texto-t2 { margin-top: 8px; font-size: 16px; line-height: 1.5; }',
+        '.melk-dual__texto .melk-dual__texto-t3 { margin-top: 8px; font-size: 16px; line-height: 1.5; }',
+        '.melk-dual__texto .melk-dual__texto-t4 { margin-top: 10px; font-size: 16px; line-height: 1.35; }',
+        '.melk-dual__btn { display: flex; align-items: center; justify-content: center; margin: 10px auto 0; width: fit-content; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 19px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #fff; background-color: #353535; border: 3px solid #353535; border-radius: 100px; padding: 10px 26px 10px 40px; cursor: pointer; text-decoration: none; transition: all .2s; }',
+        '.melk-dual__btn:hover { background-color: #ffffff; color: #353535; }',
+        '.melk-dual__btn:active { transform: scale(.95); }',
+        '.melk-dual__btn svg { width: 30px; height: 30px; margin-left: 12px; transition: transform .3s ease-in-out; }',
+        '.melk-dual__btn:hover svg { transform: translateX(6px); }',
+        '.melk-dual__bono { position: absolute; top: 50%; left: 50%; right: auto; z-index: 2; width: auto; height: 62px; max-width: 100%; transform: translate(-50%, -50%) scale(0) rotate(12deg); transform-origin: center; pointer-events: none; }',
+        '.melk-dual__bono.melk-dual__bono-in { animation: melk-dual-plop-movil 3.5s ease 1 forwards; }',
+        '@keyframes melk-dual-plop-movil { 0% { transform: translate(-50%, -50%) scale(0) rotate(12deg); } 30% { transform: translate(-50%, -50%) scale(1.18) rotate(12deg); } 50% { transform: translate(-50%, -50%) scale(.96) rotate(12deg); } 70% { transform: translate(-50%, -50%) scale(1.06) rotate(12deg); } 100% { transform: translate(-50%, -50%) scale(1) rotate(12deg); } }',
+        '.melk-dual__bono--der { top: 50%; left: 50%; right: auto; transform: translate(-50%, -50%) scale(0) rotate(-12deg); }',
+        '.melk-dual__bono--der.melk-dual__bono-in { animation: melk-dual-plop-movil-der 3.5s ease 1 forwards; }',
+        '@keyframes melk-dual-plop-movil-der { 0% { transform: translate(-50%, -50%) scale(0) rotate(-12deg); } 30% { transform: translate(-50%, -50%) scale(1.18) rotate(-12deg); } 50% { transform: translate(-50%, -50%) scale(.96) rotate(-12deg); } 70% { transform: translate(-50%, -50%) scale(1.06) rotate(-12deg); } 100% { transform: translate(-50%, -50%) scale(1) rotate(-12deg); } }',
+        '.melk-dual__target { will-change: transform; }',
+        '.melk-holo { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; background-color: #ffffff; overflow: hidden; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+        '.melk-holo__fondo { position: relative; height: 420px; }',
+        '.melk-holo__mover { position: absolute; top: 50%; left: 0; width: 240px; max-width: 60vw; transform: translate(-60vw, -50%); will-change: transform; pointer-events: none; display: flex; flex-direction: column; align-items: center; }',
+        '.melk-holo__personaje { position: relative; z-index: 1; width: 100%; transform: rotate(0deg); transform-origin: 50% 50%; will-change: transform; }',
+        '.melk-holo__holo { position: absolute; inset: 0; z-index: 0; border-radius: 50%; background: linear-gradient(90deg, #00F0FF, #FF00F7, #FFDD00, #00FFAA, #0055FF, #FF0055, #00F0FF); background-size: 200% 100%; opacity: .35; animation: melk-holo-shimmer 12s linear infinite; }',
+        '.melk-holo__png { position: relative; z-index: 1; display: block; width: 100%; height: auto; }',
+        '.melk-holo__texto { position: absolute; right: 100%; top: 50%; z-index: 0; margin: 0 24px 0 0; transform: translateY(calc(-50% + .1em)); pointer-events: auto; text-decoration: none; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: clamp(48px, 10vw, 200px); line-height: .8; letter-spacing: -.06em; color: #353535; white-space: nowrap; }',
+        '.melk-holo__palabra { display: inline-block; white-space: nowrap; transition: opacity .25s ease; }',
+        '.melk-holo__palabra--hover { position: absolute; right: 0; top: 0; opacity: 0; }',
+        '.melk-holo__texto:hover .melk-holo__palabra--base { opacity: 0; }',
+        '.melk-holo__texto:hover .melk-holo__palabra--hover { opacity: 1; }',
+        '.melk-holo__btn { display: none; }',
+        '.melk-holo__letra { display: inline-block; transform: translateY(0); transition: transform .42s cubic-bezier(.34, 1.56, .64, 1) var(--d, 0s); }',
+        '.melk-holo__texto:hover .melk-holo__letra { transform: translateY(-.16em); }',
+        '@keyframes melk-holo-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }',
+        '.melk-holo__hint { position: absolute; left: 50%; z-index: 3; transform: translateX(-50%); pointer-events: none; animation: melk-holo-hint 1.7s ease-in-out infinite; transition: opacity .4s ease; }',
+        '.melk-holo__hint::after { content: ""; display: block; width: 16px; height: 16px; border-right: 3px solid #353535; border-bottom: 3px solid #353535; transform: rotate(45deg); margin: 0 auto; }',
+        '@keyframes melk-holo-hint { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }',
+        '.melk-holo__hint--top { bottom: 26px; }',
+        '.melk-holo__hint--oculto { opacity: 0; }',
+        '@media (max-width: 767px) { .melk-holo__hint { display: none; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }', '@media (min-width: 768px) {',
         '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 86px 40px 186px; }',
         '.melk-catalogo__mascota { display: block; width: 150px; }',
         '.melk-catalogo .melk-headline__text { font-size: 76px; }',
@@ -145,7 +196,46 @@
         '.melk-catalogo .melk-link .melk-link__text { padding-bottom: 4px; font-size: 22px; }',
         '.melk-catalogo .melk-item.is-end .melk-note::after { top: calc(50% - 30px); width: 176px; height: 60px; font-size: 24px; font-weight: 700; content: "Finalizado"; border-radius: 15px; }',
         '.melk-catalogo .melk-item.is-reception .melk-note::after { top: calc(50% - 30px); width: 224px; height: 60px; font-size: 24px; content: "Recepción cerrada"; border-radius: 15px; }',
-        '}'
+        '.melk-dual { padding: 100px 0; }',
+        '.melk-dual__row { flex-direction: row; gap: 0; max-width: 1200px; margin-left: auto; margin-right: auto; }',
+        '.melk-dual__row + .melk-dual__row { margin-top: 40px; }',
+        '.melk-dual__img { flex: 0 0 40%; max-width: 540px; }',
+        '.melk-dual__img--izq { margin-left: 9%; }',
+        '.melk-dual__img--der { margin-right: 9%; order: 0; }',
+        '.melk-dual__espacio { width: auto; }',
+        '.melk-dual__texto { flex: 0 1 46%; max-width: 46%; margin-left: auto; margin-right: 9%; padding: 0; padding-left: 6%; transform: translateY(-10px); }',
+        '.melk-dual__texto--mayorista { margin-left: 9%; margin-right: auto; padding-left: 0; padding-right: 6%; order: 0; }',
+        '.melk-dual__texto-inner { width: fit-content; max-width: 100%; margin: 0 auto; }',
+        '.melk-dual__texto .melk-dual__texto-t1 { font-size: clamp(19px, 2.1vw, 28px); }',
+        '.melk-dual__texto .melk-dual__texto-t2 { font-size: 19px; }',
+        '.melk-dual__texto .melk-dual__texto-t3 { font-size: 19px; }',
+        '.melk-dual__texto .melk-dual__texto-t4 { font-size: 19px; }',
+        '.melk-dual__btn { font-size: 21px; padding: 12px 30px 12px 46px; margin-top: 20px; }',
+        '.melk-dual__bono { top: -3.5%; right: -6%; left: auto; transform: scale(0) rotate(12deg); }',
+        '.melk-dual__bono.melk-dual__bono-in { animation: melk-dual-plop 1s ease 1 forwards; }',
+        '.melk-dual__bono--der { top: -3.5%; left: -6%; right: auto; transform: scale(0) rotate(-12deg); }',
+        '.melk-dual__bono--der.melk-dual__bono-in { animation: melk-dual-plop-der 1s ease 1 forwards; }',
+        '@keyframes melk-dual-plop { 0% { transform: scale(0) rotate(12deg); } 35% { transform: scale(1.18) rotate(12deg); } 55% { transform: scale(.96) rotate(12deg); } 75% { transform: scale(1.06) rotate(12deg); } 100% { transform: scale(1) rotate(12deg); } }',
+        '@keyframes melk-dual-plop-der { 0% { transform: scale(0) rotate(-12deg); } 35% { transform: scale(1.18) rotate(-12deg); } 55% { transform: scale(.96) rotate(-12deg); } 75% { transform: scale(1.06) rotate(-12deg); } 100% { transform: scale(1) rotate(-12deg); } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-dual__bono { transform: rotate(12deg); } .melk-dual__bono--der { transform: rotate(-12deg); } }',
+        '.melk-holo__fondo { height: 520px; }',
+        '}',
+        '@media (max-width: 767px) {',
+        '.melk-holo__mover { left: 50%; transform: translate(-50%, -50%); gap: 30px; }',
+        '.melk-holo__personaje { order: 1; }',
+        '.melk-holo__texto { position: static; order: 2; margin: 0; right: auto; top: auto; transform: none; text-align: center; font-size: clamp(36px, 12vw, 56px); display: flex; flex-direction: column; align-items: center; gap: 18px; }',
+        '.melk-holo__palabra--base { position: static; opacity: 1; }',
+        '.melk-holo__palabra--hover { display: none; }',
+        '.melk-holo__letra { transition: none !important; transform: none !important; }',
+        '.melk-holo__texto:hover .melk-holo__letra { transform: none !important; }',
+        '.melk-holo__texto:hover .melk-holo__palabra--base { opacity: 1 !important; }',
+        '.melk-holo__btn { display: flex; align-items: center; justify-content: center; width: fit-content; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 19px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #fff; background-color: #353535; border: 3px solid #353535; border-radius: 100px; padding: 12px 28px 12px 42px; cursor: pointer; text-decoration: none; transition: all .2s; }',
+        '.melk-holo__btn:hover { background-color: #ffffff; color: #353535; }',
+        '.melk-holo__btn:active { transform: scale(.95); }',
+        '.melk-holo__btn svg { width: 30px; height: 30px; margin-left: 12px; transition: transform .3s ease-in-out; }',
+        '.melk-holo__btn:hover svg { transform: translateX(6px); }',
+        '}',
+        '@keyframes melk-holo-cta { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }'
     ].join('\n');
     document.head.appendChild(style);
 
@@ -250,6 +340,94 @@
         + '</div>'
         + '</div>';
 
+    // ---------------- BLOQUE AGREGADO (PERSONALIZADOS / MAYORISTA) ----------------
+    var PNG_PERSONALIZADOS = 'https://d22fxaf9t8d39k.cloudfront.net/57608062870301647f3403c21081f04df6de9e96628d6d1b2a805b1f49d0f59920700.png';
+    var PNG_MAYORISTA = 'https://d22fxaf9t8d39k.cloudfront.net/93620b539094d29f9e440936b202fec6029413adf9de377258c87dba28fabc9120700.png';
+    var PNG_BONO = 'https://d22fxaf9t8d39k.cloudfront.net/195c8b64bf4c0b8ca087f7458890a2f8fab6a0e96ac49e8b2415e80f1a68d52720700.png';
+    var PNG_BONO_MAYORISTA = 'https://d22fxaf9t8d39k.cloudfront.net/82ae0816b6c737f82ff7e5e412359fc41e6dcf829c5a24a904d1945e85ad2d5520700.png';
+    // BOTON ¡QUIERO! - pegá aca el link (ej: 'https://www.melmakalcos.com.ar/...'). Mientras empiece con URL_ el boton no navega.
+    var LINK_QUIERO = 'URL_REEMPLAZAR_LINK_QUIERO';
+
+    var dual = document.createElement('div');
+    dual.className = 'melk-dual';
+    dual.id = 'melk-dual';
+    dual.innerHTML =
+        '<div class="melk-dual__row">'
+        + '<div class="melk-dual__img melk-dual__img--izq melk-dual__target melk-dual__target--izq">'
+        + '<img class="melk-dual__png" src="' + PNG_PERSONALIZADOS + '" alt="Personalizados">'
+        + '<img class="melk-dual__bono" src="' + PNG_BONO + '" alt="">'
+        + '</div>'
+        + '<div class="melk-dual__espacio melk-dual__texto">'
+        + '<div class="melk-dual__texto-inner">'
+        + '<p class="melk-dual__texto-t1">CONVERTIMOS TUS IMÁGENES EN STICKERS</p>'
+        + '<p class="melk-dual__texto-t2">FOTOS FAMILIARES, DE TUS MASCOTAS. ¡LO QUE QUIERAS!</p>'
+        + '<p class="melk-dual__texto-t3">¿TENÉS UN EMPRENDIMIENTO Y QUERÉS STICKERS CON TU LOGO?</p>'
+        + '<p class="melk-dual__texto-t4">¡IMPRIMIMOS TUS DISEÑOS DESDE 1 UNIDAD!</p>'
+        + '<a class="melk-dual__btn" href="https://www.melmakalcos.com.ar/personalizados">'
+        + '<span class="melk-dual__btn-texto">¡QUIERO!</span>'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="20" y2="12"></line><polyline points="12 4 20 12 12 20"></polyline></svg>'
+        + '</a>'
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        + '<div class="melk-dual__row">'
+        + '<div class="melk-dual__espacio melk-dual__texto melk-dual__texto--mayorista">'
+        + '<div class="melk-dual__texto-inner">'
+        + '<p class="melk-dual__texto-t1">MULTIPLICÁ TU PLATA</p>'
+        + '<p class="melk-dual__texto-t2">AHORRÁ TIEMPO Y TRABAJÁ CON NUESTRO CATÁLOGO.</p>'
+        + '<p class="melk-dual__texto-t3">IDEAL SI TENÉS UN LOCAL O ESTÁS PARTICIPANDO EN FERIAS/EVENTOS.</p>'
+        + '<a class="melk-dual__btn" href="https://www.melmakalcos.com.ar/mayorista">'
+        + '<span class="melk-dual__btn-texto">¡QUIERO!</span>'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="20" y2="12"></line><polyline points="12 4 20 12 12 20"></polyline></svg>'
+        + '</a>'
+        + '</div>'
+        + '</div>'
+        + '<div class="melk-dual__img melk-dual__img--der melk-dual__target melk-dual__target--der">'
+        + '<img class="melk-dual__png" src="' + PNG_MAYORISTA + '" alt="Mayorista">'
+        + '<img class="melk-dual__bono melk-dual__bono--der" src="' + PNG_BONO_MAYORISTA + '" alt="">'
+        + '</div>'
+        + '</div>'
+        + '<div class="melk-holo__hint melk-holo__hint--top"></div>'
+        + '</div>';
+
+    // ---------------- BLOQUE HOLO (debajo de todo) ----------------
+    // Fondo blanco con la mascota que aparece girando al hacer scroll.
+    var PNG_HOLO = 'https://d22fxaf9t8d39k.cloudfront.net/4fbeab78973904aded3e9a7b1112ed4dd2874bf4d2ac72fc47e56dc145ea04ff20700.png';
+    var TEXTO_HOLO = 'HOLOGRÁFICOS';
+    var TEXTO_HOLO_HOVER = '>>>>>>CATÁLOGO';
+    function generarLetrasHolo(txt) {
+        var out = '';
+        for (var li = 0; li < txt.length; li++) {
+            var c = txt.charAt(li);
+            if (c === ' ') c = '&nbsp;';
+            out += '<span class="melk-holo__letra" style="--d:' + (li * 0.04).toFixed(2) + 's">' + c + '</span>';
+        }
+        return out;
+    }
+    var letrasHolo = generarLetrasHolo(TEXTO_HOLO);
+    var letrasHoloHover = generarLetrasHolo(TEXTO_HOLO_HOVER);
+    // LINK del texto HOLO - pegar aca el link (ej: 'https://...'). Mientras empiece con URL_ no navega.
+    var LINK_HOLO = 'URL_LINK_HOLO';
+    var holo = document.createElement('div');
+    holo.className = 'melk-holo';
+    holo.id = 'melk-holo';
+    holo.innerHTML =
+        '<div class="melk-holo__fondo">'
+        + '<div class="melk-holo__mover">'
+        + '<a class="melk-holo__texto" href="https://www.melmakalcos.com.ar/holograficos">'
+        + '<span class="melk-holo__palabra melk-holo__palabra--base">' + letrasHolo + '</span>'
+        + '<span class="melk-holo__palabra melk-holo__palabra--hover">' + letrasHoloHover + '</span>'
+        + '<span class="melk-holo__btn"><span class="melk-holo__btn-texto">CATÁLOGO</span>'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="20" y2="12"></line><polyline points="12 4 20 12 12 20"></polyline></svg>'
+        + '</span>'
+        + '</a>'
+        + '<div class="melk-holo__personaje">'
+        + '<div class="melk-holo__holo"></div>'
+        + '<img class="melk-holo__png" src="' + PNG_HOLO + '" alt="Mascota">'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+
     // ---------------- INSERTAR DESPUES DEL BANNER ----------------
     function insertarSeccion() {
         if (seccion.parentNode) return;
@@ -258,6 +436,24 @@
             ref.parentNode.insertBefore(seccion, ref.nextSibling);
         } else {
             document.body.appendChild(seccion);
+        }
+        seccion.parentNode.insertBefore(dual, seccion.nextSibling);
+        seccion.parentNode.insertBefore(holo, dual.nextSibling);
+
+        // Si el link de los botones ¡QUIERO! es todavia placeholder, no navegan
+        var botonesQuiero = dual.querySelectorAll('.melk-dual__btn');
+        for (var q = 0; q < botonesQuiero.length; q++) {
+            if ((botonesQuiero[q].getAttribute('href') || '').indexOf('URL_') === 0) {
+                botonesQuiero[q].addEventListener('click', function (e) { e.preventDefault(); });
+                botonesQuiero[q].removeAttribute('href');
+            }
+        }
+
+        // Si el link del texto HOLO es todavia placeholder, no navega
+        var enlaceHolo = holo.querySelector('.melk-holo__texto');
+        if (enlaceHolo && (enlaceHolo.getAttribute('href') || '').indexOf('URL_') === 0) {
+            enlaceHolo.addEventListener('click', function (e) { e.preventDefault(); });
+            enlaceHolo.removeAttribute('href');
         }
     }
 
@@ -277,6 +473,159 @@
             });
         }, { threshold: 0.15 });
         for (var i = 0; i < targets.length; i++) obs.observe(targets[i]);
+    }
+
+    // ---------------- ANIMACION DEL BLOQUE AGREGADO (atada al scroll, suave y reversible) ----------------
+    // La posicion objetivo se calcula por scroll, pero el PNG va "persiguiendo"
+    // esa posicion con un amortiguador (lerp), asi el movimiento es fluido y
+    // no violento. Al bajar entra deslizandose desde el borde real de la pantalla;
+    // al subir vuelve a salir. Sin difuminado ni opacidad, con leve inclinacion.
+    var dualFilas = [];
+    var dualVinculado = false;
+    var dualCorriendo = false;
+    function aplicarDual() {
+        var vh = window.innerHeight || 1;
+        var llegada = vh * 0.35; // punto del viewport donde el PNG termina de entrar
+        var activo = false;
+        for (var f = 0; f < dualFilas.length; f++) {
+            var fl = dualFilas[f];
+            if (!fl || !fl.target) continue;
+            var rect = fl.fila.getBoundingClientRect();
+            var tp = Math.max(0, Math.min(1, (vh - rect.top) / (vh - llegada)));
+            fl.cur += (tp - fl.cur) * 0.10; // amortiguador: ~10% por frame
+            if (fl.cur < 0.003 && tp === 0) fl.cur = 0;
+            if (Math.abs(tp - fl.cur) > 0.004) activo = true;
+            var off = 130 * (1 - fl.cur);
+            var dir = fl.target.classList.contains('melk-dual__target--izq') ? -1 : 1;
+            fl.target.style.transform = 'translateX(' + dir * off + '%) rotate(' + (dir === -1 ? -4 : 4) + 'deg)';
+            if (fl.bono && !fl.bonoDone && tp >= 0.98) {
+                fl.bonoDone = true;
+                fl.bono.classList.add('melk-dual__bono-in');
+            }
+        }
+        if (activo) {
+            requestAnimationFrame(aplicarDual);
+        } else {
+            dualCorriendo = false;
+        }
+    }
+    function pedirDual() {
+        if (!dualFilas.length) {
+            var filas = dual.querySelectorAll('.melk-dual__row');
+            for (var i = 0; i < filas.length; i++) {
+                var t = filas[i].querySelector('.melk-dual__target');
+                var b = filas[i].querySelector('.melk-dual__bono');
+                dualFilas.push({ fila: filas[i], target: t, cur: 0, bono: b, bonoDone: false });
+            }
+        }
+        if (!dualCorriendo) {
+            dualCorriendo = true;
+            requestAnimationFrame(aplicarDual);
+        }
+    }
+    function animarDual() {
+        if (!dual.parentNode) return;
+        var reducido = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var todos = dual.querySelectorAll('.melk-dual__target');
+        if (reducido || !('requestAnimationFrame' in window)) {
+            for (var i = 0; i < todos.length; i++) {
+                todos[i].style.transform = '';
+                var bono = todos[i].querySelector('.melk-dual__bono');
+                if (bono) bono.classList.add('melk-dual__bono-in');
+            }
+            return;
+        }
+        if (dualVinculado) { pedirDual(); return; }
+        dualVinculado = true;
+        window.addEventListener('scroll', pedirDual, { passive: true });
+        window.addEventListener('resize', pedirDual);
+        pedirDual();
+    }
+
+    // ---------------- ANIMACION DEL PERSONAJE HOLO (misma sensibilidad que el dual) ----------------
+    // La mascota entra girando desde fuera de pantalla (izquierda) hacia un
+    // margen a la derecha, atada al scroll con el mismo lerp/damping del dual.
+    var holoMover = null;
+    var holoPersonaje = null;
+    var holoCur = 0;
+    var holoVinculado = false;
+    var holoCorriendo = false;
+    var HOLO_INICIO = -60;  // vw, fuera de pantalla (izquierda)
+    var HOLO_FIN = 76;      // vw, margen a la derecha
+    function esMovilHolo() {
+        return window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+    }
+    function aplicarHolo() {
+        if (esMovilHolo()) {
+            holoMover.style.transform = 'translate(-50%, -50%)';
+            holoPersonaje.style.transform = 'rotate(0deg)';
+            holoCorriendo = false;
+            return;
+        }
+        var vh = window.innerHeight || 1;
+        var llegada = vh * 0.35;
+        var rect = holo.getBoundingClientRect();
+        var tp = Math.max(0, Math.min(1, (vh - rect.top) / (vh - llegada)));
+        holoCur += (tp - holoCur) * 0.10;
+        if (holoCur < 0.003 && tp === 0) holoCur = 0;
+        var activo = Math.abs(tp - holoCur) > 0.004;
+        var x = HOLO_INICIO + (HOLO_FIN - HOLO_INICIO) * holoCur;
+        var rot = -360 * holoCur;
+        holoMover.style.transform = 'translate(' + x + 'vw, -50%)';
+        holoPersonaje.style.transform = 'rotate(' + rot + 'deg)';
+        if (activo) {
+            requestAnimationFrame(aplicarHolo);
+        } else {
+            holoCorriendo = false;
+        }
+    }
+    function pedirHolo() {
+        if (!holoCorriendo) {
+            holoCorriendo = true;
+            requestAnimationFrame(aplicarHolo);
+        }
+    }
+    function animarHolo() {
+        if (!holo.parentNode) return;
+        holoMover = holo.querySelector('.melk-holo__mover');
+        holoPersonaje = holo.querySelector('.melk-holo__personaje');
+        if (!holoMover || !holoPersonaje) return;
+        var reducido = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (esMovilHolo()) {
+            holoMover.style.transform = 'translate(-50%, -50%)';
+            holoPersonaje.style.transform = 'rotate(0deg)';
+            return;
+        }
+        if (reducido || !('requestAnimationFrame' in window)) {
+            holoMover.style.transform = 'translate(' + HOLO_FIN + 'vw, -50%)';
+            holoPersonaje.style.transform = 'rotate(0deg)';
+            return;
+        }
+        if (holoVinculado) { pedirHolo(); return; }
+        holoVinculado = true;
+        window.addEventListener('scroll', pedirHolo, { passive: true });
+        window.addEventListener('resize', pedirHolo);
+        pedirHolo();
+    }
+
+    // ---------------- FLECHAS GUIA (se ocultan al escrollear) ----------------
+    var hintHoloVinculado = false;
+    function aplicarHintHolo() {
+        var vh = window.innerHeight || 1;
+        var hints = document.querySelectorAll('.melk-holo__hint');
+        for (var i = 0; i < hints.length; i++) {
+            var r = hints[i].getBoundingClientRect();
+            var ocultar = r.top < vh * 0.35;
+            if (ocultar) hints[i].classList.add('melk-holo__hint--oculto');
+            else hints[i].classList.remove('melk-holo__hint--oculto');
+        }
+    }
+    function animarHintHolo() {
+        if (hintHoloVinculado) { aplicarHintHolo(); return; }
+        hintHoloVinculado = true;
+        window.addEventListener('scroll', aplicarHintHolo, { passive: true });
+        window.addEventListener('resize', aplicarHintHolo);
+        aplicarHintHolo();
     }
 
     // ---------------- VIBRACION + ZOOM AL HOVER (segun tiempo) ----------------
@@ -326,6 +675,8 @@
         animarEntrada();
         efectoPaso();
         animarMascota();
+        animarDual();
+        animarHolo();
     }
 
     var primeraCarga = true;
@@ -386,6 +737,9 @@
         animarEntrada();
         efectoPaso();
         animarMascota();
+        animarDual();
+        animarHolo();
+        animarHintHolo();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', iniciar);
