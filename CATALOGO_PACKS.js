@@ -129,7 +129,7 @@
         '.melk-dual__texto { width: 100%; margin: 0; padding: 0 24px; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; color: #353535; text-align: center; }',
         '.melk-dual__texto--mayorista { order: 2; }',
         '.melk-dual__texto-inner { width: 100%; }',
-        '.melk-dual__texto p { margin: 0; }',
+        '.melk-dual__texto p { margin: 0; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; }',
         '.melk-dual__texto .melk-dual__texto-t1 { margin: 0; font-size: clamp(14px, 4.2vw, 18px); line-height: 1.15; white-space: nowrap; }',
         '.melk-dual__texto .melk-dual__texto-t2 { margin-top: 8px; font-size: 16px; line-height: 1.5; }',
         '.melk-dual__texto .melk-dual__texto-t3 { margin-top: 8px; font-size: 16px; line-height: 1.5; }',
