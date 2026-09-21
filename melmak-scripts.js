@@ -701,14 +701,29 @@
 // BREADCRUMB: agrega enlace "PRODUCTOS" para volver al catálogo general
 // ==========================================
 (function () {
+  function esCatalogo() {
+    var ruta = window.location.pathname.replace(/\/+$/, '');
+    return ruta === '/productos';
+  }
+
   function agregarProductos() {
     var breadcrumb = document.querySelector('.category-feed__breadcrumb');
     if (!breadcrumb) return;
+
+    // En /productos el breadcrumb ya termina en "Productos"; no agregamos.
+    if (esCatalogo()) return;
+
     if (breadcrumb.getAttribute('data-mx-productos')) return;
     breadcrumb.setAttribute('data-mx-productos', '1');
 
     var items = breadcrumb.querySelectorAll('.breadcrumb__item');
     if (!items.length) return;
+
+    // Si ya existe un ítem "Productos", no duplicar.
+    for (var i = 0; i < items.length; i++) {
+      var texto = (items[i].textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
+      if (texto === 'PRODUCTOS') return;
+    }
 
     // El primer ítem es "Inicio". Insertamos "PRODUCTOS" justo después.
     var primero = items[0];
