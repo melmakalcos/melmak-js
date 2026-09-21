@@ -134,7 +134,6 @@
 
 
   function crearArbol() {
-    var filtro = document.querySelector('.products-feed__filter');
     var listaOriginal = document.querySelector(
       '.products-feed__categories-list'
     );
@@ -142,19 +141,28 @@
 
     /*
      * El menú superior tiene todas las categorías y subcategorías.
-     * La lista original define cuáles son las categorías principales.
+     * La lista original (solo existe en /productos) define cuáles son las
+     * categorías principales. En páginas de categoría/subcategoría no hay
+     * lista ni filtro: usamos los enlaces "bold" del menú como principales.
      */
     var enlacesMenuSuperior = document.querySelectorAll(
       '.header-menu__desktop-list__container-list a.desktop-list-link__text'
     );
 
 
-    if (!filtro || !listaOriginal || !enlacesMenuSuperior.length) {
+    if (!enlacesMenuSuperior.length) {
       return false;
     }
 
 
-    if (filtro.querySelector('.cat-arbol[data-recursivo="ok"]')) {
+    var filtros = document.querySelectorAll('.products-feed__filter');
+
+
+    /*
+     * En páginas sin filtro (categoría/subcategoría) el árbol se crea una
+     * sola vez. En /productos, si ya está, no lo repetimos.
+     */
+    if (!filtros.length && document.querySelector('.cat-arbol[data-recursivo="ok"]')) {
       return true;
     }
 
@@ -194,13 +202,16 @@
     }
 
 
-    Array.from(listaOriginal.querySelectorAll('a')).forEach(function (enlace) {
-      guardarCategoria(enlace, true);
-    });
+    if (listaOriginal) {
+      Array.from(listaOriginal.querySelectorAll('a')).forEach(function (enlace) {
+        guardarCategoria(enlace, true);
+      });
+    }
 
 
     Array.from(enlacesMenuSuperior).forEach(function (enlace) {
-      guardarCategoria(enlace, false);
+      var esBold = enlace.classList.contains('desktop-list-link__text--bold');
+      guardarCategoria(enlace, !listaOriginal && esBold);
     });
 
 
@@ -261,7 +272,9 @@
     }
 
 
-    var arbolAnterior = filtro.querySelector('.cat-arbol');
+    var arbolAnterior = filtros.length
+      ? filtros[0].querySelector('.cat-arbol')
+      : document.querySelector('.cat-arbol');
 
 
     if (arbolAnterior) {
@@ -351,44 +364,65 @@
      * El tema renderiza el filtro en DOS lugares: la sidebar de escritorio
      * y el sidenav móvil ("Filtrar"). Hay que inyectar el árbol en ambos,
      * porque el CSS oculta la lista original en todos los filtros.
+     * En páginas de categoría/subcategoría no existe el filtro: lo creamos
+     * y lo colocamos arriba de la grilla de productos.
      */
     var AVISO_TEXTO = 'HACÉ CLICK EN LA CATEGORÍA PARA VERLA COMPLETA Y EN LAS FLECHAS PARA VER LAS SUBCATEGORÍAS';
-    var todosLosFiltros = document.querySelectorAll('.products-feed__filter');
-    for (var fi = 0; fi < todosLosFiltros.length; fi++) {
-      var listaDeEsteFiltro = todosLosFiltros[fi].querySelector(
-        '.products-feed__categories-list'
-      );
 
-
-      if (!listaDeEsteFiltro) {
-        continue;
-      }
-
-
-      var anterior = listaDeEsteFiltro.previousElementSibling;
-      if (anterior && anterior.classList.contains('cat-arbol')) {
-        continue;
-      }
-
-
-      // Aviso instructivo arriba del árbol de categorías.
+    function armarAviso() {
       var aviso = document.createElement('p');
       aviso.className = 'cat-aviso';
       aviso.textContent = AVISO_TEXTO;
-      listaDeEsteFiltro.insertAdjacentElement('beforebegin', aviso);
+      return aviso;
+    }
+
+    if (filtros.length) {
+      for (var fi = 0; fi < filtros.length; fi++) {
+        var listaDeEsteFiltro = filtros[fi].querySelector(
+          '.products-feed__categories-list'
+        );
 
 
-      var arbolEste = (todosLosFiltros[fi] === filtro)
-        ? arbol
-        : arbol.cloneNode(true);
+        if (!listaDeEsteFiltro) {
+          continue;
+        }
 
 
-      if (arbolEste !== arbol) {
-        engancharClic(arbolEste);
+        var anterior = listaDeEsteFiltro.previousElementSibling;
+        if (anterior && anterior.classList.contains('cat-arbol')) {
+          continue;
+        }
+
+
+        var arbolEste = (fi === 0) ? arbol : arbol.cloneNode(true);
+
+
+        if (arbolEste !== arbol) {
+          engancharClic(arbolEste);
+        }
+
+
+        listaDeEsteFiltro.insertAdjacentElement('beforebegin', armarAviso());
+        listaDeEsteFiltro.insertAdjacentElement('beforebegin', arbolEste);
       }
+    } else {
+      /*
+       * Página de categoría/subcategoría: sin .products-feed__filter.
+       * Creamos un contenedor nuevo y lo insertamos antes de la grilla.
+       */
+      var filtroNuevo = document.createElement('div');
+      filtroNuevo.className = 'products-feed__filter';
+      filtroNuevo.setAttribute('data-mx-cat', '1');
+      filtroNuevo.appendChild(armarAviso());
+      filtroNuevo.appendChild(arbol);
 
+      var contenedor = document.querySelector(
+        '.category-feed_content.products-feed__content, .products-feed__content'
+      );
 
-      listaDeEsteFiltro.insertAdjacentElement('beforebegin', arbolEste);
+      if (contenedor) {
+        contenedor.insertBefore(filtroNuevo, contenedor.firstChild);
+      }
     }
 
 
@@ -636,4 +670,44 @@
   `;
 
   document.head.appendChild(styleRGB);
+})();
+
+// ==========================================
+// BREADCRUMB: agrega enlace "PRODUCTOS" para volver al catálogo general
+// ==========================================
+(function () {
+  function agregarProductos() {
+    var breadcrumb = document.querySelector('.category-feed__breadcrumb');
+    if (!breadcrumb) return;
+    if (breadcrumb.getAttribute('data-mx-productos')) return;
+    breadcrumb.setAttribute('data-mx-productos', '1');
+
+    var items = breadcrumb.querySelectorAll('.breadcrumb__item');
+    if (!items.length) return;
+
+    // El primer ítem es "Inicio". Insertamos "PRODUCTOS" justo después.
+    var primero = items[0];
+
+    var li = document.createElement('li');
+    li.className = 'breadcrumb__item';
+
+    var a = document.createElement('a');
+    a.href = 'https://www.melmakalcos.com.ar/productos';
+    a.className = 'breadcrumb__link text--primary text--primary-hover';
+    a.textContent = 'PRODUCTOS';
+
+    li.appendChild(a);
+    primero.insertAdjacentElement('afterend', li);
+  }
+
+  function iniciar() {
+    agregarProductos();
+    window.setInterval(agregarProductos, 1000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
 })();
