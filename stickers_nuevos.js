@@ -44,47 +44,50 @@
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); font-weight: 400; color: #353535; margin: 0; }',
 
         // Carrusel (contenido centrado, separado de los bordes)
-        '.msn-carrusel__viewport { position: relative; max-width: 1120px; margin: 0 auto; overflow: hidden; padding: 6px 34px 16px; --msn-per: 3; --msn-gap: 14px; }',
+        // OJO: overflow soloco x horizontal; el vertical queda visible para que el
+        // hover/sombra de las cajas NO se corte con franjas.
+        '.msn-carrusel__viewport { position: relative; max-width: 1120px; margin: 0 auto; overflow-x: hidden; overflow-y: visible; padding: 22px 52px 30px; --msn-per: 3; --msn-gap: 14px; }',
         '.msn-carrusel__track { display: flex; gap: var(--msn-gap, 14px); will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
-        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; width: calc((100% - (var(--msn-per) - 1) * var(--msn-gap, 14px)) / var(--msn-per)); box-sizing: border-box; }',
+        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; width: calc((100% - (var(--msn-per) - 1) * var(--msn-gap, 14px)) / var(--msn-per)); box-sizing: border-box; }',
 
-        // Card (wrapper)
-        '.msn-carrusel .block-products-feed__product-wrapper { display: flex; flex-direction: column; height: 100%; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
+        // Card (wrapper) - todas iguales
+        '.msn-carrusel .block-products-feed__product-wrapper { flex: 1 1 auto; width: 100%; min-width: 0; display: flex; flex-direction: column; height: 100%; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover { transform: translateY(-5px); box-shadow: 0 14px 26px rgba(53, 53, 53, .22); }',
 
         // Imagen (solo la primera, hover zoom)
         '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 1 / 1; background: #f2f2f2; }',
         '.msn-carrusel .block-products-feed__product-media a { display: block; position: relative; width: 100%; height: 100%; }',
         '.msn-carrusel .block-products-feed__product-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }',
-        '.msn-carrusel .block-products-feed__product-image:not(:first-of-type) { display: none; }',
+        '.msn-carrusel__slide[data-extra-img] .block-products-feed__product-image:not(:first-of-type) { display: none !important; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover .block-products-feed__product-image { transform: scale(1.06); }',
 
         // Badge OFF (pilula negra)
         '.msn-carrusel .block-products-feed__product-offer { position: absolute; top: 8px; left: 8px; z-index: 2; background-color: #353535 !important; color: #fff !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 100px; padding: 4px 9px; }',
 
-        // Cuerpo de la card: info + boton, boton siempre visible abajo
-        '.msn-carrusel__body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; padding: 0 2px; }',
+        // Cuerpo de la card: info + boton a la vista SIEMPRE
+        '.msn-carrusel__body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-height: 96px; padding: 0 2px; box-sizing: border-box; }',
         '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; line-height: 1.2; color: #353535; margin: 8px 0 3px; }',
         '.msn-carrusel .block-products-feed__product-name a { color: #353535; text-decoration: none; }',
+        '.msn-carrusel .block-products-feed__product-info { padding: 0 2px; }',
         '.msn-carrusel .block-products-feed__product-price { font-size: 13px; color: #353535; margin: 1px 0; }',
         '.msn-carrusel .block-products-feed__product-price del { color: #999; margin-left: 4px; font-size: 11px; }',
         '.msn-carrusel .block-products-feed__product-additional { font-size: 11px; color: #353535; margin: 3px 0 0; text-transform: uppercase; letter-spacing: .02em; }',
 
-        // Boton COMPRAR (pilula negra, siempre visible)
-        '.msn-carrusel .block-products-feed__product-buttons { display: flex; justify-content: center; margin-top: auto; padding-top: 8px; }',
-        '.msn-carrusel .block-products-feed__product-buttons-buy { display: inline-block; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 2px solid #353535 !important; border-radius: 100px; padding: 8px 18px; transition: all .2s ease; }',
+        // Boton COMPRAR (pilula negra) - el tema lo oculta hasta el hover, lo forzamos siempre visible
+        '.msn-carrusel .block-products-feed__product-buttons { display: flex !important; justify-content: center; margin-top: auto; padding-top: 8px; opacity: 1 !important; visibility: visible !important; transform: none !important; pointer-events: auto; }',
+        '.msn-carrusel .block-products-feed__product-buttons-buy { display: inline-block !important; opacity: 1 !important; visibility: visible !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 2px solid #353535 !important; border-radius: 100px; padding: 8px 18px; transition: all .2s ease; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:hover { background-color: #ffffff !important; color: #353535 !important; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:active { transform: scale(.95); }',
 
-        // Flechas
-        '.msn-carrusel__flecha { position: absolute; top: 50%; margin-top: -32px; z-index: 5; width: 46px; height: 46px; border-radius: 50%; border: 3px solid #353535; background-color: #ffffff; color: #353535; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
+        // Flechas (pegadas al CONTENIDO, no a la pantalla)
+        '.msn-carrusel__flecha { position: absolute; top: 50%; margin-top: -40px; z-index: 5; width: 48px; height: 48px; border-radius: 50%; border: 3px solid #353535; background-color: #ffffff; color: #353535; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
         '.msn-carrusel__flecha svg { width: 20px; height: 20px; }',
         '.msn-carrusel__flecha:hover { background-color: #353535; color: #fff; }',
-        '.msn-carrusel__flecha--prev { left: 6px; }',
-        '.msn-carrusel__flecha--next { right: 6px; }',
+        '.msn-carrusel__flecha--prev { left: 2px; }',
+        '.msn-carrusel__flecha--next { right: 2px; }',
 
         // VER TODOS (pilula negra con animacion que invita a interactuar)
-        '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 20px; animation: msn-mas-llamada 4.2s ease-in-out infinite; }',
+        '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 24px; animation: msn-mas-llamada 4.2s ease-in-out infinite; }',
         '.msn-carrusel__mas a { display: inline-flex; align-items: center; gap: 10px; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff; background-color: #353535; border: 3px solid #353535; border-radius: 100px; padding: 11px 26px 11px 32px; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
         '.msn-carrusel__mas a svg { width: 22px; height: 22px; transition: transform .3s ease; animation: msn-mas-flecha 4.2s ease-in-out infinite; }',
         '.msn-carrusel__mas a:hover { background-color: #fff; color: #353535; transform: scale(1.04); }',
@@ -95,13 +98,14 @@
         // Movil
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 50px; }',
-        '  .msn-carrusel__viewport { padding: 6px 26px 16px; }',
-        '  .msn-carrusel__flecha { width: 38px; height: 38px; margin-top: -26px; border-width: 2px; }',
+        '  .msn-carrusel__viewport { padding: 18px 46px 24px; }',
+        '  .msn-carrusel__flecha { width: 38px; height: 38px; margin-top: -31px; border-width: 2px; }',
         '  .msn-carrusel__flecha svg { width: 17px; height: 17px; }',
-        '  .msn-carrusel__flecha--prev { left: 2px; }',
-        '  .msn-carrusel__flecha--next { right: 2px; }',
+        '  .msn-carrusel__flecha--prev { left: 4px; }',
+        '  .msn-carrusel__flecha--next { right: 4px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
+        '  .msn-carrusel__body { min-height: 84px; }',
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px 10px 28px; }',
         '}',
         '@media (prefers-reduced-motion: reduce) {',
@@ -129,19 +133,44 @@
         if (caja) caja.style.display = 'none';
         sec.style.display = 'none';
 
-        // Limpio clases de grilla y fuerzo imagenes lazy
+        // Limpio clases de grilla, fuerzo imagenes y dejo clara una sola foto por card
         productos.forEach(function (p) {
             p.className = p.className.replace(/\buk-width[^\s]*/g, '').replace(/\s+/g, ' ').trim();
-            var imgs = p.querySelectorAll('img[data-src]');
+            p.classList.add('msn-carrusel__slide');
+
+            var imgs = p.querySelectorAll('img');
+            var conSrc = [];
             for (var i = 0; i < imgs.length; i++) {
                 var ig = imgs[i];
-                if (!ig.getAttribute('src') && ig.getAttribute('data-src')) {
+                // Copio atributos lazy del tema (data-src / data-srcset / data-sizes)
+                if (ig.hasAttribute('data-srcset') && !ig.hasAttribute('srcset')) {
+                    ig.setAttribute('srcset', ig.getAttribute('data-srcset'));
+                }
+                if (ig.hasAttribute('data-sizes') && !ig.hasAttribute('sizes')) {
+                    ig.setAttribute('sizes', ig.getAttribute('data-sizes'));
+                }
+                if (!ig.getAttribute('src') && ig.hasAttribute('data-src')) {
                     ig.setAttribute('src', ig.getAttribute('data-src'));
                 }
                 ig.removeAttribute('data-src');
+                ig.removeAttribute('data-srcset');
+                ig.removeAttribute('data-sizes');
+                // Dejo SOLO la clase que usa el carrusel (saco clases lazy/retina del tema)
+                ig.setAttribute('class', 'block-products-feed__product-image');
                 ig.setAttribute('loading', 'lazy');
+                conSrc.push(ig);
             }
-            p.classList.add('msn-carrusel__slide');
+            // Si la primera foto quedo sin src (placeholder lazy), le doy el src de la primera que tenga
+            var primera = conSrc[0];
+            if (primera && !primera.getAttribute('src') && !primera.getAttribute('srcset')) {
+                for (var s = 0; s < conSrc.length; s++) {
+                    if (conSrc[s].getAttribute('src') || conSrc[s].getAttribute('srcset')) {
+                        primera.setAttribute('src', conSrc[s].getAttribute('src') || conSrc[s].getAttribute('srcset'));
+                        break;
+                    }
+                }
+            }
+            if (conSrc.length > 1) p.setAttribute('data-extra-img', '1');
 
             // El envoltorio de info + boton pasa a ser el cuerpo de la card
             var info = p.querySelector('.block-products-feed__product-info');
@@ -155,6 +184,7 @@
 
         var head = document.createElement('div');
         head.className = 'msn-carrusel__head';
+        head.style.maxWidth = CONFIG.anchoMaximo + 'px';
         var h2 = document.createElement('h2');
         h2.className = 'msn-carrusel__titulo';
         h2.textContent = CONFIG.titulo;
@@ -163,6 +193,7 @@
 
         var viewport = document.createElement('div');
         viewport.className = 'msn-carrusel__viewport';
+        viewport.style.maxWidth = CONFIG.anchoMaximo + 'px';
         var track = document.createElement('div');
         track.className = 'msn-carrusel__track';
         for (var k = 0; k < productos.length; k++) track.appendChild(productos[k]);
@@ -181,8 +212,9 @@
         };
         var prev = FLECHA('prev');
         var next = FLECHA('next');
-        root.appendChild(prev);
-        root.appendChild(next);
+        // Las flechas viven DENTRO del viewport (contenido centrado) => no tocan los bordes de pantalla
+        viewport.appendChild(prev);
+        viewport.appendChild(next);
 
         if (CONFIG.mostrarVerTodos) {
             var mas = document.createElement('div');
@@ -197,19 +229,26 @@
 
         sec.parentNode.insertBefore(root, sec.nextSibling);
 
+        // ----- Bucle INFINITO (clones) -----
+        // Duplico todas las cards al final del track: al llegar al final, "saltar" a la
+        // posicion inicial es imperceptible => el loop es continuo, sin barrido.
+        var N0 = productos.length;
+        for (var c = 0; c < N0; c++) {
+            track.appendChild(productos[c].cloneNode(true));
+        }
+
         // ----- Carrusel -----
         var perActual = null;
         var indice = 0;
         var paso = 0;
-        var N = productos.length;
 
         function per() {
-            return (viewport.clientWidth && viewport.clientWidth < 640) ? CONFIG.visiblesMovil : CONFIG.visiblesDesktop;
+            return (window.innerWidth < 640) ? CONFIG.visiblesMovil : CONFIG.visiblesDesktop;
         }
 
+        // posicion maxima: N0 (ahi ya se ven los CLONES, identicos a la posicion 0)
         function maxIndice() {
-            var p = per();
-            return Math.max(0, N - p);
+            return N0;
         }
 
         function medir() {
@@ -220,43 +259,57 @@
                 viewport.style.setProperty('--msn-gap', CONFIG.separacion + 'px');
             }
             if (productos[0]) paso = productos[0].getBoundingClientRect().width + CONFIG.separacion;
-            if (indice > maxIndice()) indice = maxIndice();
+            indice = Math.max(0, Math.min(N0, indice));
             aplicar();
         }
 
-        function aplicar() {
+        function aplicar(instant) {
+            if (instant) track.style.transition = 'none';
             track.style.transform = 'translateX(-' + (indice * paso) + 'px)';
+            if (instant) {
+                void track.offsetWidth; // fuerza reflow
+                track.style.transition = '';
+            }
         }
 
-        function ir(i) {
-            indice = Math.max(0, Math.min(maxIndice(), i));
-            aplicar();
+        function ir(i, instant) {
+            indice = Math.max(0, Math.min(N0, i));
+            aplicar(instant);
         }
 
         function sig() {
-            ir(indice >= maxIndice() ? 0 : indice + 1);
+            if (indice >= N0) ir(0, true);        // ya está en el clon = volver al inicio invisible
+            else ir(indice + 1);
         }
 
         function ant() {
-            ir(indice <= 0 ? maxIndice() : indice - 1);
+            if (indice <= 0) ir(N0 - per(), true); // del primero, vamos al último sin barrido
+            else ir(indice - 1);
         }
 
         prev.addEventListener('click', ant);
         next.addEventListener('click', sig);
 
-        // Autoplay
+        // Autoplay (loop infinito)
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var timer = null;
         function play() {
-            if (reduce || !CONFIG.autoplayMs || N <= per()) return;
+            if (reduce || !CONFIG.autoplayMs || N0 <= per()) return;
             stop();
             timer = setInterval(sig, CONFIG.autoplayMs);
         }
         function stop() {
             if (timer) { clearInterval(timer); timer = null; }
         }
+        // Al salir del carrusel: avanza YA (no espera el intervalo completo) y retoma el loop
+        function retomar() {
+            if (reduce || !CONFIG.autoplayMs || N0 <= per()) return;
+            stop();
+            sig();
+            timer = setInterval(sig, CONFIG.autoplayMs);
+        }
         root.addEventListener('mouseenter', stop);
-        root.addEventListener('mouseleave', play);
+        root.addEventListener('mouseleave', retomar);
         window.addEventListener('touchstart', stop, { passive: true });
 
         medir();
