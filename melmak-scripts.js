@@ -326,25 +326,62 @@
     arbol.appendChild(crearNivel(categoriasPrincipales));
 
 
-    arbol.addEventListener('click', function (evento) {
-      var cabeza = evento.target.closest('.cat-cabeza');
+    function engancharClic(arbolito) {
+      arbolito.addEventListener('click', function (evento) {
+        var cabeza = evento.target.closest('.cat-cabeza');
 
 
-      if (!cabeza || !arbol.contains(cabeza)) {
-        return;
+        if (!cabeza || !arbolito.contains(cabeza)) {
+          return;
+        }
+
+
+        if (evento.target.closest('a')) {
+          return;
+        }
+
+
+        cabeza.parentElement.classList.toggle('cat-abierta');
+      });
+    }
+    engancharClic(arbol);
+
+
+    /*
+     * El tema renderiza el filtro en DOS lugares: la sidebar de escritorio
+     * y el sidenav móvil ("Filtrar"). Hay que inyectar el árbol en ambos,
+     * porque el CSS oculta la lista original en todos los filtros.
+     */
+    var todosLosFiltros = document.querySelectorAll('.products-feed__filter');
+    for (var fi = 0; fi < todosLosFiltros.length; fi++) {
+      var listaDeEsteFiltro = todosLosFiltros[fi].querySelector(
+        '.products-feed__categories-list'
+      );
+
+
+      if (!listaDeEsteFiltro) {
+        continue;
       }
 
 
-      if (evento.target.closest('a')) {
-        return;
+      var anterior = listaDeEsteFiltro.previousElementSibling;
+      if (anterior && anterior.classList.contains('cat-arbol')) {
+        continue;
       }
 
 
-      cabeza.parentElement.classList.toggle('cat-abierta');
-    });
+      var arbolEste = (todosLosFiltros[fi] === filtro)
+        ? arbol
+        : arbol.cloneNode(true);
 
 
-    listaOriginal.insertAdjacentElement('beforebegin', arbol);
+      if (arbolEste !== arbol) {
+        engancharClic(arbolEste);
+      }
+
+
+      listaDeEsteFiltro.insertAdjacentElement('beforebegin', arbolEste);
+    }
 
 
     return true;
@@ -434,6 +471,7 @@
 
 
     '.products-feed__filter > .products-feed__filter-title, .products-feed__filter > hr, .products-feed__filter > .products-feed__categories-list { display: none !important; }',
+    '@media (max-width: 959px) { .products-feed__products { grid-template-columns: repeat(2, 1fr) !important; } }',
     '.products-feed__product-wrapper, .products-feed__product-wrapper:hover, .block-products-feed__product-wrapper, .block-products-feed__product-wrapper:hover, .block-products-set__product-wrapper, .block-products-set__product-wrapper:hover, .product-vip__carrousel-image { box-shadow: none !important; }'
   ].join('');
 
