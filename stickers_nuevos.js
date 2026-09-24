@@ -1,5 +1,24 @@
 // =============================================
 // STICKERS NUEVOS v5 — Carrusel MELMAK
+//
+// Convierte la seccion nativa de Tiendanube
+// (.block-products-feed--1339226 "STICKERS
+// NUEVOS") en un carrusel MELMAK.
+//
+//  - Fondo amarillo #ffee26 full-bleed, titulo
+//    Curda Gouda.
+//  - Cajas MAS CHICAS con un margen (gutter) a
+//    los costados: no tocan los bordes.
+//  - CAJAS UNIFORMES SIEMPRE: cuadradas e
+//    iguales; la imagen se achica (object-fit).
+//  - AUTOPLAY: avanza solo; se pausa al pasar el
+//    mouse por encima y se reanuda al salir.
+//  - DESLIZABLE: dedo en movil y click/arrastre
+//    en PC. Sin flechas de navegacion grandes.
+//  - FLECHITAS indicadoras de direccion.
+//  - "VER TODOS" como PILULA VINYL garantizada.
+//
+// Los anchos se calculan en JS (px exactos).
 // =============================================
 (function () {
     var ID_ROOT = 'msn-root';
@@ -37,8 +56,11 @@
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
 
-        // Fondo amarillo full-bleed
-        '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background-color: #ffee26; }',
+        // Fondo amarillo full-bleed. El top (18px) es transparente para que la
+        // ONDA amarilla forme el borde superior ondulado (sin linea).
+        '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background: linear-gradient(180deg, transparent 0 18px, #ffee26 18px); }',
+        '.msn-carrusel__onda { position: absolute; top: 0; left: 0; right: 0; height: 18px; pointer-events: none; background-repeat: repeat-x; background-size: 26px 18px; background-position: 0 0; animation: msn-onda 1.5s linear infinite; background-image: url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffee26%22/></svg>\'); }',
+        '@keyframes msn-onda { to { background-position: 26px 0; } }',
 
         // Encabezado centrado
         '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 6px; }',
@@ -52,7 +74,7 @@
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
 
         // Cada card: el ancho se fija por JS (px).
-        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; box-sizing: border-box; }',
+        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; box-sizing: border-box; margin: 0 !important; }',
 
         // Card (wrapper) - todas iguales
         '.msn-carrusel .block-products-feed__product-wrapper { width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
@@ -183,6 +205,10 @@
         var root = document.createElement('div');
         root.id = ID_ROOT;
         root.className = 'msn-carrusel';
+
+        var onda = document.createElement('div');
+        onda.className = 'msn-carrusel__onda';
+        root.appendChild(onda);
 
         var head = document.createElement('div');
         head.className = 'msn-carrusel__head';
