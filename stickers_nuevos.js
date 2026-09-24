@@ -1,25 +1,5 @@
 // =============================================
 // STICKERS NUEVOS v5 — Carrusel MELMAK
-//
-// Convierte la seccion nativa de Tiendanube
-// (.block-products-feed--1339226 "STICKERS
-// NUEVOS") en un carrusel MELMAK.
-//
-//  - Fondo amarillo #ffee26 full-bleed, titulo
-//    Curda Gouda.
-//  - Cajas MAS CHICAS con un margen (gutter) a
-//    los costados: no tocan los bordes.
-//  - CAJAS UNIFORMES SIEMPRE: cuadradas e
-//    iguales; la imagen se achica (object-fit).
-//  - AUTOPLAY: avanza solo; se pausa al pasar el
-//    mouse por encima y se reanuda al salir.
-//  - DESLIZABLE: dedo en movil y click/arrastre
-//    en PC. Sin flechas de navegacion grandes.
-//  - FLECHITAS indicadoras de direccion.
-//  - "VER TODOS" como PILULA VINYL garantizada.
-//
-// Los anchos se calculan en JS (px exactos).
-// =============================================
 (function () {
     var ID_ROOT = 'msn-root';
     if (document.getElementById(ID_ROOT)) return;
@@ -58,7 +38,7 @@
 
         // Fondo amarillo full-bleed. El top (18px) es transparente para que la
         // ONDA amarilla forme el borde superior ondulado (sin linea).
-        '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background: linear-gradient(180deg, transparent 0 18px, #ffee26 18px); }',
+        '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 28px; background: linear-gradient(180deg, transparent 0 14px, #ffee26 14px); }',
         '.msn-carrusel__onda { position: absolute; top: 0; left: 0; right: 0; height: 18px; pointer-events: none; background-repeat: repeat-x; background-size: 26px 18px; background-position: 0 0; animation: msn-onda 1.5s linear infinite; background-image: url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffee26%22/></svg>\'); }',
         '@keyframes msn-onda { to { background-position: 26px 0; } }',
 
@@ -122,7 +102,7 @@
 
         // Movil
         '@media (max-width: 639px) {',
-        '  .msn-carrusel { padding: 46px 0 50px; }',
+        '  .msn-carrusel { padding: 46px 0 22px; }',
         '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
