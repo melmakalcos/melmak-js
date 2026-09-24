@@ -1,16 +1,5 @@
 /* =========================================================
-   MELMAK — PANTALLA DE BIENVENIDA  (bienvenida.js)
-   =========================================================
-   · Fullscreen, SIN barra de desplazamiento, responsive.
-   · Fondo amarillo + franjas laterales #353535 (MELMAK rotado).
-   · Personaje que cae desde arriba y vibra (parece caer infinito).
-   · Partículas negras subiendo (efecto "en el aire").
-   · Caja central (blanca, sin borde) + botón ENTRAR.
-   · Al tocar ENTRAR se desvanece y se elimina.
-   · Se muestra 1 vez por sesión (sessionStorage).
-   · FUENTES PRECARGADAS: el overlay se muestra recién cuando
-     "Curda Gouda" y "vinyl" ya están cargadas, para que el texto
-     no cambie de tamaño/tipo a mitad de pantalla.
+   MELMAK — PANTALLA DE BIENVENIDA
    ========================================================= */
 (function () {
     'use strict';
