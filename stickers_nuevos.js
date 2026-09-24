@@ -1,5 +1,25 @@
 // =============================================
 // STICKERS NUEVOS v5 — Carrusel MELMAK
+//
+// Convierte la seccion nativa de Tiendanube
+// (.block-products-feed--1339226 "STICKERS
+// NUEVOS") en un carrusel MELMAK.
+//
+//  - Fondo amarillo #ffee26 full-bleed, titulo
+//    Curda Gouda.
+//  - Cajas MAS CHICAS con un margen (gutter) a
+//    los costados: no tocan los bordes.
+//  - CAJAS UNIFORMES SIEMPRE: cuadradas e
+//    iguales; la imagen se achica (object-fit).
+//  - AUTOPLAY: avanza solo; se pausa al pasar el
+//    mouse por encima y se reanuda al salir.
+//  - DESLIZABLE: dedo en movil y click/arrastre
+//    en PC. Sin flechas de navegacion grandes.
+//  - FLECHITAS indicadoras de direccion.
+//  - "VER TODOS" como PILULA VINYL garantizada.
+//
+// Los anchos se calculan en JS (px exactos).
+// =============================================
 (function () {
     var ID_ROOT = 'msn-root';
     if (document.getElementById(ID_ROOT)) return;
@@ -70,7 +90,7 @@
 
         // Cuerpo: info + boton SIEMPRE visibles
         '.msn-carrusel .block-products-feed__product-info { display: flex !important; flex-direction: column; justify-content: center; flex: 1 1 auto; min-height: 96px; padding: 0 2px; box-sizing: border-box; }',
-        '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; color: #353535; margin: 8px 0 3px; }',
+        '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; color: #353535; margin: 8px 0 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }',
         '.msn-carrusel .block-products-feed__product-name a { color: #353535; text-decoration: none; }',
         '.msn-carrusel .block-products-feed__product-price { font-size: 13px; color: #353535; margin: 1px 0; }',
         '.msn-carrusel .block-products-feed__product-price del { color: #999; margin-left: 4px; font-size: 11px; }',
@@ -251,6 +271,24 @@
             return N0;
         }
 
+        function igualar() {
+            var cards = track.children;
+            var i;
+            // Mido la altura natural de cada card
+            for (i = 0; i < cards.length; i++) cards[i].style.height = 'auto';
+            var maxH = 0;
+            for (i = 0; i < cards.length; i++) {
+                var h = cards[i].getBoundingClientRect().height;
+                if (h > maxH) maxH = h;
+            }
+            // Todas iguales a la mas alta
+            if (maxH > 0) {
+                for (i = 0; i < cards.length; i++) {
+                    cards[i].style.height = Math.ceil(maxH) + 'px';
+                }
+            }
+        }
+
         function medir() {
             var vw = window.innerWidth;
             var g = gutter();
@@ -265,6 +303,8 @@
             for (var i = 0; i < cards.length; i++) {
                 cards[i].style.width = cardW + 'px';
             }
+
+            igualar();
 
             paso = cardW + gap;
             indice = Math.max(0, Math.min(maxIndice(), indice));
