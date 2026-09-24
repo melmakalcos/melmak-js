@@ -1,25 +1,5 @@
 // =============================================
 // STICKERS NUEVOS v5 — Carrusel MELMAK
-//
-// Convierte la seccion nativa de Tiendanube
-// (.block-products-feed--1339226 "STICKERS
-// NUEVOS") en un carrusel MELMAK.
-//
-//  - Fondo amarillo #ffee26 full-bleed, titulo
-//    Curda Gouda.
-//  - Cajas MAS CHICAS con un margen (gutter) a
-//    los costados: no tocan los bordes.
-//  - CAJAS UNIFORMES SIEMPRE: cuadradas e
-//    iguales; la imagen se achica (object-fit).
-//  - AUTOPLAY: avanza solo; se pausa al pasar el
-//    mouse por encima y se reanuda al salir.
-//  - DESLIZABLE: dedo en movil y click/arrastre
-//    en PC. Sin flechas de navegacion grandes.
-//  - FLECHITAS indicadoras de direccion.
-//  - "VER TODOS" como PILULA VINYL garantizada.
-//
-// Los anchos se calculan en JS (px exactos).
-// =============================================
 (function () {
     var ID_ROOT = 'msn-root';
     if (document.getElementById(ID_ROOT)) return;
@@ -60,12 +40,12 @@
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background-color: #ffee26; }',
 
         // Encabezado centrado
-        '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 26px; }',
+        '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 6px; }',
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; }',
 
         // Viewport: ancho completo; el gutter se maneja por transform en JS.
         // overflow-y visible para que hover/sombra NO se corten.
-        '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 22px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
+        '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 10px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
         '.msn-carrusel__track { display: flex; align-items: stretch; will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
@@ -109,10 +89,11 @@
         '.msn-carrusel__flecha--next { right: 6px; }',
 
         // VER TODOS (pilula VINYL garantizada)
-        '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 24px; }',
-        '.msn-carrusel__mas a { display: inline-flex; align-items: center; gap: 10px; font-family: \'vinyl\' !important; font-size: 17px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff; background-color: #353535; border: 3px solid #353535; border-radius: 100px; padding: 12px 28px; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
-        '.msn-carrusel__mas a, .msn-carrusel__mas a * { font-family: \'vinyl\' !important; }',
-        '.msn-carrusel__mas a:hover { background-color: #fff; color: #353535; transform: scale(1.04); }',
+        '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 18px; }',
+        '.msn-carrusel__mas a { display: inline-flex !important; align-items: center; gap: 10px; font-family: \'vinyl\' !important; font-size: 17px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 3px solid #353535 !important; border-radius: 100px; padding: 12px 28px; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
+        '.msn-carrusel__mas a, .msn-carrusel__mas a * { font-family: \'vinyl\' !important; color: #fff !important; }',
+        '.msn-carrusel__mas a:hover { background-color: #fff !important; color: #353535 !important; transform: scale(1.04); }',
+        '.msn-carrusel__mas a:hover * { color: #353535 !important; }',
         '.msn-carrusel__mas svg { width: 22px; height: 22px; }',
 
         // Movil
@@ -150,41 +131,46 @@
         if (caja) caja.style.display = 'none';
         sec.style.display = 'none';
 
-        // Limpio clases de grilla y fuerzo imagenes (una sola foto por card)
+        // Limpio clases de grilla y dejo UNA sola imagen por card con estructura
+        // simple (media > a > img). Asi los productos con varias fotos tambien
+        // se ven y TODAS las cajas quedan iguales.
         productos.forEach(function (p) {
             p.className = p.className.replace(/\buk-width[^\s]*/g, '').replace(/\s+/g, ' ').trim();
             p.classList.add('msn-carrusel__slide');
 
-            var imgs = p.querySelectorAll('img');
-            var conSrc = [];
-            for (var i = 0; i < imgs.length; i++) {
-                var ig = imgs[i];
-                if (ig.hasAttribute('data-srcset') && !ig.hasAttribute('srcset')) {
-                    ig.setAttribute('srcset', ig.getAttribute('data-srcset'));
+            var media = p.querySelector('.block-products-feed__product-media');
+            if (!media) return;
+
+            var firstImg = media.querySelector('img');
+            var firstA = media.querySelector('a');
+            var href = firstA ? firstA.getAttribute('href') : null;
+            var offer = media.querySelector('[class*="product-offer"]');
+
+            if (firstImg) {
+                if (firstImg.hasAttribute('data-srcset') && !firstImg.hasAttribute('srcset')) {
+                    firstImg.setAttribute('srcset', firstImg.getAttribute('data-srcset'));
                 }
-                if (ig.hasAttribute('data-sizes') && !ig.hasAttribute('sizes')) {
-                    ig.setAttribute('sizes', ig.getAttribute('data-sizes'));
+                if (firstImg.hasAttribute('data-sizes') && !firstImg.hasAttribute('sizes')) {
+                    firstImg.setAttribute('sizes', firstImg.getAttribute('data-sizes'));
                 }
-                if (!ig.getAttribute('src') && ig.hasAttribute('data-src')) {
-                    ig.setAttribute('src', ig.getAttribute('data-src'));
+                if (!firstImg.getAttribute('src') && firstImg.hasAttribute('data-src')) {
+                    firstImg.setAttribute('src', firstImg.getAttribute('data-src'));
                 }
-                ig.removeAttribute('data-src');
-                ig.removeAttribute('data-srcset');
-                ig.removeAttribute('data-sizes');
-                ig.setAttribute('class', 'block-products-feed__product-image');
-                ig.setAttribute('loading', 'lazy');
-                conSrc.push(ig);
+                firstImg.removeAttribute('data-src');
+                firstImg.removeAttribute('data-srcset');
+                firstImg.removeAttribute('data-sizes');
+                firstImg.setAttribute('class', 'block-products-feed__product-image');
+                firstImg.setAttribute('loading', 'lazy');
             }
-            var primera = conSrc[0];
-            if (primera && !primera.getAttribute('src') && !primera.getAttribute('srcset')) {
-                for (var s = 0; s < conSrc.length; s++) {
-                    if (conSrc[s].getAttribute('src') || conSrc[s].getAttribute('srcset')) {
-                        primera.setAttribute('src', conSrc[s].getAttribute('src') || conSrc[s].getAttribute('srcset'));
-                        break;
-                    }
-                }
-            }
-            if (conSrc.length > 1) p.setAttribute('data-extra-img', '1');
+
+            // Reconstruyo el media: una sola imagen dentro de un <a>
+            media.innerHTML = '';
+            var newA = document.createElement('a');
+            newA.className = 'block-products-feed__product-link';
+            if (href) newA.setAttribute('href', href);
+            if (firstImg) newA.appendChild(firstImg);
+            if (offer) newA.appendChild(offer);
+            media.appendChild(newA);
         });
 
         // ----- DOM -----

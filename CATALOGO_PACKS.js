@@ -1,11 +1,5 @@
 // =============================================
 // CATALOGO - Seccion del catalogo de productos
-//
-// EDITAR: TITULO_CATALOGO y VOLUMENES
-//         (un objeto por volumen, con sus cajas)
-// CONFIG: ANCLA_INSERCION = selector del bloque
-//         banner, despues del cual se inserta
-//         la seccion.
 // =============================================
 (function () {
     if (document.getElementById('melk-catalogo')) return;
@@ -149,8 +143,8 @@
         '@keyframes melk-dual-plop-movil-der { 0% { transform: translate(-50%, -50%) scale(0) rotate(-12deg); } 30% { transform: translate(-50%, -50%) scale(1.18) rotate(-12deg); } 50% { transform: translate(-50%, -50%) scale(.96) rotate(-12deg); } 70% { transform: translate(-50%, -50%) scale(1.06) rotate(-12deg); } 100% { transform: translate(-50%, -50%) scale(1) rotate(-12deg); } }',
         '.melk-dual__target { will-change: transform; }',
         '.melk-holo { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; background-color: #ffffff; overflow: hidden; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-        '.melk-holo__fondo { position: relative; height: 420px; }',
-        '.melk-holo__mover { position: absolute; top: 50%; left: 0; width: 240px; max-width: 60vw; transform: translate(-60vw, -50%); will-change: transform; pointer-events: none; display: flex; flex-direction: column; align-items: center; }',
+        '.melk-holo__fondo { position: relative; height: 500px; }',
+        '.melk-holo__mover { position: absolute; top: 45%; left: 0; width: 240px; max-width: 60vw; transform: translate(-60vw, -50%); will-change: transform; pointer-events: none; display: flex; flex-direction: column; align-items: center; }',
         '.melk-holo__personaje { position: relative; z-index: 1; width: 100%; transform: rotate(0deg); transform-origin: 50% 50%; will-change: transform; }',
         '.melk-holo__holo { position: absolute; inset: 0; z-index: 0; border-radius: 50%; background: linear-gradient(90deg, #00F0FF, #FF00F7, #FFDD00, #00FFAA, #0055FF, #FF0055, #00F0FF); background-size: 200% 100%; opacity: .35; animation: melk-holo-shimmer 12s linear infinite; }',
         '.melk-holo__png { position: relative; z-index: 1; display: block; width: 100%; height: auto; }',
@@ -220,7 +214,7 @@
         '@keyframes melk-dual-plop { 0% { transform: scale(0) rotate(12deg); } 35% { transform: scale(1.18) rotate(12deg); } 55% { transform: scale(.96) rotate(12deg); } 75% { transform: scale(1.06) rotate(12deg); } 100% { transform: scale(1) rotate(12deg); } }',
         '@keyframes melk-dual-plop-der { 0% { transform: scale(0) rotate(-12deg); } 35% { transform: scale(1.18) rotate(-12deg); } 55% { transform: scale(.96) rotate(-12deg); } 75% { transform: scale(1.06) rotate(-12deg); } 100% { transform: scale(1) rotate(-12deg); } }',
         '@media (prefers-reduced-motion: reduce) { .melk-dual__bono { transform: rotate(12deg); } .melk-dual__bono--der { transform: rotate(-12deg); } }',
-        '.melk-holo__fondo { height: 520px; }',
+        '.melk-holo__fondo { height: 640px; }',
         '}',
         '@media (max-width: 767px) {',
         '.melk-holo__mover { left: 50%; transform: translate(-50%, -50%); gap: 30px; }',
