@@ -1,5 +1,24 @@
 // =============================================
-// STICKERS NUEVOS v4 — Carrusel AL FILO MELMAK
+// STICKERS NUEVOS v5 — Carrusel MELMAK
+//
+// Convierte la seccion nativa de Tiendanube
+// (.block-products-feed--1339226 "STICKERS
+// NUEVOS") en un carrusel MELMAK.
+//
+//  - Fondo amarillo #ffee26 full-bleed, titulo
+//    Curda Gouda.
+//  - Cajas MAS CHICAS con un margen (gutter) a
+//    los costados: no tocan los bordes.
+//  - CAJAS UNIFORMES SIEMPRE: cuadradas e
+//    iguales; la imagen se achica (object-fit).
+//  - AUTOPLAY: avanza solo; se pausa al pasar el
+//    mouse por encima y se reanuda al salir.
+//  - DESLIZABLE: dedo en movil y click/arrastre
+//    en PC. Sin flechas de navegacion grandes.
+//  - FLECHITAS indicadoras de direccion.
+//  - "VER TODOS" como PILULA VINYL garantizada.
+//
+// Los anchos se calculan en JS (px exactos).
 // =============================================
 (function () {
     var ID_ROOT = 'msn-root';
@@ -7,12 +26,16 @@
 
     // =============== CONFIG (EDITAR AQUI) ================
     var CONFIG = {
-        titulo: 'STICKERS NUEVOS',   // titulo de la seccion
-        visiblesDesktop: 3,          // visibles en PC
-        visiblesMovil: 2,            // visibles en movil
-        separacion: 14,              // separacion entre cards (px)
-        autoplayMs: 0,               // 0 = sin autoplay (solo swipe)
-        mostrarVerTodos: true,       // boton "VER TODOS" abajo
+        titulo: 'STICKERS NUEVOS',     // titulo de la seccion
+        visibleMovil: 2,               // minimo de cards visibles en movil
+        visibleDesktop: 3,             // minimo de cards visibles en PC
+        maxAnchoCardMovil: 220,        // ancho maximo de cada card en movil (px)
+        maxAnchoCardDesktop: 320,      // ancho maximo de cada card en PC (px)
+        separacion: 16,                // separacion entre cards (px)
+        gutterMovil: 14,               // margen a los costados en movil (px)
+        gutterDesktop: 28,             // margen a los costados en PC (px)
+        autoplayMs: 3200,              // 0 = sin autoplay
+        mostrarVerTodos: true,         // boton "VER TODOS" abajo
         linkVerTodos: '/productos'
     };
     // Selector de la seccion nativa de Tiendanube.
@@ -20,7 +43,6 @@
     // ====================================================
 
     // ---------------- FUENTE VINYL (Typekit) ----------------
-    // Por si el kit no esta cargado: la garantizamos para la pilula.
     if (!document.getElementById('msn-typekit-vinyl')) {
         var tkv = document.createElement('link');
         tkv.id = 'msn-typekit-vinyl';
@@ -37,35 +59,36 @@
         // Fondo amarillo full-bleed
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background-color: #ffee26; }',
 
-        // Encabezado centrado (separado del borde)
+        // Encabezado centrado
         '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 26px; }',
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; }',
 
-        // Viewport AL FILO: ancho completo, sin gutters laterales.
+        // Viewport: ancho completo; el gutter se maneja por transform en JS.
         // overflow-y visible para que hover/sombra NO se corten.
         '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 22px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
         '.msn-carrusel__track { display: flex; align-items: stretch; will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
 
-        // Cada card: el ancho se fija por JS (px). flex none.
+        // Cada card: el ancho se fija por JS (px).
         '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; box-sizing: border-box; }',
 
         // Card (wrapper) - todas iguales
         '.msn-carrusel .block-products-feed__product-wrapper { width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover { transform: translateY(-5px); box-shadow: 0 14px 26px rgba(53, 53, 53, .22); }',
 
-        // Media: caja cuadrada FIJA (el tamano NO depende de la imagen)
-        '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 1 / 1 !important; width: 100% !important; height: auto !important; max-height: none !important; background: #f2f2f2; }',
-        '.msn-carrusel .block-products-feed__product-media a { display: block; position: relative; width: 100%; height: 100%; }',
-        '.msn-carrusel .block-products-feed__product-image { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; transition: transform .3s ease; }',
+        // Media: caja CUADRADA garantizada (padding-bottom hack) - el tamano
+        // NO depende de la imagen; es la imagen la que se achica.
+        '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; border-radius: 10px; width: 100% !important; height: 0 !important; padding-bottom: 100% !important; max-height: none !important; background: #f2f2f2; }',
+        '.msn-carrusel .block-products-feed__product-media a { display: block; position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; }',
+        '.msn-carrusel .block-products-feed__product-image { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; transition: transform .3s ease; -webkit-user-drag: none; user-select: none; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover .block-products-feed__product-image { transform: scale(1.06); }',
         '.msn-carrusel__slide[data-extra-img] .block-products-feed__product-image:not(:first-of-type) { display: none !important; }',
 
         // Badge OFF (pilula negra)
         '.msn-carrusel .block-products-feed__product-offer { position: absolute; top: 8px; left: 8px; z-index: 2; background-color: #353535 !important; color: #fff !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 100px; padding: 4px 9px; }',
 
-        // Cuerpo de la card: info + boton SIEMPRE visibles y uniformes
+        // Cuerpo: info + boton SIEMPRE visibles
         '.msn-carrusel .block-products-feed__product-info { display: flex !important; flex-direction: column; justify-content: center; flex: 1 1 auto; min-height: 96px; padding: 0 2px; box-sizing: border-box; }',
         '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; color: #353535; margin: 8px 0 3px; }',
         '.msn-carrusel .block-products-feed__product-name a { color: #353535; text-decoration: none; }',
@@ -76,6 +99,14 @@
         '.msn-carrusel .block-products-feed__product-buttons-buy { display: inline-block !important; opacity: 1 !important; visibility: visible !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 2px solid #353535 !important; border-radius: 100px; padding: 8px 18px; transition: all .2s ease; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:hover { background-color: #ffffff !important; color: #353535 !important; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:active { transform: scale(.95); }',
+
+        // FLECHITAS indicadoras (pequenas)
+        '.msn-carrusel__flecha { position: absolute; top: 50%; margin-top: -22px; z-index: 5; width: 44px; height: 44px; border-radius: 50%; border: 3px solid #353535; background-color: rgba(255,255,255,.92); color: #353535; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
+        '.msn-carrusel__flecha svg { width: 18px; height: 18px; }',
+        '.msn-carrusel__flecha:hover { background-color: #353535; color: #fff; }',
+        '.msn-carrusel__flecha:active { transform: scale(.92); }',
+        '.msn-carrusel__flecha--prev { left: 6px; }',
+        '.msn-carrusel__flecha--next { right: 6px; }',
 
         // VER TODOS (pilula VINYL garantizada)
         '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 24px; }',
@@ -90,6 +121,10 @@
         '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
+        '  .msn-carrusel__flecha { width: 36px; height: 36px; margin-top: -18px; border-width: 2px; }',
+        '  .msn-carrusel__flecha svg { width: 15px; height: 15px; }',
+        '  .msn-carrusel__flecha--prev { left: 4px; }',
+        '  .msn-carrusel__flecha--next { right: 4px; }',
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px; }',
         '}',
         '@media (prefers-reduced-motion: reduce) {',
@@ -112,7 +147,6 @@
         var productos = grilla ? Array.prototype.slice.call(grilla.querySelectorAll('.block-products-feed__product')) : [];
         if (!productos.length) return;
 
-        // La seccion original queda desactivada
         if (caja) caja.style.display = 'none';
         sec.style.display = 'none';
 
@@ -172,6 +206,22 @@
         track.className = 'msn-carrusel__track';
         for (var k = 0; k < productos.length; k++) track.appendChild(productos[k]);
         viewport.appendChild(track);
+
+        // FLECHITAS
+        function flecha(dir) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'msn-carrusel__flecha msn-carrusel__flecha--' + dir;
+            b.setAttribute('aria-label', dir === 'prev' ? 'Anterior' : 'Siguiente');
+            b.innerHTML = dir === 'prev'
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 5 8 12 15 19"></polyline></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 5 16 12 9 19"></polyline></svg>';
+            return b;
+        }
+        var prev = flecha('prev');
+        var next = flecha('next');
+        viewport.appendChild(prev);
+        viewport.appendChild(next);
         root.appendChild(viewport);
 
         if (CONFIG.mostrarVerTodos) {
@@ -194,30 +244,36 @@
         }
 
         // ----- Carrusel -----
-        var perActual = null;
         var indice = 0;
         var paso = 0;
+        var gutterActual = 0;
         var cardW = 0;
 
-        function per() {
-            return (window.innerWidth < 640) ? CONFIG.visiblesMovil : CONFIG.visiblesDesktop;
+        function esMovil() { return window.innerWidth < 640; }
+        function gutter() { return esMovil() ? CONFIG.gutterMovil : CONFIG.gutterDesktop; }
+        function maxCard() { return esMovil() ? CONFIG.maxAnchoCardMovil : CONFIG.maxAnchoCardDesktop; }
+        function minVis() { return esMovil() ? CONFIG.visibleMovil : CONFIG.visibleDesktop; }
+
+        function calcularPer(contentW) {
+            var gap = CONFIG.separacion;
+            var p = Math.ceil((contentW + gap) / (maxCard() + gap));
+            return Math.max(minVis(), p);
         }
 
         function maxIndice() {
-            if (N0 <= per()) return 0;
+            if (N0 <= minVis()) return 0;
             return N0;
         }
 
         function medir() {
-            var p = per();
-            perActual = p;
-
-            // Ancho real del viewport (full-bleed, sin gutters)
-            var vw = viewport.clientWidth || window.innerWidth;
+            var vw = window.innerWidth;
+            var g = gutter();
             var gap = CONFIG.separacion;
-            cardW = (vw - (p - 1) * gap) / p;
+            var contentW = vw - 2 * g;
+            var p = calcularPer(contentW);
+            cardW = (contentW - (p - 1) * gap) / p;
+            gutterActual = g;
 
-            // Aplico el ancho a TODAS las cards (originales + clones)
             track.style.gap = gap + 'px';
             var cards = track.children;
             for (var i = 0; i < cards.length; i++) {
@@ -226,14 +282,14 @@
 
             paso = cardW + gap;
             indice = Math.max(0, Math.min(maxIndice(), indice));
-            aplicar();
+            aplicar(true);
         }
 
         function aplicar(instant) {
             if (instant) track.style.transition = 'none';
-            track.style.transform = 'translateX(-' + (indice * paso) + 'px)';
+            track.style.transform = 'translateX(' + (gutterActual - indice * paso) + 'px)';
             if (instant) {
-                void track.offsetWidth; // fuerza reflow
+                void track.offsetWidth;
                 track.style.transition = '';
             }
         }
@@ -243,21 +299,40 @@
             aplicar(instant);
         }
 
-        // ----- ARRASTRE / SWIPE (dedo en movil + click en PC) -----
+        function sig() {
+            if (maxIndice() === 0) return;
+            if (indice >= N0) ir(0, true);   // N0 se ve igual que 0 => salto invisible
+            else ir(indice + 1);
+        }
+        function ant() {
+            if (maxIndice() === 0) return;
+            if (indice <= 0) {
+                ir(N0, true);                // salto invisible: N0 se ve igual que 0
+                void track.offsetWidth;
+                ir(N0 - 1);                  // anima hacia atras (entra la ultima card)
+            } else {
+                ir(indice - 1);
+            }
+        }
+
+        prev.addEventListener('click', ant);
+        next.addEventListener('click', sig);
+
+        // ----- ARRASTRE / SWIPE -----
         var arrastrando = false;
         var arrX = 0, arrBase = 0, arrDx = 0, arrDxPrev = 0, arrT = 0, vel = 0;
         var bloqueaClick = false;
 
         viewport.addEventListener('pointerdown', function (e) {
+            if (e.target.closest('.msn-carrusel__flecha')) return;
             if (e.pointerType === 'mouse' && e.button !== 0) return;
             arrastrando = true;
             arrX = e.clientX;
-            arrBase = -(indice * paso);
+            arrBase = gutterActual - indice * paso;
             arrDx = 0; arrDxPrev = 0; vel = 0; arrT = 0;
             track.classList.add('msn-no-trans');
             viewport.classList.add('msn-drag');
             try { viewport.setPointerCapture(e.pointerId); } catch (err) { }
-            e.preventDefault();
         });
 
         viewport.addEventListener('pointermove', function (e) {
@@ -281,7 +356,7 @@
             viewport.classList.remove('msn-drag');
 
             var dist = Math.abs(arrDx);
-            var flotante = -(arrBase + arrDx) / paso;
+            var flotante = (gutterActual - (arrBase + arrDx)) / paso;
             var objetivo = Math.round(flotante);
             if (Math.abs(vel) > .35) objetivo += Math.round(vel * 250 / paso);
             objetivo = Math.max(0, Math.min(maxIndice(), objetivo));
@@ -291,7 +366,6 @@
         viewport.addEventListener('pointerup', soltar);
         viewport.addEventListener('pointercancel', soltar);
 
-        // Bloqueo el click fantasma tras un arrastre (para no abrir la card sin querer)
         viewport.addEventListener('click', function (e) {
             if (bloqueaClick) {
                 e.preventDefault();
@@ -300,11 +374,26 @@
             }
         }, true);
 
+        // ----- AUTOPLAY (se pausa al hover / touch) -----
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var timer = null;
+        function play() {
+            if (reduce || !CONFIG.autoplayMs || maxIndice() === 0) return;
+            stop();
+            timer = setInterval(sig, CONFIG.autoplayMs);
+        }
+        function stop() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+        root.addEventListener('mouseenter', stop);
+        root.addEventListener('mouseleave', play);
+        window.addEventListener('touchstart', stop, { passive: true });
+        window.addEventListener('touchend', play, { passive: true });
+
         medir();
+        play();
         window.addEventListener('resize', function () { medir(); });
 
-        // Recalculo cuando cargan las imagenes (puede cambiar el alto, no el ancho,
-        // pero por las dudas re-aplico el ancho).
         var imgs = root.querySelectorAll('img');
         for (var m = 0; m < imgs.length; m++) {
             if (imgs[m].complete) continue;
