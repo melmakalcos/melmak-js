@@ -1,5 +1,5 @@
 // =============================================
-// STICKERS NUEVOS v3 — Carrusel
+// STICKERS NUEVOS v4 — Carrusel AL FILO MELMAK
 // =============================================
 (function () {
     var ID_ROOT = 'msn-root';
@@ -19,32 +19,44 @@
     var SECCION = '.block-products-feed--1339226';
     // ====================================================
 
+    // ---------------- FUENTE VINYL (Typekit) ----------------
+    // Por si el kit no esta cargado: la garantizamos para la pilula.
+    if (!document.getElementById('msn-typekit-vinyl')) {
+        var tkv = document.createElement('link');
+        tkv.id = 'msn-typekit-vinyl';
+        tkv.rel = 'stylesheet';
+        tkv.href = 'https://use.typekit.net/tdt2nii.css';
+        document.head.appendChild(tkv);
+    }
+
     // ---------------- ESTILOS ----------------
     var style = document.createElement('style');
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
 
-        // Seguro global: font-vinyl cargada por el tema; aca la referencio por gusto.
         // Fondo amarillo full-bleed
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 62px; background-color: #ffee26; }',
 
-        // Encabezado (contenido centrado, separado de los bordes)
+        // Encabezado centrado (separado del borde)
         '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 26px; }',
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; }',
 
-        // Viewport AL FILO: sin gutters laterales ni flechas, swiping tipo galeria.
-        // Overflow vertical visible => hover/sombras NO se cortan con franjas.
-        '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 22px 0 30px; --msn-per: 3; --msn-gap: 14px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
+        // Viewport AL FILO: ancho completo, sin gutters laterales.
+        // overflow-y visible para que hover/sombra NO se corten.
+        '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 22px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
-        '.msn-carrusel__track { display: flex; gap: var(--msn-gap, 14px); will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
+        '.msn-carrusel__track { display: flex; align-items: stretch; will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
-        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; width: calc((100% - (var(--msn-per, 3) - 1) * var(--msn-gap, 14px)) / var(--msn-per, 3)); box-sizing: border-box; }',
+
+        // Cada card: el ancho se fija por JS (px). flex none.
+        '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; box-sizing: border-box; }',
 
         // Card (wrapper) - todas iguales
-        '.msn-carrusel .block-products-feed__product-wrapper { height: 100%; display: flex; flex-direction: column; border: 3px solid #353535; border-radius: 12px; background: #fff; box-shadow: 0 2px 0 rgba(53,53,53,.14); overflow: hidden; }',
+        '.msn-carrusel .block-products-feed__product-wrapper { width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
+        '.msn-carrusel .block-products-feed__product-wrapper:hover { transform: translateY(-5px); box-shadow: 0 14px 26px rgba(53, 53, 53, .22); }',
 
-        // Media: caja cuadrada FIJA (el tamano de la caja NO depende de la imagen)
-        '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; aspect-ratio: 1 / 1 !important; width: 100% !important; height: auto !important; max-height: none !important; background: #f2f2f2; }',
+        // Media: caja cuadrada FIJA (el tamano NO depende de la imagen)
+        '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; border-radius: 10px; aspect-ratio: 1 / 1 !important; width: 100% !important; height: auto !important; max-height: none !important; background: #f2f2f2; }',
         '.msn-carrusel .block-products-feed__product-media a { display: block; position: relative; width: 100%; height: 100%; }',
         '.msn-carrusel .block-products-feed__product-image { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; transition: transform .3s ease; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover .block-products-feed__product-image { transform: scale(1.06); }',
@@ -53,33 +65,36 @@
         // Badge OFF (pilula negra)
         '.msn-carrusel .block-products-feed__product-offer { position: absolute; top: 8px; left: 8px; z-index: 2; background-color: #353535 !important; color: #fff !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 100px; padding: 4px 9px; }',
 
-        // Cuerpo de la card: info + boton SIEMPRE visibles, uniformes
+        // Cuerpo de la card: info + boton SIEMPRE visibles y uniformes
         '.msn-carrusel .block-products-feed__product-info { display: flex !important; flex-direction: column; justify-content: center; flex: 1 1 auto; min-height: 96px; padding: 0 2px; box-sizing: border-box; }',
         '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; color: #353535; margin: 8px 0 3px; }',
         '.msn-carrusel .block-products-feed__product-name a { color: #353535; text-decoration: none; }',
         '.msn-carrusel .block-products-feed__product-price { font-size: 13px; color: #353535; margin: 1px 0; }',
         '.msn-carrusel .block-products-feed__product-price del { color: #999; margin-left: 4px; font-size: 11px; }',
+        '.msn-carrusel .block-products-feed__product-additional { font-size: 11px; color: #353535; margin: 3px 0 0; text-transform: uppercase; letter-spacing: .02em; }',
         '.msn-carrusel .block-products-feed__product-buttons { display: flex !important; justify-content: center; margin-top: auto; padding-top: 8px; opacity: 1 !important; visibility: visible !important; transform: none !important; pointer-events: auto; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy { display: inline-block !important; opacity: 1 !important; visibility: visible !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 2px solid #353535 !important; border-radius: 100px; padding: 8px 18px; transition: all .2s ease; }',
-        '.msn-carrusel .block-products-feed__product-buttons-buy:hover { background-color: #fff !important; color: #353535 !important; }',
+        '.msn-carrusel .block-products-feed__product-buttons-buy:hover { background-color: #ffffff !important; color: #353535 !important; }',
+        '.msn-carrusel .block-products-feed__product-buttons-buy:active { transform: scale(.95); }',
 
-        // VER TODOS (pilula VINYL - garantizada con !important)
+        // VER TODOS (pilula VINYL garantizada)
         '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 24px; }',
         '.msn-carrusel__mas a { display: inline-flex; align-items: center; gap: 10px; font-family: \'vinyl\' !important; font-size: 17px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff; background-color: #353535; border: 3px solid #353535; border-radius: 100px; padding: 12px 28px; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
+        '.msn-carrusel__mas a, .msn-carrusel__mas a * { font-family: \'vinyl\' !important; }',
         '.msn-carrusel__mas a:hover { background-color: #fff; color: #353535; transform: scale(1.04); }',
         '.msn-carrusel__mas svg { width: 22px; height: 22px; }',
 
         // Movil
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 50px; }',
-        '  .msn-carrusel__body { min-height: 84px; }',
+        '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px; }',
         '}',
         '@media (prefers-reduced-motion: reduce) {',
         '  .msn-carrusel__track { transition: none; }',
-        '  .msn-carrusel__track.msn-no-trans { transition: none; }',
+        '  .msn-carrusel .block-products-feed__product-wrapper:hover { transform: none; }',
         '}'
     ].join('\n');
     document.head.appendChild(style);
@@ -101,16 +116,15 @@
         if (caja) caja.style.display = 'none';
         sec.style.display = 'none';
 
-        // Limpio clases de grilla, fuerzo imagenes y dejo UNA sola foto por card
-        var conSrc = [];
+        // Limpio clases de grilla y fuerzo imagenes (una sola foto por card)
         productos.forEach(function (p) {
             p.className = p.className.replace(/\buk-width[^\s]*/g, '').replace(/\s+/g, ' ').trim();
             p.classList.add('msn-carrusel__slide');
 
             var imgs = p.querySelectorAll('img');
+            var conSrc = [];
             for (var i = 0; i < imgs.length; i++) {
                 var ig = imgs[i];
-                // Copio atributos lazy del tema (data-src / data-srcset / data-sizes)
                 if (ig.hasAttribute('data-srcset') && !ig.hasAttribute('srcset')) {
                     ig.setAttribute('srcset', ig.getAttribute('data-srcset'));
                 }
@@ -123,12 +137,10 @@
                 ig.removeAttribute('data-src');
                 ig.removeAttribute('data-srcset');
                 ig.removeAttribute('data-sizes');
-                // Dejo SOLO la clase que usa el carrusel (saco clases lazy del tema)
                 ig.setAttribute('class', 'block-products-feed__product-image');
                 ig.setAttribute('loading', 'lazy');
                 conSrc.push(ig);
             }
-            // Si la primera quedo sin src (placeholder lazy), copio el src de la primera que tenga
             var primera = conSrc[0];
             if (primera && !primera.getAttribute('src') && !primera.getAttribute('srcset')) {
                 for (var s = 0; s < conSrc.length; s++) {
@@ -139,10 +151,6 @@
                 }
             }
             if (conSrc.length > 1) p.setAttribute('data-extra-img', '1');
-
-            // El envoltorio de info + boton pasa a ser el cuerpo de la card
-            var info = p.querySelector('.block-products-feed__product-info');
-            if (info && info.parentNode) info.parentNode.classList.add('msn-carrusel__body');
         });
 
         // ----- DOM -----
@@ -152,7 +160,6 @@
 
         var head = document.createElement('div');
         head.className = 'msn-carrusel__head';
-        head.style.maxWidth = '1120px';
         var h2 = document.createElement('h2');
         h2.className = 'msn-carrusel__titulo';
         h2.textContent = CONFIG.titulo;
@@ -181,8 +188,6 @@
         sec.parentNode.insertBefore(root, sec.nextSibling);
 
         // ----- Bucle INFINITO (clones) -----
-        // Duplico las cards al final del track: al llegar al final, "saltar" a la
-        // posicion inicial es imperceptible => el loop es continuo, sin barrido.
         var N0 = productos.length;
         for (var c = 0; c < N0; c++) {
             track.appendChild(productos[c].cloneNode(true));
@@ -192,23 +197,34 @@
         var perActual = null;
         var indice = 0;
         var paso = 0;
+        var cardW = 0;
 
         function per() {
             return (window.innerWidth < 640) ? CONFIG.visiblesMovil : CONFIG.visiblesDesktop;
         }
 
         function maxIndice() {
+            if (N0 <= per()) return 0;
             return N0;
         }
 
         function medir() {
             var p = per();
-            if (perActual !== p) {
-                perActual = p;
-                viewport.style.setProperty('--msn-per', p);
-                viewport.style.setProperty('--msn-gap', CONFIG.separacion + 'px');
+            perActual = p;
+
+            // Ancho real del viewport (full-bleed, sin gutters)
+            var vw = viewport.clientWidth || window.innerWidth;
+            var gap = CONFIG.separacion;
+            cardW = (vw - (p - 1) * gap) / p;
+
+            // Aplico el ancho a TODAS las cards (originales + clones)
+            track.style.gap = gap + 'px';
+            var cards = track.children;
+            for (var i = 0; i < cards.length; i++) {
+                cards[i].style.width = cardW + 'px';
             }
-            if (productos[0]) paso = productos[0].getBoundingClientRect().width + CONFIG.separacion;
+
+            paso = cardW + gap;
             indice = Math.max(0, Math.min(maxIndice(), indice));
             aplicar();
         }
@@ -225,16 +241,6 @@
         function ir(i, instant) {
             indice = Math.max(0, Math.min(maxIndice(), i));
             aplicar(instant);
-        }
-
-        function sig() {
-            if (indice >= N0) ir(0, true);        // ya en el clon = volver al inicio sin barrido
-            else ir(indice + 1);
-        }
-
-        function ant() {
-            if (indice <= 0) ir(N0 - per(), true); // del primero, vamos al ultimo sin barrido
-            else ir(indice - 1);
         }
 
         // ----- ARRASTRE / SWIPE (dedo en movil + click en PC) -----
@@ -294,31 +300,11 @@
             }
         }, true);
 
-        // Autoplay (loop infinito)
-        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var timer = null;
-        function play() {
-            if (reduce || !CONFIG.autoplayMs || N0 <= per()) return;
-            stop();
-            timer = setInterval(sig, CONFIG.autoplayMs);
-        }
-        function stop() {
-            if (timer) { clearInterval(timer); timer = null; }
-        }
-        function retomar() {
-            if (reduce || !CONFIG.autoplayMs || N0 <= per()) return;
-            stop();
-            sig();
-            timer = setInterval(sig, CONFIG.autoplayMs);
-        }
-        root.addEventListener('mouseenter', stop);
-        root.addEventListener('mouseleave', retomar);
-        window.addEventListener('touchstart', stop, { passive: true });
-
         medir();
-        play();
         window.addEventListener('resize', function () { medir(); });
-        // Recalculo cuando cargan las imagenes (el alto cambia)
+
+        // Recalculo cuando cargan las imagenes (puede cambiar el alto, no el ancho,
+        // pero por las dudas re-aplico el ancho).
         var imgs = root.querySelectorAll('img');
         for (var m = 0; m < imgs.length; m++) {
             if (imgs[m].complete) continue;
