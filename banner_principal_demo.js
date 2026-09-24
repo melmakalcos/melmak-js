@@ -1,16 +1,5 @@
 /* =========================================================
-   MELMAK — BANNER PRINCIPAL DEMO
-   =========================================================
-   · Hero animado: wordmark grande + mascota.
-   · Carrusel #353535 debajo de las cajas con las palabras
-     que antes caían (efecto marquee, blanco/amarillo).
-   · 3 "posts" de clientes: número + nombre + consulta
-     (sin categorías ni links).
-   · Primera minicaja con el personaje (gif) en la esquina
-     superior izquierda con la explosión "burst" detrás.
-   · Estilo MELMAK: amarillo #ffee26, negro #353535,
-     tipografía Curda Gouda + Rubik.
-   · Todo se inyecta desde JS (patrón de la tienda).
+   MELMAK — BANNER PRINCIPAL
    ========================================================= */
 (function () {
     'use strict';
@@ -90,7 +79,7 @@
         '#melmak-bbs__carrusel:after{bottom:-10px;height:10px;',
         '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 0H100V3C87.5 3 87.5 9 75 9C62.5 9 62.5 3 50 3C37.5 3 37.5 9 25 9C12.5 9 12.5 3 0 3Z\' fill=\'%23353535\'/%3E%3C/svg%3E");',
         '  background-size:100px 10px;background-repeat:repeat-x;',
-        '  animation:mbbs-ola-top 6s linear infinite;}',
+        '  animation:mbbs-ola-top 6s linear infinite;animation-delay:-3s;}',
         '.mbbs-marquee-half{display:flex;align-items:center;flex:none;}',
         '.mbbs-marquee-item{display:inline-block;margin:0 26px;',
         '  font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;',
@@ -569,7 +558,7 @@
         var texto = document.createElement('p');
         texto.className = 'mbms-merit__texto';
         texto.textContent = [
-            'SerigrafÍA, solvente/ecosolvente, sublimaCIÓN, láser... existen stickers de todo tipo de IMPRESIÓN Y MATERIALES. ',
+            'Serigrafiados, solvente/ecosolvente, sublimados, láser... existen stickers de todo tipo de materiales e impresión. ',
             'En MELMAK, utilizamos la tecnología UV sobre vinilo, la cual ofrece una alta resistencia a la decoloración por luz solar, ',
             'la humedad, los roces y la intemperie, prolongando su vida útil en exteriores.'
         ].join('').toUpperCase();
