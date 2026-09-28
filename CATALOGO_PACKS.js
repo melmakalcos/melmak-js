@@ -7,7 +7,7 @@
     if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;   // solo portada
 
     // =============== DATOS (EDITAR AQUI) ================
-    var TITULO_CATALOGO = 'CATÁLOGO';
+    var TITULO_CATALOGO = '¡COMPRÁ YA!';
 
     var VOLUMENES = [
         {
@@ -46,7 +46,7 @@
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
         '@keyframes mmOnda { to { background-position: 26px 0; } }',
         '.melk-catalogo { font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-        '.melk-catalogo__fondo { position: relative; overflow: hidden; padding: 56px 16px 76px; background-color: #ffffff; --melk-cuadricula-tam: 50px;',
+        '.melk-catalogo__fondo { position: relative; overflow: hidden; padding: 72px 16px 70px; background-color: #ffffff; --melk-cuadricula-tam: 50px;',
         '  background-image: linear-gradient(45deg, #ffee26 25%, transparent 25%, transparent 75%, #ffee26 75%, #ffee26), linear-gradient(45deg, #ffee26 25%, #ffffff 25%, #ffffff 75%, #ffee26 75%, #ffee26);',
         '  background-size: var(--melk-cuadricula-tam) var(--melk-cuadricula-tam);',
         '  background-position: 0 0, calc(var(--melk-cuadricula-tam) / 2) calc(var(--melk-cuadricula-tam) / 2);',
@@ -55,7 +55,8 @@
         '.melk-catalogo__mascota { display: none; position: absolute; left: -20%; top: 30%; width: 130px; height: auto; z-index: 0; pointer-events: none; will-change: left, top; }',
         '.melk-catalogo__wrap { position: relative; z-index: 1; max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
-        '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 38px; font-weight: 400; line-height: 1; color: #353535; }',
+        '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 46px; font-weight: 400; line-height: 1; color: #353535; animation: melk-titulo-loop 3s ease-in-out infinite; }',
+        '@keyframes melk-titulo-loop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.03); } }',
         '.melk-catalogo .melk-list { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 40px; }',
         '.melk-catalogo .melk-item { width: 100%; }',
         '.melk-catalogo .melk-note:hover { background-color: #ffee26; background-image: none; filter: brightness(1.06); box-shadow: inset 0 0 60px rgba(53,53,53,.55), inset 0 0 120px rgba(53,53,53,.35); }',
@@ -109,10 +110,10 @@
         '.melk-catalogo .melk-item.is-reception .melk-link { display: none; }',
         '.melk-catalogo .melk-bounce-target { opacity: 0; transform: scale(.88) translateY(40px); transition: opacity .7s ease var(--bounce-delay, 0s), transform .7s cubic-bezier(.165,.84,.44,1) var(--bounce-delay, 0s); }',
         '.melk-catalogo .melk-bounce-target.melk-bounce-in { opacity: 1; transform: none; }',
-        '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } .melk-catalogo .melk-note:hover .melk-note__capa { animation: none; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-catalogo .melk-bounce-target { opacity: 1; transform: none; transition: none; } .melk-catalogo .melk-headline__text { animation: none; } .melk-catalogo .melk-note__arrow { animation: none; transform: translate(-50%, -16px); } .melk-catalogo .melk-note:hover .melk-note__capa { animation: none; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-dual__target { transform: none !important; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-dual__bono { transform: translate(-50%, -50%) rotate(12deg); animation: none; } .melk-dual__bono--der { transform: translate(-50%, -50%) rotate(-12deg); } }',
-        '.melk-dual { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; background-color: #ffffff; padding: 70px 0; overflow: hidden; }',
+        '.melk-dual { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; background-color: #ffffff; padding: 70px 0 20px; overflow: hidden; }',
         '.melk-dual__row { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 34px 0; flex-direction: column; gap: 30px; }',
         '.melk-dual__row + .melk-dual__row { margin-top: 20px; }',
         '.melk-dual__img { position: relative; flex: 0 0 auto; width: 68%; max-width: 340px; align-self: center; }',
@@ -164,9 +165,9 @@
         '.melk-holo__hint--oculto { opacity: 0; }',
         '@media (max-width: 767px) { .melk-holo__hint { display: none; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }', '@media (min-width: 768px) {',
-        '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 86px 40px 186px; }',
+        '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 100px 40px 200px; }',
         '.melk-catalogo__mascota { display: block; width: 150px; }',
-        '.melk-catalogo .melk-headline__text { font-size: 76px; }',
+        '.melk-catalogo .melk-headline__text { font-size: 92px; }',
         '.melk-catalogo .melk-headline { margin: 8px 0 20px; }',
         '.melk-catalogo .melk-list { gap: 80px; margin-top: 14px; }',
         '.melk-catalogo .melk-item__inner { border-radius: 26px 26px 42px 42px; padding: 0; background-color: transparent; border: 0; overflow: visible; }',
@@ -217,7 +218,8 @@
         '.melk-holo__fondo { height: 640px; }',
         '}',
         '@media (max-width: 767px) {',
-        '.melk-holo__mover { left: 50%; transform: translate(-50%, -50%); gap: 30px; }',
+        '.melk-holo__fondo { height: auto; padding: 34px 0 70px; }',
+        '.melk-holo__mover { position: relative; top: auto; left: 50%; transform: translateX(-50%); gap: 30px; }',
         '.melk-holo__personaje { order: 1; }',
         '.melk-holo__texto { position: static; order: 2; margin: 0; right: auto; top: auto; transform: none; text-align: center; font-size: clamp(36px, 12vw, 56px); display: flex; flex-direction: column; align-items: center; gap: 18px; }',
         '.melk-holo__palabra--base { position: static; opacity: 1; }',
@@ -255,7 +257,7 @@
 
     // ---------------- RENDER ----------------
     function renderTitulo(title) {
-        return '<div class="melk-headline"><p class="melk-headline__text">' + title + '</p></div>';
+        return '<div class="melk-headline melk-bounce-target"><p class="melk-headline__text">' + title + '</p></div>';
     }
 
     function renderCaja(n) {
@@ -334,6 +336,7 @@
         + ONDA_BOTTOM
         + '<img class="melk-catalogo__mascota" src="https://d22fxaf9t8d39k.cloudfront.net/5747277f193e94fe14afb2e6fffa4fe60dca4bf5f37cdfb4073a0fdbd12e795920700.png" alt="">'
         + '<div class="melk-catalogo__wrap">'
+        + renderTitulo(TITULO_CATALOGO)
         + '<ul class="melk-list">' + lista + '</ul>'
         + '</div>'
         + '</div>';
@@ -545,17 +548,27 @@
     // margen a la derecha, atada al scroll con el mismo lerp/damping del dual.
     var holoMover = null;
     var holoPersonaje = null;
+    var holoTexto = null;
     var holoCur = 0;
     var holoVinculado = false;
     var holoCorriendo = false;
     var HOLO_INICIO = -60;  // vw, fuera de pantalla (izquierda)
-    var HOLO_FIN = 76;      // vw, margen a la derecha
+    var HOLO_FIN = 76;      // vw, posicion final (se recalcula para centrar)
     function esMovilHolo() {
         return window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
     }
+    // Centra horizontalmente el grupo (texto + circulo). El texto cuelga a la
+    // izquierda del circulo, asi que corregimos la posicion final segun el
+    // ancho real del texto: mover.left = 0.5*vw - 108 + textW/2.
+    function medirHolo() {
+        if (!holoTexto) return;
+        var vw = window.innerWidth || 1;
+        var textW = holoTexto.getBoundingClientRect().width;
+        HOLO_FIN = 50 + (textW / 2 - 108) / vw * 100;
+    }
     function aplicarHolo() {
         if (esMovilHolo()) {
-            holoMover.style.transform = 'translate(-50%, -50%)';
+            holoMover.style.transform = 'translateX(-50%)';
             holoPersonaje.style.transform = 'rotate(0deg)';
             holoCorriendo = false;
             return;
@@ -587,13 +600,15 @@
         if (!holo.parentNode) return;
         holoMover = holo.querySelector('.melk-holo__mover');
         holoPersonaje = holo.querySelector('.melk-holo__personaje');
+        holoTexto = holo.querySelector('.melk-holo__texto');
         if (!holoMover || !holoPersonaje) return;
         var reducido = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (esMovilHolo()) {
-            holoMover.style.transform = 'translate(-50%, -50%)';
+            holoMover.style.transform = 'translateX(-50%)';
             holoPersonaje.style.transform = 'rotate(0deg)';
             return;
         }
+        medirHolo();
         if (reducido || !('requestAnimationFrame' in window)) {
             holoMover.style.transform = 'translate(' + HOLO_FIN + 'vw, -50%)';
             holoPersonaje.style.transform = 'rotate(0deg)';
@@ -601,8 +616,13 @@
         }
         if (holoVinculado) { pedirHolo(); return; }
         holoVinculado = true;
+        function alRedimensionar() { medirHolo(); pedirHolo(); }
         window.addEventListener('scroll', pedirHolo, { passive: true });
-        window.addEventListener('resize', pedirHolo);
+        window.addEventListener('resize', alRedimensionar);
+        // Recalculo cuando carga la tipografia (cambia el ancho del texto).
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function () { medirHolo(); pedirHolo(); });
+        }
         pedirHolo();
     }
 
@@ -667,6 +687,7 @@
             + ONDA_BOTTOM
             + '<img class="melk-catalogo__mascota" src="https://d22fxaf9t8d39k.cloudfront.net/5747277f193e94fe14afb2e6fffa4fe60dca4bf5f37cdfb4073a0fdbd12e795920700.png" alt="">'
             + '<div class="melk-catalogo__wrap">'
+            + renderTitulo(TITULO_CATALOGO)
             + '<ul class="melk-list">' + lista + '</ul>'
             + '</div>'
             + '</div>';

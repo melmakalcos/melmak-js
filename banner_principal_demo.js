@@ -558,8 +558,8 @@
         var texto = document.createElement('p');
         texto.className = 'mbms-merit__texto';
         texto.textContent = [
-            'Serigrafiados, solvente/ecosolvente, sublimados, láser... existen stickers de todo tipo de materiales e impresión. ',
-            'En MELMAK, utilizamos la tecnología UV sobre vinilo, la cual ofrece una alta resistencia a la decoloración por luz solar, ',
+            'Serigrafía, solvente/ecosolvente, sublimación, láser... existen stickers de todo tipo de impresión y materiales. ',
+            'En MELMAK, utilizamos TECNOLOGÍA UV sobre VINILO PREMIUM, la cual ofrece una alta resistencia a la decoloración por luz solar, ',
             'la humedad, los roces y la intemperie, prolongando su vida útil en exteriores.'
         ].join('').toUpperCase();
         caja.appendChild(pilula);
