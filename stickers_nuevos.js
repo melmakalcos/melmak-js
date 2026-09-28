@@ -50,6 +50,7 @@
         // overflow-y visible para que hover/sombra NO se corten.
         '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 10px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
+        '.msn-carrusel__viewport a, .msn-carrusel__viewport button { cursor: pointer; }',
         '.msn-carrusel__track { display: flex; align-items: stretch; will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
 
@@ -325,25 +326,36 @@
         next.addEventListener('click', sig);
 
         // ----- ARRASTRE / SWIPE -----
-        var arrastrando = false;
+        // El arrastre recien arranca cuando el movimiento supera un umbral; asi
+        // un click normal (sin mover) NO se bloquea y navega el enlace.
+        var siguiendo = false;     // pointerdown activo, todavia no sabemos si arrastra
+        var arrastrando = false;   // superamos el umbral => arrastre real
+        var UMBRAL = 6;            // px para considerarlo arrastre
         var arrX = 0, arrBase = 0, arrDx = 0, arrDxPrev = 0, arrT = 0, vel = 0;
         var bloqueaClick = false;
 
         viewport.addEventListener('pointerdown', function (e) {
             if (e.target.closest('.msn-carrusel__flecha')) return;
             if (e.pointerType === 'mouse' && e.button !== 0) return;
-            arrastrando = true;
+            siguiendo = true;
+            arrastrando = false;
             arrX = e.clientX;
             arrBase = gutterActual - indice * paso;
             arrDx = 0; arrDxPrev = 0; vel = 0; arrT = 0;
-            track.classList.add('msn-no-trans');
-            viewport.classList.add('msn-drag');
-            try { viewport.setPointerCapture(e.pointerId); } catch (err) { }
         });
 
         viewport.addEventListener('pointermove', function (e) {
-            if (!arrastrando) return;
+            if (!siguiendo) return;
             var dx = e.clientX - arrX;
+
+            if (!arrastrando) {
+                if (Math.abs(dx) < UMBRAL) return;
+                arrastrando = true;
+                track.classList.add('msn-no-trans');
+                viewport.classList.add('msn-drag');
+                try { viewport.setPointerCapture(e.pointerId); } catch (err) { }
+            }
+
             var ahora = Date.now();
             if (arrT) {
                 var dt = ahora - arrT;
@@ -356,8 +368,12 @@
         });
 
         function soltar() {
-            if (!arrastrando) return;
+            if (!siguiendo) return;
+            var estabaArrastrando = arrastrando;
+            siguiendo = false;
             arrastrando = false;
+            if (!estabaArrastrando) return;   // fue un click: no bloqueamos nada
+
             track.classList.remove('msn-no-trans');
             viewport.classList.remove('msn-drag');
 
