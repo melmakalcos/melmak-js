@@ -1,11 +1,24 @@
 /* =========================================================
-   MELMAK — PANTALLA DE BIENVENIDA
+   MELMAK — PANTALLA DE BIENVENIDAAAA
    ========================================================= */
 (function () {
     'use strict';
-
-    if (sessionStorage.getItem('melmak-bienvenida-visto') === '1') return;
-    sessionStorage.setItem('melmak-bienvenida-visto', '1');
+    function mwLeerCookie(nombre) {
+        var partes = document.cookie ? document.cookie.split(';') : [];
+        for (var i = 0; i < partes.length; i++) {
+            var c = partes[i].trim().split('=');
+            if (c[0] === nombre) return c[1] || '';
+        }
+        return '';
+    }
+    // "Visto" = cookie de sesión (compartida entre pestañas) + respaldo en sessionStorage.
+    // La cookie NO lleva Secure para que funcione tambien en HTTP (preview/local).
+    var mwVisto = false;
+    try { mwVisto = (mwLeerCookie('melmak-bienvenida-visto') === '1'); } catch (e) { }
+    try { if (sessionStorage.getItem('melmak-bienvenida-visto') === '1') mwVisto = true; } catch (e) { }
+    if (mwVisto) return;
+    document.cookie = 'melmak-bienvenida-visto=1; path=/; SameSite=Lax';
+    try { sessionStorage.setItem('melmak-bienvenida-visto', '1'); } catch (e) { }
     window.__melmakBienvenida = true;
 
     /* =============== TEXTO / IMAGEN (EDITAR AQUÍ) =============== */
