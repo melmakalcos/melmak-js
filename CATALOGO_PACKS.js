@@ -19,8 +19,8 @@
     // "link" (opcional, por defecto /productos) = destino del boton INGRESAR.
     // Completar "img" y "link" de las categorias que quedan vacias:
     var MONITOR_CATEGORIAS = [
-        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', zoom: 1.25 },
-        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', zoom: 1 },
+        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', link: 'https://www.melmakalcos.com.ar/animados', zoom: 1.25 },
+        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', link: 'https://www.melmakalcos.com.ar/animanga', zoom: 1 },
         { nombre: 'CINE Y TV', img: '', link: '' },
         { nombre: 'COLOR', img: '', link: '' },
         { nombre: 'COUNTER STRIKE', img: '', link: '' },
@@ -248,8 +248,8 @@
         '.melk-monitor__flecha--next { animation: melk-game-bob-der .85s ease-in-out infinite; }',
         '@keyframes melk-game-bob-izq { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.74cqw); } }',
         '@keyframes melk-game-bob-der { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.74cqw); } }',
-        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }',
-        '.melk-monitor__ingresar:hover { background-color: #ffee26; color: #353535; }',
+        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; }',
+        '.melk-monitor__ingresar:hover, .melk-monitor__ingresar:focus { background-color: #ffee26; color: #353535 !important; }',
         '.melk-monitor__ingresar:active { transform: translate(0.43cqw, 0.43cqw); box-shadow: 0 0 0 #ffee26; }',
         '.melk-monitor__panel { display: flex; align-items: center; justify-content: space-between; gap: 1.28cqw; padding: 1.5cqw 1.06cqw 0.64cqw; }',
         '.melk-monitor__ranura { display: block; width: 8.3cqw; height: 0.85cqw; border: 0.32cqw solid #353535; border-radius: 0.64cqw; background-color: #fff; }',
