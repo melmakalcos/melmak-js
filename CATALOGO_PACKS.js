@@ -9,6 +9,42 @@
     // =============== DATOS (EDITAR AQUI) ================
     var TITULO_CATALOGO = '¡COMPRÁ YA!';
 
+    // ---------------- BLOQUE MONITOR (categorias) ----------------
+    // Titulo de la seccion del monitor (misma animacion que el titulo del catalogo).
+    var TITULO_MONITOR = 'CATÁLOGO';
+    // Texto fijo de la barra navegadora del monitor (se muestra en amarillo sobre la barra negra).
+    var MONITOR_BARRA_TEXTO = '¡ESTAMOS ACTUALIZANDO ESTA FUNCIÓN! GRACIAS POR TU PACIENCIA :)';
+    // Una entrada por categoria: "nombre" = texto del boton; "img" = imagen del contenido.
+    // "zoom" (opcional, por defecto 1) = recorte para tapar el margen transparente del PNG.
+    // "link" (opcional, por defecto /productos) = destino del boton INGRESAR.
+    // Completar "img" y "link" de las categorias que quedan vacias:
+    var MONITOR_CATEGORIAS = [
+        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', zoom: 1.25 },
+        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', zoom: 1 },
+        { nombre: 'CINE Y TV', img: '', link: '' },
+        { nombre: 'COLOR', img: '', link: '' },
+        { nombre: 'COUNTER STRIKE', img: '', link: '' },
+        { nombre: 'DEPORTES', img: '', link: '' },
+        { nombre: 'DRAGON BALL', img: '', link: '' },
+        { nombre: 'HARRY POTTER', img: '', link: '' },
+        { nombre: 'K-POP', img: '', link: '' },
+        { nombre: 'LOGOS', img: '', link: '' },
+        { nombre: 'MEMAZOS', img: '', link: '' },
+        { nombre: 'MÚSICA', img: '', link: '' },
+        { nombre: 'PATRIA / NOSTALGIA', img: '', link: '' },
+        { nombre: 'POKEMON', img: '', link: '' },
+        { nombre: 'PORTADAS JUEGOS', img: '', link: '' },
+        { nombre: 'PORTADAS MÚSICA', img: '', link: '' },
+        { nombre: 'SIMPSONS', img: '', link: '' },
+        { nombre: 'STAR WARS', img: '', link: '' },
+        { nombre: 'STREAM', img: '', link: '' },
+        { nombre: 'UNIVERSO', img: '', link: '' },
+        { nombre: 'VALORANT', img: '', link: '' },
+        { nombre: 'VICIO', img: '', link: '' },
+        { nombre: 'WEED', img: '', link: '' }
+    ];
+    // ============================================================
+
     var VOLUMENES = [
         {
             status: '',            // '' | 'is-reception' | 'is-end'
@@ -46,7 +82,7 @@
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
         '@keyframes mmOnda { to { background-position: 26px 0; } }',
         '.melk-catalogo { font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-        '.melk-catalogo__fondo { position: relative; overflow: hidden; padding: 72px 16px 70px; background-color: #ffffff; --melk-cuadricula-tam: 50px;',
+        '.melk-catalogo__fondo { position: relative; overflow: hidden; padding: 72px 16px 72px; background-color: #ffffff; --melk-cuadricula-tam: 50px;',
         '  background-image: linear-gradient(45deg, #ffee26 25%, transparent 25%, transparent 75%, #ffee26 75%, #ffee26), linear-gradient(45deg, #ffee26 25%, #ffffff 25%, #ffffff 75%, #ffee26 75%, #ffee26);',
         '  background-size: var(--melk-cuadricula-tam) var(--melk-cuadricula-tam);',
         '  background-position: 0 0, calc(var(--melk-cuadricula-tam) / 2) calc(var(--melk-cuadricula-tam) / 2);',
@@ -164,8 +200,71 @@
         '.melk-holo__hint--top { bottom: 26px; }',
         '.melk-holo__hint--oculto { opacity: 0; }',
         '@media (max-width: 767px) { .melk-holo__hint { display: none; } }',
-        '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }', '@media (min-width: 768px) {',
-        '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 100px 40px 200px; }',
+        '.melk-monitor-grupo { margin: 72px 0 0; }',
+        '.melk-monitor { position: relative; container-type: inline-size; width: 88%; max-width: 940px; margin: 0 auto; }',
+        '.melk-monitor__carcasa { position: relative; box-sizing: border-box; width: 100%; background-color: #fff; border: 0.32cqw solid #353535; border-radius: 2.55cqw; padding: 1.9cqw 1.9cqw 0.85cqw; box-shadow: 0 1.5cqw 3.2cqw rgba(0,0,0,.28); }',
+        '.melk-monitor__pantalla { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 0.32cqw solid #353535; border-radius: 1.5cqw; background-color: #fff; }',
+        '.melk-monitor__ventana { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; background-color: #fff; overflow: hidden; }',
+        '.melk-monitor__barra { position: relative; flex: 0 0 auto; display: block; padding: 0.85cqw 7.9cqw; background-color: #353535; }',
+        '.melk-monitor__dots { position: absolute; left: 1.5cqw; top: 50%; transform: translateY(-50%); display: flex; gap: 0.85cqw; }',
+        '.melk-monitor__dot { flex: 0 0 auto; width: 1.4cqw; height: 1.4cqw; border: 0.21cqw solid #353535; border-radius: 50%; background-color: #ff4566; }',
+        '.melk-monitor__dot:nth-child(2) { background-color: #ffd23f; }',
+        '.melk-monitor__dot:nth-child(3) { background-color: #3fbf7f; }',
+        '.melk-monitor__titulo { display: block; text-align: center; font-family: \'Press Start 2P\', monospace; font-size: 1.28cqw; line-height: 1.55; letter-spacing: .02em; text-transform: uppercase; color: #ffee26; }',
+        '.melk-monitor__cuerpo { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background-color: #fff; }',
+        '.melk-monitor__contenido { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1); filter: saturate(1.4) contrast(1.08) brightness(1.34); }',
+        '.melk-monitor__cambio { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }',
+        '.melk-monitor__cambio--on { animation: melk-canal .5s steps(1) 1; }',
+        '@keyframes melk-canal { 0% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 4px); } 20% { opacity: 1; background: repeating-linear-gradient(0deg, #000 0 3px, #fff 3px 6px); transform: translateY(4px); } 40% { opacity: 1; background: repeating-linear-gradient(90deg, #fff 0 3px, #000 3px 6px); transform: translate(-3px, -4px); } 60% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 5px); transform: translate(2px, 3px); } 80% { opacity: .5; background: repeating-linear-gradient(0deg, #000 0 2px, #fff 2px 4px); } 100% { opacity: 0; } }',
+        '.melk-monitor__titulo-png { position: relative; text-align: center; pointer-events: none; }',
+        '.melk-monitor__titulo-txt { display: inline-block; font-family: \'Press Start 2P\', monospace; font-weight: 700; font-style: italic; font-size: 8cqw; line-height: 1.15; letter-spacing: 0; color: #ffee26; text-shadow: -0.13cqw -0.13cqw 0 #ffee26, 0.13cqw -0.13cqw 0 #ffee26, -0.13cqw 0.13cqw 0 #ffee26, 0.13cqw 0.13cqw 0 #ffee26, -0.4cqw -0.4cqw 0 #353535, 0.4cqw -0.4cqw 0 #353535, -0.4cqw 0.4cqw 0 #353535, 0.4cqw 0.4cqw 0 #353535, -0.4cqw 0 0 #353535, 0.4cqw 0 0 #353535, 0 -0.4cqw 0 #353535, 0 0.4cqw 0 #353535, -0.27cqw -0.27cqw 0 #353535, 0.27cqw -0.27cqw 0 #353535, -0.27cqw 0.27cqw 0 #353535, 0.27cqw 0.27cqw 0 #353535, -0.27cqw 0 0 #353535, 0.27cqw 0 0 #353535, 0 -0.27cqw 0 #353535, 0 0.27cqw 0 #353535, 0.85cqw 0.85cqw 0 #1b1b1b; animation: melk-titulo-bob 2.2s ease-in-out infinite; }',
+        '@keyframes melk-titulo-bob { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-0.43cqw) scale(1.03); } }',
+        '.melk-monitor__spark { position: absolute; width: 1.8cqw; height: 1.8cqw; background: #fff; clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%); filter: drop-shadow(0 0 0.2cqw #353535); pointer-events: none; will-change: transform, opacity; animation: melk-twinkle 1.5s ease-in-out infinite; }',
+        '@keyframes melk-twinkle { 0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; } 50% { transform: scale(1) rotate(45deg); opacity: 1; } }',
+        '.melk-monitor__hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; font-family: \'Press Start 2P\', monospace; }',
+        '.melk-hud { position: absolute; display: flex; align-items: center; gap: 0.85cqw; padding: 0.7cqw 1.1cqw; background-color: #353535; border: 0.27cqw solid #fff; }',
+        '.melk-hud--hp { top: 1.7cqw; left: 1.7cqw; }',
+        '.melk-hud--coins { top: 1.7cqw; right: 1.7cqw; }',
+        '.melk-hud-wrap--score { position: absolute; bottom: 1.7cqw; left: 1.7cqw; display: inline-grid; grid-template-columns: max-content; gap: 1.1cqw; }',
+        '.melk-hud-wrap--score .melk-hud { position: static; }',
+        '.melk-hud__gif { display: block; width: 0; min-width: 100%; height: auto; image-rendering: pixelated; }',
+        '.melk-hud__label { font-size: 1cqw; line-height: 1; letter-spacing: .05em; color: #ffee26; }',
+        '.melk-hud__val { font-size: 1.4cqw; line-height: 1; letter-spacing: .1em; color: #fff; }',
+        '.melk-hud__col { display: flex; flex-direction: column; gap: 0.58cqw; }',
+        '.melk-hud__coin { width: 2cqw; height: 2cqw; border: 0.27cqw solid #000; border-radius: 50%; background: radial-gradient(circle, #ffee26 60%, #c9b800 61%); box-shadow: inset -0.15cqw -0.15cqw 0 #8a7d00; animation: melk-hud-coin 1.2s ease-in-out infinite; }',
+        '@keyframes melk-hud-coin { 0% { transform: scaleX(1); } 50% { transform: scaleX(.1); filter: brightness(1.4); } 100% { transform: scaleX(1); } }',
+        '.melk-hud__hearts { display: flex; gap: 0.43cqw; }',
+        '.melk-hud__heart { width: 1.85cqw; height: 1.7cqw; background-color: #5b5b5b; clip-path: polygon(50% 15%, 65% 0%, 100% 25%, 100% 60%, 50% 100%, 0% 60%, 0% 25%, 35% 0%); transition: background-color .15s ease; }',
+        '.melk-hud__heart--on { background-color: #ffee26; }',
+        '.melk-monitor__glitch { position: absolute; inset: 0; z-index: 5; pointer-events: none; background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.13) 50%), linear-gradient(90deg, rgba(255,0,0,.05), rgba(0,255,0,.02), rgba(0,0,255,.05)); background-size: 100% 4px, 8px 100%; animation: melk-crt-flicker .12s infinite; }',
+        '.melk-monitor__glitch::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 46px rgba(0,0,0,.32); }',
+        '@keyframes melk-crt-flicker { 0% { opacity: .9; } 50% { opacity: 1; } 100% { opacity: .95; } }',
+        '.melk-monitor__scanbar { position: absolute; left: 0; right: 0; top: 0; height: 24%; z-index: 5; pointer-events: none; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 50%, rgba(255,255,255,0) 100%); animation: melk-crt-scanbar 8s linear infinite; }',
+        '@keyframes melk-crt-scanbar { from { top: -28%; } to { top: 100%; } }',
+        '.melk-monitor__controles { position: absolute; left: 50%; top: 60%; z-index: 3; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 1.9cqw; }',
+        '.melk-monitor__selector { display: inline-flex; align-items: center; gap: 1.7cqw; padding: 1.28cqw 2.13cqw; background-color: #ffee26; border: 0.43cqw solid #353535; box-shadow: 0.64cqw 0.64cqw 0 #353535; font-family: \'Press Start 2P\', monospace; }',
+        '.melk-monitor__cat { font-size: 2.34cqw; line-height: 1.2; color: #353535; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }',
+        '.melk-monitor__flecha { background: none; border: 0; padding: 0; cursor: pointer; color: #353535; font-family: \'Press Start 2P\', monospace; font-size: 2.55cqw; line-height: 1; }',
+        '.melk-monitor__flecha:hover { color: #ff4566; }',
+        '.melk-monitor__flecha--prev { animation: melk-game-bob-izq .85s ease-in-out infinite; }',
+        '.melk-monitor__flecha--next { animation: melk-game-bob-der .85s ease-in-out infinite; }',
+        '@keyframes melk-game-bob-izq { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.74cqw); } }',
+        '@keyframes melk-game-bob-der { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.74cqw); } }',
+        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }',
+        '.melk-monitor__ingresar:hover { background-color: #ffee26; color: #353535; }',
+        '.melk-monitor__ingresar:active { transform: translate(0.43cqw, 0.43cqw); box-shadow: 0 0 0 #ffee26; }',
+        '.melk-monitor__panel { display: flex; align-items: center; justify-content: space-between; gap: 1.28cqw; padding: 1.5cqw 1.06cqw 0.64cqw; }',
+        '.melk-monitor__ranura { display: block; width: 8.3cqw; height: 0.85cqw; border: 0.32cqw solid #353535; border-radius: 0.64cqw; background-color: #fff; }',
+        '.melk-monitor__botones { display: flex; align-items: center; gap: 1.06cqw; }',
+        '.melk-monitor__knob { display: block; width: 1.7cqw; height: 1.7cqw; border: 0.32cqw solid #353535; border-radius: 50%; background-color: #fff; }',
+        '.melk-monitor__knob--led { background-color: #ff4566; animation: melk-monitor-led 1.6s ease-in-out infinite; }',
+        '@keyframes melk-monitor-led { 0%, 100% { background-color: #ff4566; } 50% { background-color: rgba(255,69,102,0); } }',
+        '@media (max-width: 639px) { .melk-monitor { width: 100%; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-monitor__glitch, .melk-monitor__scanbar, .melk-monitor__cambio, .melk-monitor__flecha--prev, .melk-monitor__flecha--next, .melk-monitor__knob--led, .melk-hud__coin, .melk-monitor__titulo-txt, .melk-monitor__spark { animation: none; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }',
+        '@media (min-width: 768px) {',
+        '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 100px 40px 90px; }',
+        '.melk-monitor-grupo { margin-top: 90px; }',
         '.melk-catalogo__mascota { display: block; width: 150px; }',
         '.melk-catalogo .melk-headline__text { font-size: 92px; }',
         '.melk-catalogo .melk-headline { margin: 8px 0 20px; }',
@@ -254,10 +353,206 @@
         tkVinyl.href = 'https://use.typekit.net/tdt2nii.css';
         document.head.appendChild(tkVinyl);
     }
+    if (!document.getElementById('melk-font-8bit')) {
+        var f8bit = document.createElement('link');
+        f8bit.id = 'melk-font-8bit';
+        f8bit.rel = 'stylesheet';
+        f8bit.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+        document.head.appendChild(f8bit);
+    }
+    if (!document.getElementById('melk-pixel-svg')) {
+        var pixelSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        pixelSvg.id = 'melk-pixel-svg';
+        pixelSvg.setAttribute('width', '0');
+        pixelSvg.setAttribute('height', '0');
+        pixelSvg.setAttribute('aria-hidden', 'true');
+        pixelSvg.style.position = 'absolute';
+        pixelSvg.style.width = '0';
+        pixelSvg.style.height = '0';
+        pixelSvg.innerHTML = '<filter id="melk-pixel" x="0" y="0">'
+            + '<feFlood x="2" y="2" width="1" height="1" />'
+            + '<feComposite width="4" height="4" />'
+            + '<feTile result="melk-grid" />'
+            + '<feComposite in="SourceGraphic" in2="melk-grid" operator="in" />'
+            + '<feMorphology operator="dilate" radius="1.5" />'
+            + '</filter>';
+        (document.body || document.documentElement).appendChild(pixelSvg);
+    }
 
     // ---------------- RENDER ----------------
     function renderTitulo(title) {
         return '<div class="melk-headline melk-bounce-target"><p class="melk-headline__text">' + title + '</p></div>';
+    }
+
+    function renderMonitor() {
+        var c = MONITOR_CATEGORIAS[0] || { nombre: '', img: '' };
+        return '<div class="melk-monitor melk-bounce-target" data-bounce="0.7">'
+            + '<div class="melk-monitor__carcasa">'
+            + '<div class="melk-monitor__pantalla">'
+            + '<div class="melk-monitor__ventana">'
+            + '<div class="melk-monitor__barra">'
+            + '<span class="melk-monitor__dots">'
+            + '<span class="melk-monitor__dot"></span>'
+            + '<span class="melk-monitor__dot"></span>'
+            + '<span class="melk-monitor__dot"></span>'
+            + '</span>'
+            + '<span class="melk-monitor__titulo">' + MONITOR_BARRA_TEXTO + '</span>'
+            + '</div>'
+            + '<div class="melk-monitor__cuerpo">'
+            + '<img class="melk-monitor__contenido" src="' + c.img + '" alt="">'
+            + '<div class="melk-monitor__cambio"></div>'
+            + '<div class="melk-monitor__hud">'
+            + '<div class="melk-hud melk-hud--hp"><span class="melk-hud__label">HP:</span><span class="melk-hud__hearts"><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span></span></div>'
+            + '<div class="melk-hud melk-hud--coins"><span class="melk-hud__coin"></span><span class="melk-hud__col"><span class="melk-hud__label">COINS</span><span class="melk-hud__val">99</span></span></div>'
+            + '<div class="melk-hud-wrap melk-hud-wrap--score"><img class="melk-hud__gif" src="https://d22fxaf9t8d39k.cloudfront.net/13219b62c3a4bdf4f71927c8dbcdd50a06a4a3b7a499ec57fcdefb86861e303020700.gif" alt=""><div class="melk-hud melk-hud--score"><span class="melk-hud__label">PUNTAJE</span><span class="melk-hud__val" data-hud="score">000000</span></div></div>'
+            + '</div>'
+            + '<div class="melk-monitor__controles">'
+            + '<div class="melk-monitor__titulo-png"><span class="melk-monitor__titulo-txt">' + TITULO_MONITOR + '</span></div>'
+            + '<div class="melk-monitor__selector">'
+            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--prev" aria-label="Categoría anterior">&#9664;</button>'
+            + '<span class="melk-monitor__cat">' + c.nombre + '</span>'
+            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--next" aria-label="Categoría siguiente">&#9654;</button>'
+            + '</div>'
+            + '<a class="melk-monitor__ingresar" href="' + (c.link || '/productos') + '">Ingresar</a>'
+            + '</div>'
+            + '</div>'
+            + '<div class="melk-monitor__glitch"></div>'
+            + '<div class="melk-monitor__scanbar"></div>'
+            + '</div>'
+            + '</div>'
+            + '<div class="melk-monitor__panel">'
+            + '<span class="melk-monitor__ranura"></span>'
+            + '<div class="melk-monitor__botones">'
+            + '<span class="melk-monitor__knob"></span>'
+            + '<span class="melk-monitor__knob"></span>'
+            + '<span class="melk-monitor__knob melk-monitor__knob--led"></span>'
+            + '</div>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
+    }
+
+    function renderGrupoMonitor() {
+        return '<div class="melk-monitor-grupo">'
+            + renderMonitor()
+            + '</div>';
+    }
+
+    function generarDestellos(cont) {
+        if (!cont) return;
+        for (var s = 0; s < 9; s++) {
+            var sp = document.createElement('span');
+            sp.className = 'melk-monitor__spark';
+            (function (el) {
+                function ubicar() {
+                    el.style.left = (4 + Math.random() * 92) + '%';
+                    el.style.top = (-30 + Math.random() * 120) + '%';
+                    el.style.animationDelay = (-Math.random() * 1.6) + 's';
+                    el.style.animationDuration = (1 + Math.random() * 1.2) + 's';
+                    var w = 1.1 + Math.random() * 1.5;
+                    el.style.width = w + 'cqw';
+                    el.style.height = w + 'cqw';
+                }
+                el.addEventListener('animationiteration', ubicar);
+                ubicar();
+            })(sp);
+            cont.appendChild(sp);
+        }
+    }
+
+    function initMonitor() {
+        var mon = seccion.querySelector('.melk-monitor');
+        if (!mon || !MONITOR_CATEGORIAS.length) return;
+        var img = mon.querySelector('.melk-monitor__contenido');
+        var cat = mon.querySelector('.melk-monitor__cat');
+        var ingresar = mon.querySelector('.melk-monitor__ingresar');
+        var prev = mon.querySelector('.melk-monitor__flecha--prev');
+        var next = mon.querySelector('.melk-monitor__flecha--next');
+        var cambio = mon.querySelector('.melk-monitor__cambio');
+        generarDestellos(mon.querySelector('.melk-monitor__titulo-png'));
+        var hearts = mon.querySelectorAll('.melk-hud__heart');
+        var scoreEl = mon.querySelector('[data-hud="score"]');
+        var i = 0;
+        var hp = 2;
+        var score = 0;
+        function pad(n, len) { var s = String(n); while (s.length < len) { s = '0' + s; } return s; }
+        function pintarHud() {
+            for (var k = 0; k < hearts.length; k++) {
+                if (k < hp) { hearts[k].classList.add('melk-hud__heart--on'); }
+                else { hearts[k].classList.remove('melk-hud__heart--on'); }
+            }
+            if (scoreEl) scoreEl.textContent = pad(score, 6);
+        }
+        function pintar() {
+            var c = MONITOR_CATEGORIAS[i];
+            if (img) { if (c.img) img.src = c.img; img.style.transform = 'scale(' + (c.zoom || 1) + ')'; }
+            if (cat) cat.textContent = c.nombre;
+            if (ingresar) ingresar.setAttribute('href', c.link || '/productos');
+        }
+        function mover(d) {
+            i = (i + d + MONITOR_CATEGORIAS.length) % MONITOR_CATEGORIAS.length;
+            score += 250;
+            if (hp < hearts.length) hp++;
+            pintarHud();
+            if (cambio) {
+                cambio.classList.remove('melk-monitor__cambio--on');
+                void cambio.offsetWidth;
+                cambio.classList.add('melk-monitor__cambio--on');
+                setTimeout(pintar, 130);
+            } else {
+                pintar();
+            }
+        }
+        if (prev) prev.addEventListener('click', function () { mover(-1); });
+        if (next) next.addEventListener('click', function () { mover(1); });
+        pintar();
+        pintarHud();
+    }
+
+    // Posicion vertical de un elemento relativa a un ancestro posicionado (ignora transforms).
+    function offsetRelativo(el, raiz) {
+        var y = 0;
+        var n = el;
+        while (n && n !== raiz) {
+            y += n.offsetTop;
+            n = n.offsetParent;
+        }
+        return y;
+    }
+
+    // Iguala la separacion "onda superior -> COMPRA YA" con "CATALOGO -> ultima caja".
+    function ajustarGrupoMonitor() {
+        var grupo = seccion.querySelector('.melk-monitor-grupo');
+        var lista = seccion.querySelector('.melk-list');
+        var wrap = seccion.querySelector('.melk-catalogo__wrap');
+        if (!grupo || !lista || !wrap) return;
+        var base = (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) ? 90 : 72;
+        var listaB = offsetRelativo(lista, wrap) + lista.offsetHeight;
+        var maxB = listaB;
+        var cards = lista.querySelectorAll('.melk-note__card');
+        for (var k = 0; k < cards.length; k++) {
+            var b = offsetRelativo(cards[k], wrap) + cards[k].offsetHeight;
+            if (b > maxB) maxB = b;
+        }
+        grupo.style.marginTop = Math.round(base + (maxB - listaB)) + 'px';
+    }
+
+    // Iguala el espacio "onda superior -> titulo" con "titulo -> primera caja".
+    function ajustarHeadline() {
+        var fondo = seccion.querySelector('.melk-catalogo__fondo');
+        var onda = seccion.querySelector('.melk-onda--top');
+        var head = seccion.querySelector('.melk-headline');
+        var card = seccion.querySelector('.melk-note__card-inner');
+        if (!fondo || !onda || !head || !card) return;
+        if (head.dataset.mmBase === undefined) {
+            head.dataset.mmBase = parseFloat(window.getComputedStyle(head).marginTop) || 0;
+        }
+        var base = parseFloat(head.dataset.mmBase) || 0;
+        var ondaB = offsetRelativo(onda, fondo) + onda.offsetHeight;
+        var headT = offsetRelativo(head, fondo);
+        var arriba = headT - ondaB;
+        var abajo = offsetRelativo(card, fondo) - (headT + head.offsetHeight);
+        head.style.marginTop = Math.round(Math.max(0, base + (abajo - arriba))) + 'px';
     }
 
     function renderCaja(n) {
@@ -321,7 +616,7 @@
     }
 
     // ---------------- HTML DE LA SECCION ----------------
-    var ONDA_TOP = '<div style="position:absolute;top:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 0 L0 0 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
+    var ONDA_TOP = '<div class="melk-onda melk-onda--top" style="position:absolute;top:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 0 L0 0 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
     var ONDA_BOTTOM = '<div style="position:absolute;bottom:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
 
     var seccion = document.createElement('div');
@@ -338,6 +633,7 @@
         + '<div class="melk-catalogo__wrap">'
         + renderTitulo(TITULO_CATALOGO)
         + '<ul class="melk-list">' + lista + '</ul>'
+        + renderGrupoMonitor()
         + '</div>'
         + '</div>';
 
@@ -689,6 +985,7 @@
             + '<div class="melk-catalogo__wrap">'
             + renderTitulo(TITULO_CATALOGO)
             + '<ul class="melk-list">' + lista + '</ul>'
+            + renderGrupoMonitor()
             + '</div>'
             + '</div>';
         animarEntrada();
@@ -696,6 +993,9 @@
         animarMascota();
         animarDual();
         animarHolo();
+        initMonitor();
+        ajustarGrupoMonitor();
+        ajustarHeadline();
     }
 
     var primeraCarga = true;
@@ -714,13 +1014,33 @@
         var XMIN = -20, XMAX = 110;   // % posiciones fuera de pantalla
         var VEL = 26;                 // % por segundo de cruce
         var ESPERA = 1000;            // 1 s fuera antes de la siguiente entrada
+        var YMIN = 6, YMAX = 80;      // recorre todo el alto de la seccion
         var dir = 1;
         var x = XMIN;
-        var yBase = 30;
+        var yIni = 30, yFin = 30;
         var fuera = false;
         var tFuera = 0;
         var prev = performance.now();
         m.style.transform = 'scaleX(1)';
+        var fondoEl = seccion.querySelector('.melk-catalogo__fondo');
+        function zonaVisible() {
+            var el = fondoEl || seccion;
+            var r = el.getBoundingClientRect();
+            var vh = window.innerHeight || document.documentElement.clientHeight;
+            if (!r.height) return [YMIN, YMAX];
+            var a = (0 - r.top) / r.height * 100;
+            var b = (vh - r.top) / r.height * 100;
+            a = Math.max(YMIN, Math.min(YMAX, a));
+            b = Math.max(YMIN, Math.min(YMAX, b));
+            if (b - a < 12) { var m = (a + b) / 2; a = Math.max(YMIN, m - 6); b = Math.min(YMAX, m + 6); }
+            return [a, b];
+        }
+        function nuevaAltura() {
+            var z = zonaVisible();
+            yIni = z[0] + Math.random() * (z[1] - z[0]);
+            yFin = z[0] + Math.random() * (z[1] - z[0]);
+        }
+        nuevaAltura();
         function paso(now) {
             if (token !== mascotaSesion) return;
             var dt = Math.min(now - prev, 100);
@@ -732,17 +1052,19 @@
                     tFuera = now;
                     m.style.opacity = '0';
                 } else {
+                    var t = (x - XMIN) / (XMAX - XMIN);
+                    if (dir === -1) t = 1 - t;
                     m.style.left = x + '%';
-                    m.style.top = (yBase + Math.sin(now / 850) * 6) + '%';
+                    m.style.top = (yIni + (yFin - yIni) * t + Math.sin(now / 850) * 4) + '%';
                 }
             } else if (now - tFuera >= ESPERA) {
                 dir = -dir;
                 x = dir === 1 ? XMIN : XMAX;
-                yBase = 16 + Math.random() * 28;
+                nuevaAltura();
                 m.style.transform = dir === 1 ? 'scaleX(1)' : 'scaleX(-1)';
                 m.style.opacity = '1';
                 m.style.left = x + '%';
-                m.style.top = (yBase + Math.sin(now / 850) * 6) + '%';
+                m.style.top = yIni + '%';
                 fuera = false;
             }
             requestAnimationFrame(paso);
@@ -759,10 +1081,15 @@
         animarDual();
         animarHolo();
         animarHintHolo();
+        initMonitor();
+        ajustarGrupoMonitor();
+        ajustarHeadline();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', iniciar);
     } else {
         iniciar();
     }
+    window.addEventListener('load', function () { ajustarGrupoMonitor(); ajustarHeadline(); });
+    window.addEventListener('resize', function () { ajustarGrupoMonitor(); ajustarHeadline(); });
 })();
