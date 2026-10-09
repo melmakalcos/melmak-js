@@ -19,8 +19,8 @@
     // "link" (opcional, por defecto /productos) = destino del boton INGRESAR.
     // Completar "img" y "link" de las categorias que quedan vacias:
     var MONITOR_CATEGORIAS = [
-        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', link: 'https://www.melmakalcos.com.ar/animados', zoom: 1.25 },
-        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', link: 'https://www.melmakalcos.com.ar/animanga', zoom: 1 },
+        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', zoom: 1.25 },
+        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', zoom: 1 },
         { nombre: 'CINE Y TV', img: '', link: '' },
         { nombre: 'COLOR', img: '', link: '' },
         { nombre: 'COUNTER STRIKE', img: '', link: '' },
@@ -992,8 +992,9 @@
     }
 
     var primeraCarga = true;
-    window.addEventListener('pageshow', function () {
+    window.addEventListener('pageshow', function (e) {
         if (primeraCarga) { primeraCarga = false; return; }
+        if (e.persisted) { location.reload(); return; }
         reiniciarSeccion();
     });
 
