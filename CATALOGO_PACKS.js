@@ -91,7 +91,7 @@
         '.melk-catalogo__mascota { display: none; position: absolute; left: -20%; top: 30%; width: 130px; height: auto; z-index: 0; pointer-events: none; will-change: left, top; }',
         '.melk-catalogo__wrap { position: relative; z-index: 1; max-width: 1150px; margin: 0 auto; }',
         '.melk-catalogo .melk-headline { position: relative; z-index: 1; display: flex; justify-content: center; margin: 18px 0 22px; }',
-        '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 46px; font-weight: 400; line-height: 1; color: #353535; animation: melk-titulo-loop 3s ease-in-out infinite; }',
+        '.melk-catalogo .melk-headline__text { display: flex; justify-content: center; margin: 0; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; font-size: 46px; font-weight: 400; line-height: 1; color: #353535; }',
         '@keyframes melk-titulo-loop { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.03); } }',
         '.melk-catalogo .melk-list { list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-direction: column; gap: 40px; }',
         '.melk-catalogo .melk-item { width: 100%; }',
@@ -202,21 +202,36 @@
         '@media (max-width: 767px) { .melk-holo__hint { display: none; } }',
         '.melk-monitor-grupo { margin: 72px 0 0; }',
         '.melk-monitor { position: relative; container-type: inline-size; width: 88%; max-width: 940px; margin: 0 auto; }',
+        '.melk-monitor__cables { position: absolute; left: 50%; transform: translateX(-50%); width: 100vw; top: -14%; bottom: -14%; z-index: 0; pointer-events: none; }',
+        '.melk-monitor__cables svg { display: block; width: 100%; height: 100%; overflow: visible; }',
+        '.melk-cable__borde { fill: none; stroke: #353535; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }',
+        '.melk-cable__cuerpo { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }',
+        '.melk-cable--blanco { stroke: #ffffff; }',
+        '.melk-cable--amarillo { stroke: #ffee26; }',
+        '.melk-cable { animation-name: melk-cable-sway; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }',
+        '@keyframes melk-cable-sway { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(1deg); } }',
         '.melk-monitor, .melk-monitor * { font-family: \'Press Start 2P\', monospace !important; }',
-        '.melk-monitor__carcasa { position: relative; box-sizing: border-box; width: 100%; background-color: #fff; border: 0.32cqw solid #353535; border-radius: 2.55cqw; padding: 1.9cqw 1.9cqw 0.85cqw; box-shadow: 0 1.5cqw 3.2cqw rgba(0,0,0,.28); }',
-        '.melk-monitor__pantalla { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 0.32cqw solid #353535; border-radius: 1.5cqw; background-color: #fff; }',
-        '.melk-monitor__ventana { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; background-color: #fff; overflow: hidden; }',
+        '.melk-monitor__carcasa { position: relative; z-index: 1; box-sizing: border-box; width: 100%; background-color: #fff; border: 0.32cqw solid #353535; border-radius: 2.55cqw; padding: 1.9cqw 1.9cqw 0.85cqw; box-shadow: 0 1.5cqw 3.2cqw rgba(0,0,0,.28); }',
+        '.melk-monitor__pantalla { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 0.32cqw solid #353535; border-radius: 1.5cqw; background-color: #000; }',
+        '.melk-monitor__pantalla::after { content: ""; position: absolute; inset: 0; z-index: 6; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 4.5cqw rgba(0,0,0,.38), inset 0 0 1cqw rgba(0,0,0,.3); }',
+        '.melk-monitor__ventana { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; background-color: #fff; overflow: hidden; opacity: 0; transform-origin: 50% 50%; }',
+        '.melk-monitor--encendido .melk-monitor__ventana { opacity: 1; animation: melk-crt-on .95s cubic-bezier(.2, .8, .25, 1) forwards; }',
+        '.melk-monitor--apagado .melk-monitor__ventana { opacity: 0; animation: melk-crt-off .8s cubic-bezier(.4, 0, .3, 1) forwards; }',
+        '@keyframes melk-crt-on { 0% { transform: scale(0, .004); filter: brightness(40); opacity: 1; } 40% { transform: scale(1, .004); filter: brightness(25); opacity: 1; } 70% { transform: scale(1, 1); filter: brightness(8); opacity: 1; } 100% { transform: scale(1, 1); filter: brightness(1); opacity: 1; } }',
+        '@keyframes melk-crt-off { 0% { transform: scale(1, 1); filter: brightness(1); opacity: 1; } 50% { transform: scale(1, .004); filter: brightness(15); opacity: 1; } 100% { transform: scale(0, .004); filter: brightness(50); opacity: 0; } }',
         '.melk-monitor__barra { position: relative; flex: 0 0 auto; display: block; padding: 1cqw 2.5cqw; background-color: #353535; }',
         '.melk-monitor__titulo { display: block; text-align: center; font-family: \'Press Start 2P\', monospace; font-size: 1.2cqw; line-height: 1.5; letter-spacing: .02em; text-transform: uppercase; color: #ffee26; white-space: nowrap; }',
-        '.melk-monitor__cuerpo { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background-color: #fff; }',
+        '.melk-monitor__cuerpo { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background-color: #fff; animation: melk-plasma 9s steps(1) infinite; }',
+        '@keyframes melk-plasma { 0%, 82%, 100% { transform: translate(0, 0); filter: brightness(1); } 84% { transform: translate(-0.7cqw, 0.3cqw); filter: brightness(1.25) saturate(1.4); } 86% { transform: translate(1cqw, -0.3cqw); filter: brightness(0.8); } 88% { transform: translate(-0.4cqw, 0.2cqw); filter: brightness(1.15); } 90% { transform: translate(0, 0); filter: brightness(1); } }',
         '.melk-monitor__contenido { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1); filter: saturate(1.4) contrast(1.08) brightness(1.34); }',
         '.melk-monitor__cambio { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }',
         '.melk-monitor__cambio--on { animation: melk-canal .5s steps(1) 1; }',
         '@keyframes melk-canal { 0% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 4px); } 20% { opacity: 1; background: repeating-linear-gradient(0deg, #000 0 3px, #fff 3px 6px); transform: translateY(4px); } 40% { opacity: 1; background: repeating-linear-gradient(90deg, #fff 0 3px, #000 3px 6px); transform: translate(-3px, -4px); } 60% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 5px); transform: translate(2px, 3px); } 80% { opacity: .5; background: repeating-linear-gradient(0deg, #000 0 2px, #fff 2px 4px); } 100% { opacity: 0; } }',
         '.melk-monitor__titulo-png { position: relative; text-align: center; pointer-events: none; }',
-        '.melk-monitor__titulo-txt { display: inline-block; font-family: \'Press Start 2P\', monospace; font-weight: 700; font-style: italic; font-size: 8cqw; line-height: 1.15; letter-spacing: 0; color: #ffee26; text-shadow: -0.13cqw -0.13cqw 0 #ffee26, 0.13cqw -0.13cqw 0 #ffee26, -0.13cqw 0.13cqw 0 #ffee26, 0.13cqw 0.13cqw 0 #ffee26, -0.4cqw -0.4cqw 0 #353535, 0.4cqw -0.4cqw 0 #353535, -0.4cqw 0.4cqw 0 #353535, 0.4cqw 0.4cqw 0 #353535, -0.4cqw 0 0 #353535, 0.4cqw 0 0 #353535, 0 -0.4cqw 0 #353535, 0 0.4cqw 0 #353535, -0.27cqw -0.27cqw 0 #353535, 0.27cqw -0.27cqw 0 #353535, -0.27cqw 0.27cqw 0 #353535, 0.27cqw 0.27cqw 0 #353535, -0.27cqw 0 0 #353535, 0.27cqw 0 0 #353535, 0 -0.27cqw 0 #353535, 0 0.27cqw 0 #353535, 0.85cqw 0.85cqw 0 #1b1b1b; animation: melk-titulo-bob 2.2s ease-in-out infinite; }',
+        '.melk-monitor__titulo-txt { display: inline-block; font-family: \'Press Start 2P\', monospace; font-weight: 700; font-style: italic; font-size: 8cqw; line-height: 1.15; letter-spacing: 0; color: transparent !important; -webkit-text-fill-color: transparent !important; background-image: linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.95) 50%, rgba(255,255,255,0) 58%), linear-gradient(180deg, #8a6d00 0%, #ffee26 34%, #fffef0 50%, #ffee26 66%, #8a6d00 100%); background-size: 220% 100%, 100% 100%; background-position: 220% 0, 0 0; -webkit-background-clip: text !important; background-clip: text !important; text-shadow: -0.13cqw -0.13cqw 0 #ffee26, 0.13cqw -0.13cqw 0 #ffee26, -0.13cqw 0.13cqw 0 #ffee26, 0.13cqw 0.13cqw 0 #ffee26, -0.4cqw -0.4cqw 0 #353535, 0.4cqw -0.4cqw 0 #353535, -0.4cqw 0.4cqw 0 #353535, 0.4cqw 0.4cqw 0 #353535, -0.4cqw 0 0 #353535, 0.4cqw 0 0 #353535, 0 -0.4cqw 0 #353535, 0 0.4cqw 0 #353535, -0.27cqw -0.27cqw 0 #353535, 0.27cqw -0.27cqw 0 #353535, -0.27cqw 0.27cqw 0 #353535, 0.27cqw 0.27cqw 0 #353535, -0.27cqw 0 0 #353535, 0.27cqw 0 0 #353535, 0 -0.27cqw 0 #353535, 0 0.27cqw 0 #353535, 0.85cqw 0.85cqw 0 #1b1b1b; animation: melk-titulo-bob 2.2s ease-in-out infinite, melk-titulo-shine 3.6s linear infinite; }',
+        '@keyframes melk-titulo-shine { 0% { background-position: 220% 0, 0 0; } 100% { background-position: -120% 0, 0 0; } }',
         '@keyframes melk-titulo-bob { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-0.43cqw) scale(1.03); } }',
-        '.melk-monitor__spark { position: absolute; width: 1.8cqw; height: 1.8cqw; background: #fff; clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%); filter: drop-shadow(0 0 0.2cqw #353535); pointer-events: none; will-change: transform, opacity; animation: melk-twinkle 1.5s ease-in-out infinite; }',
+        '.melk-monitor__spark { position: absolute; width: 1.8cqw; height: 1.8cqw; background: #fff; clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%); filter: drop-shadow(0 0 0.2cqw #353535); pointer-events: none; will-change: transform, opacity; animation: melk-twinkle 2.8s ease-in-out infinite; }',
         '@keyframes melk-twinkle { 0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; } 50% { transform: scale(1) rotate(45deg); opacity: 1; } }',
         '.melk-monitor__hud { position: absolute; inset: 0; z-index: 4; pointer-events: none; font-family: \'Press Start 2P\', monospace; }',
         '.melk-hud { position: absolute; display: flex; align-items: center; gap: 0.85cqw; padding: 0.7cqw 1.1cqw; background-color: #353535; border: 0.27cqw solid #fff; }',
@@ -233,11 +248,13 @@
         '.melk-hud__hearts { display: flex; gap: 0.43cqw; }',
         '.melk-hud__heart { width: 1.85cqw; height: 1.7cqw; background-color: #5b5b5b; clip-path: polygon(50% 15%, 65% 0%, 100% 25%, 100% 60%, 50% 100%, 0% 60%, 0% 25%, 35% 0%); transition: background-color .15s ease; }',
         '.melk-hud__heart--on { background-color: #ffee26; }',
-        '.melk-monitor__glitch { position: absolute; inset: 0; z-index: 5; pointer-events: none; background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.13) 50%), linear-gradient(90deg, rgba(255,0,0,.05), rgba(0,255,0,.02), rgba(0,0,255,.05)); background-size: 100% 4px, 8px 100%; animation: melk-crt-flicker .12s infinite; }',
-        '.melk-monitor__glitch::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 46px rgba(0,0,0,.32); }',
-        '@keyframes melk-crt-flicker { 0% { opacity: .9; } 50% { opacity: 1; } 100% { opacity: .95; } }',
-        '.melk-monitor__scanbar { position: absolute; left: 0; right: 0; top: 0; height: 24%; z-index: 5; pointer-events: none; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 50%, rgba(255,255,255,0) 100%); animation: melk-crt-scanbar 8s linear infinite; }',
-        '@keyframes melk-crt-scanbar { from { top: -28%; } to { top: 100%; } }',
+        '.melk-monitor__estatica { position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: .42; background-image: url("data:image/svg+xml;utf8,<svg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22><filter id=%22melkNoise%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23melkNoise)%22 opacity=%220.75%22/></svg>"), repeating-linear-gradient(to bottom, rgba(0,0,0,.25) 0 1px, rgba(0,0,0,0) 1px 3px); background-size: 150px 150px, 100% 3px; animation: melk-estatica .4s steps(3) infinite; }',
+        '@keyframes melk-estatica { 0% { background-position: 0 0, 0 0; } 33% { background-position: -60px 45px, 0 1px; } 66% { background-position: 70px -55px, 0 2px; } 100% { background-position: 0 0, 0 3px; } }',
+        '.melk-monitor__barrido { position: absolute; left: 0; right: 0; top: 0; height: 34%; z-index: 6; pointer-events: none; mix-blend-mode: screen; background: linear-gradient(to bottom, rgba(255,255,232,0) 0%, rgba(255,255,232,.05) 48%, rgba(255,255,232,.14) 74%, rgba(255,255,232,.34) 92%, rgba(255,255,232,.5) 100%); box-shadow: 0 0.6cqw 2.2cqw rgba(255,255,214,.18); animation: melk-radar 7.5s ease-in-out infinite, melk-radar-wobble .55s steps(2) infinite; }',
+        '@keyframes melk-radar { 0% { top: -34%; opacity: .8; } 88% { opacity: 1; } 100% { top: 104%; opacity: .65; } }',
+        '@keyframes melk-radar-wobble { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.3cqw); } }',
+        '.melk-monitor__plasma { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: linear-gradient(90deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 42%, rgba(255,255,255,0) 58%, rgba(255,255,255,.5) 100%); animation: melk-plasma-rgb 9s steps(1) infinite; }',
+        '@keyframes melk-plasma-rgb { 0%, 82%, 100% { opacity: 0; transform: translateX(0); } 84% { opacity: .85; transform: translateX(-0.7cqw); } 86% { opacity: .7; transform: translateX(1cqw); } 88% { opacity: .5; transform: translateX(-0.4cqw); } 90% { opacity: 0; transform: translateX(0); } }',
         '.melk-monitor__controles { position: absolute; left: 50%; top: 60%; z-index: 3; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 1.9cqw; }',
         '.melk-monitor__selector { display: inline-flex; align-items: center; gap: 1.7cqw; padding: 1.28cqw 2.13cqw; background-color: #ffee26; border: 0.43cqw solid #353535; box-shadow: 0.64cqw 0.64cqw 0 #353535; font-family: \'Press Start 2P\', monospace; }',
         '.melk-monitor__cat { font-size: 2.34cqw; line-height: 1.2; color: #353535; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }',
@@ -248,7 +265,8 @@
         '.melk-monitor__flecha--next { animation: melk-game-bob-der .85s ease-in-out infinite; }',
         '@keyframes melk-game-bob-izq { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.74cqw); } }',
         '@keyframes melk-game-bob-der { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.74cqw); } }',
-        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; }',
+        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; animation: melk-ingresar-blink 1.1s steps(1) infinite; }',
+        '@keyframes melk-ingresar-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }',
         '.melk-monitor__ingresar:hover, .melk-monitor__ingresar:focus { background-color: #ffee26; color: #353535 !important; }',
         '.melk-monitor__ingresar:active { transform: translate(0.43cqw, 0.43cqw); box-shadow: 0 0 0 #ffee26; }',
         '.melk-monitor__panel { display: flex; align-items: center; justify-content: space-between; gap: 1.28cqw; padding: 1.5cqw 1.06cqw 0.64cqw; }',
@@ -258,7 +276,8 @@
         '.melk-monitor__knob--led { background-color: #ff4566; animation: melk-monitor-led 1.6s ease-in-out infinite; }',
         '@keyframes melk-monitor-led { 0%, 100% { background-color: #ff4566; } 50% { background-color: rgba(255,69,102,0); } }',
         '@media (max-width: 639px) { .melk-monitor { width: 100%; } }',
-        '@media (prefers-reduced-motion: reduce) { .melk-monitor__glitch, .melk-monitor__scanbar, .melk-monitor__cambio, .melk-monitor__flecha--prev, .melk-monitor__flecha--next, .melk-monitor__knob--led, .melk-hud__coin, .melk-monitor__titulo-txt, .melk-monitor__spark { animation: none; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-monitor__estatica, .melk-monitor__barrido, .melk-monitor__plasma, .melk-monitor__cuerpo, .melk-monitor__cambio, .melk-cable, .melk-monitor__ingresar, .melk-monitor__flecha--prev, .melk-monitor__flecha--next, .melk-monitor__knob--led, .melk-hud__coin, .melk-monitor__titulo-txt, .melk-monitor__spark { animation: none; } }',
+        '@media (prefers-reduced-motion: reduce) { .melk-monitor__ventana, .melk-monitor--encendido .melk-monitor__ventana, .melk-monitor--apagado .melk-monitor__ventana { animation: none; opacity: 1; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }',
         '@media (min-width: 768px) {',
         '.melk-catalogo__fondo { --melk-cuadricula-tam: 100px; padding: 100px 40px 90px; }',
@@ -382,9 +401,63 @@
         return '<div class="melk-headline melk-bounce-target"><p class="melk-headline__text">' + title + '</p></div>';
     }
 
+    // Cada cable: [destinoX, destinoY, ondulaciones, amplitud, fase, color]. Origen = centro (600, 360).
+    // Cada cable: [origenX, origenY, destinoX, destinoY, ondulaciones, amplitud, fase, color].
+    var MONITOR_CABLES = [
+        [500, 336, -40, 150, 2.6, 40, 0.2, 'blanco'],
+        [690, 356, -40, 322, 2.3, 52, 1.1, 'amarillo'],
+        [672, 330, 1250, 182, 2.9, 36, 2.3, 'blanco'],
+        [520, 372, 1250, 402, 2.4, 46, 1.6, 'amarillo'],
+        [612, 328, -40, 462, 2.1, 44, 0.7, 'blanco'],
+        [556, 372, -40, 522, 2.7, 34, 1.9, 'amarillo'],
+        [700, 344, 1250, 462, 2.0, 50, 2.8, 'blanco'],
+        [600, 384, 1250, 522, 2.5, 38, 0.4, 'amarillo']
+    ];
+
+    function cablePath(x0, y0, x1, y1, waves, amp, phase) {
+        var pasos = 16;
+        var pts = [];
+        var dx = x1 - x0, dy = y1 - y0;
+        var len = Math.sqrt(dx * dx + dy * dy) || 1;
+        var nx = -dy / len, ny = dx / len;
+        for (var s = 0; s <= pasos; s++) {
+            var t = s / pasos;
+            var off = Math.sin(t * waves * Math.PI * 2 + phase) * amp * (1 - t * 0.3);
+            pts.push([x0 + dx * t + nx * off, y0 + dy * t + ny * off]);
+        }
+        var d = 'M' + pts[0][0].toFixed(1) + ' ' + pts[0][1].toFixed(1);
+        for (var i = 0; i < pts.length - 1; i++) {
+            var p0 = pts[i - 1] || pts[i];
+            var p1 = pts[i];
+            var p2 = pts[i + 1];
+            var p3 = pts[i + 2] || p2;
+            var c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+            var c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+            d += ' C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ' ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+        }
+        return d;
+    }
+
+    function renderCables() {
+        var svg = '<svg viewBox="0 0 1200 700" preserveAspectRatio="none"><g class="melk-cables__grupo">';
+        for (var k = 0; k < MONITOR_CABLES.length; k++) {
+            var c = MONITOR_CABLES[k];
+            var d = cablePath(c[0], c[1], c[2], c[3], c[4], c[5], c[6]);
+            var dur = (4.4 + (k % 4) * 1.3).toFixed(2);
+            var delay = (-(k * 0.6)).toFixed(2);
+            svg += '<g class="melk-cable" style="transform-origin:' + c[0] + 'px ' + c[1] + 'px; animation-duration:' + dur + 's; animation-delay:' + delay + 's">'
+                + '<path class="melk-cable__borde" d="' + d + '"/>'
+                + '<path class="melk-cable__cuerpo melk-cable--' + c[7] + '" d="' + d + '"/>'
+                + '</g>';
+        }
+        svg += '</g></svg>';
+        return '<div class="melk-monitor__cables" aria-hidden="true">' + svg + '</div>';
+    }
+
     function renderMonitor() {
         var c = MONITOR_CATEGORIAS[0] || { nombre: '', img: '' };
-        return '<div class="melk-monitor melk-bounce-target" data-bounce="0.7">'
+        return '<div class="melk-monitor">'
+            + renderCables()
             + '<div class="melk-monitor__carcasa">'
             + '<div class="melk-monitor__pantalla">'
             + '<div class="melk-monitor__ventana">'
@@ -409,8 +482,9 @@
             + '<a class="melk-monitor__ingresar" href="' + (c.link || '/productos') + '">Ingresar</a>'
             + '</div>'
             + '</div>'
-            + '<div class="melk-monitor__glitch"></div>'
-            + '<div class="melk-monitor__scanbar"></div>'
+            + '<div class="melk-monitor__estatica"></div>'
+            + '<div class="melk-monitor__barrido"></div>'
+            + '<div class="melk-monitor__plasma"></div>'
             + '</div>'
             + '</div>'
             + '<div class="melk-monitor__panel">'
@@ -441,7 +515,7 @@
                     el.style.left = (4 + Math.random() * 92) + '%';
                     el.style.top = (-30 + Math.random() * 120) + '%';
                     el.style.animationDelay = (-Math.random() * 1.6) + 's';
-                    el.style.animationDuration = (1 + Math.random() * 1.2) + 's';
+                    el.style.animationDuration = (2.6 + Math.random() * 2) + 's';
                     var w = 1.1 + Math.random() * 1.5;
                     el.style.width = w + 'cqw';
                     el.style.height = w + 'cqw';
@@ -451,6 +525,27 @@
             })(sp);
             cont.appendChild(sp);
         }
+    }
+
+    function animarMonitorOnOff(mon) {
+        if (!mon) return;
+        if (!('IntersectionObserver' in window)) { mon.classList.add('melk-monitor--encendido'); return; }
+        var encendido = false;
+        var obs = new IntersectionObserver(function (entries) {
+            for (var n = 0; n < entries.length; n++) {
+                var e = entries[n];
+                if (e.isIntersecting && !encendido) {
+                    encendido = true;
+                    mon.classList.remove('melk-monitor--apagado');
+                    mon.classList.add('melk-monitor--encendido');
+                } else if (!e.isIntersecting && encendido) {
+                    encendido = false;
+                    mon.classList.remove('melk-monitor--encendido');
+                    mon.classList.add('melk-monitor--apagado');
+                }
+            }
+        }, { threshold: 0.25 });
+        obs.observe(mon);
     }
 
     function initMonitor() {
@@ -463,6 +558,7 @@
         var next = mon.querySelector('.melk-monitor__flecha--next');
         var cambio = mon.querySelector('.melk-monitor__cambio');
         generarDestellos(mon.querySelector('.melk-monitor__titulo-png'));
+        animarMonitorOnOff(mon);
         var hearts = mon.querySelectorAll('.melk-hud__heart');
         var scoreEl = mon.querySelector('[data-hud="score"]');
         var i = 0;
@@ -548,6 +644,24 @@
         head.style.marginTop = Math.round(Math.max(0, base + (abajo - arriba))) + 'px';
     }
 
+    // Con los packs ocultos: iguala "onda superior -> COMPRA YA" con "COMPRA YA -> monitor".
+    function ajustarEspaciado() {
+        if (seccion.querySelector('.melk-list')) return; // con packs visibles lo maneja ajustarHeadline
+        var fondo = seccion.querySelector('.melk-catalogo__fondo');
+        var onda = seccion.querySelector('.melk-onda--top');
+        var head = seccion.querySelector('.melk-headline');
+        var grupo = seccion.querySelector('.melk-monitor-grupo');
+        if (!fondo || !onda || !head || !grupo) return;
+        grupo.style.marginTop = '0px';
+        var ondaB = offsetRelativo(onda, fondo) + onda.offsetHeight;
+        var headT = offsetRelativo(head, fondo);
+        var headB = headT + head.offsetHeight;
+        var arriba = headT - ondaB;
+        var abajo = offsetRelativo(grupo, fondo) - headB;
+        var objetivo = Math.max(28, arriba * 0.5);
+        grupo.style.marginTop = Math.round(Math.max(0, objetivo - abajo)) + 'px';
+    }
+
     function renderCaja(n) {
         var cls = n.id === 'melmak_pack' ? 'melk-note--melmak_pack' : 'melk-note--melmak_unidad';
         var capaImg = n.id === 'melmak_pack'
@@ -619,13 +733,18 @@
     for (var i = 0; i < VOLUMENES.length; i++) {
         lista += renderVolumen(VOLUMENES[i], i);
     }
+    // ---- PACKS (COMPRA POR UNIDAD / PACK) OCULTOS ----
+    // Se ocultaron para que debajo de "COMPRA YA" quede el monitor.
+    // Para volver a mostrarlos, descomentar la linea de abajo:
+    var packsHtml = '';
+    // packsHtml = '<ul class="melk-list">' + lista + '</ul>';
     seccion.innerHTML = '<div class="melk-catalogo__fondo">'
         + ONDA_TOP
         + ONDA_BOTTOM
         + '<img class="melk-catalogo__mascota" src="https://d22fxaf9t8d39k.cloudfront.net/5747277f193e94fe14afb2e6fffa4fe60dca4bf5f37cdfb4073a0fdbd12e795920700.png" alt="">'
         + '<div class="melk-catalogo__wrap">'
         + renderTitulo(TITULO_CATALOGO)
-        + '<ul class="melk-list">' + lista + '</ul>'
+        + packsHtml
         + renderGrupoMonitor()
         + '</div>'
         + '</div>';
@@ -977,7 +1096,7 @@
             + '<img class="melk-catalogo__mascota" src="https://d22fxaf9t8d39k.cloudfront.net/5747277f193e94fe14afb2e6fffa4fe60dca4bf5f37cdfb4073a0fdbd12e795920700.png" alt="">'
             + '<div class="melk-catalogo__wrap">'
             + renderTitulo(TITULO_CATALOGO)
-            + '<ul class="melk-list">' + lista + '</ul>'
+            + packsHtml
             + renderGrupoMonitor()
             + '</div>'
             + '</div>';
@@ -989,6 +1108,7 @@
         initMonitor();
         ajustarGrupoMonitor();
         ajustarHeadline();
+        ajustarEspaciado();
     }
 
     var primeraCarga = true;
@@ -1078,12 +1198,13 @@
         initMonitor();
         ajustarGrupoMonitor();
         ajustarHeadline();
+        ajustarEspaciado();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', iniciar);
     } else {
         iniciar();
     }
-    window.addEventListener('load', function () { ajustarGrupoMonitor(); ajustarHeadline(); });
-    window.addEventListener('resize', function () { ajustarGrupoMonitor(); ajustarHeadline(); });
+    window.addEventListener('load', function () { ajustarGrupoMonitor(); ajustarHeadline(); ajustarEspaciado(); });
+    window.addEventListener('resize', function () { ajustarGrupoMonitor(); ajustarHeadline(); ajustarEspaciado(); });
 })();
