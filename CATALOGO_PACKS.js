@@ -202,15 +202,12 @@
         '@media (max-width: 767px) { .melk-holo__hint { display: none; } }',
         '.melk-monitor-grupo { margin: 72px 0 0; }',
         '.melk-monitor { position: relative; container-type: inline-size; width: 88%; max-width: 940px; margin: 0 auto; }',
+        '.melk-monitor, .melk-monitor * { font-family: \'Press Start 2P\', monospace !important; }',
         '.melk-monitor__carcasa { position: relative; box-sizing: border-box; width: 100%; background-color: #fff; border: 0.32cqw solid #353535; border-radius: 2.55cqw; padding: 1.9cqw 1.9cqw 0.85cqw; box-shadow: 0 1.5cqw 3.2cqw rgba(0,0,0,.28); }',
         '.melk-monitor__pantalla { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; border: 0.32cqw solid #353535; border-radius: 1.5cqw; background-color: #fff; }',
         '.melk-monitor__ventana { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; background-color: #fff; overflow: hidden; }',
-        '.melk-monitor__barra { position: relative; flex: 0 0 auto; display: block; padding: 0.85cqw 7.9cqw; background-color: #353535; }',
-        '.melk-monitor__dots { position: absolute; left: 1.5cqw; top: 50%; transform: translateY(-50%); display: flex; gap: 0.85cqw; }',
-        '.melk-monitor__dot { flex: 0 0 auto; width: 1.4cqw; height: 1.4cqw; border: 0.21cqw solid #353535; border-radius: 50%; background-color: #ff4566; }',
-        '.melk-monitor__dot:nth-child(2) { background-color: #ffd23f; }',
-        '.melk-monitor__dot:nth-child(3) { background-color: #3fbf7f; }',
-        '.melk-monitor__titulo { display: block; text-align: center; font-family: \'Press Start 2P\', monospace; font-size: 1.28cqw; line-height: 1.55; letter-spacing: .02em; text-transform: uppercase; color: #ffee26; }',
+        '.melk-monitor__barra { position: relative; flex: 0 0 auto; display: block; padding: 1cqw 2.5cqw; background-color: #353535; }',
+        '.melk-monitor__titulo { display: block; text-align: center; font-family: \'Press Start 2P\', monospace; font-size: 1.2cqw; line-height: 1.5; letter-spacing: .02em; text-transform: uppercase; color: #ffee26; white-space: nowrap; }',
         '.melk-monitor__cuerpo { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background-color: #fff; }',
         '.melk-monitor__contenido { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1); filter: saturate(1.4) contrast(1.08) brightness(1.34); }',
         '.melk-monitor__cambio { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }',
@@ -244,7 +241,8 @@
         '.melk-monitor__controles { position: absolute; left: 50%; top: 60%; z-index: 3; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 1.9cqw; }',
         '.melk-monitor__selector { display: inline-flex; align-items: center; gap: 1.7cqw; padding: 1.28cqw 2.13cqw; background-color: #ffee26; border: 0.43cqw solid #353535; box-shadow: 0.64cqw 0.64cqw 0 #353535; font-family: \'Press Start 2P\', monospace; }',
         '.melk-monitor__cat { font-size: 2.34cqw; line-height: 1.2; color: #353535; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }',
-        '.melk-monitor__flecha { background: none; border: 0; padding: 0; cursor: pointer; color: #353535; font-family: \'Press Start 2P\', monospace; font-size: 2.55cqw; line-height: 1; }',
+        '.melk-monitor__flecha { display: inline-flex; align-items: center; background: none; border: 0; padding: 0; cursor: pointer; color: #353535; }',
+        '.melk-monitor__flecha svg { display: block; width: 2.3cqw; height: 2.3cqw; }',
         '.melk-monitor__flecha:hover { color: #ff4566; }',
         '.melk-monitor__flecha--prev { animation: melk-game-bob-izq .85s ease-in-out infinite; }',
         '.melk-monitor__flecha--next { animation: melk-game-bob-der .85s ease-in-out infinite; }',
@@ -391,11 +389,6 @@
             + '<div class="melk-monitor__pantalla">'
             + '<div class="melk-monitor__ventana">'
             + '<div class="melk-monitor__barra">'
-            + '<span class="melk-monitor__dots">'
-            + '<span class="melk-monitor__dot"></span>'
-            + '<span class="melk-monitor__dot"></span>'
-            + '<span class="melk-monitor__dot"></span>'
-            + '</span>'
             + '<span class="melk-monitor__titulo">' + MONITOR_BARRA_TEXTO + '</span>'
             + '</div>'
             + '<div class="melk-monitor__cuerpo">'
@@ -409,9 +402,9 @@
             + '<div class="melk-monitor__controles">'
             + '<div class="melk-monitor__titulo-png"><span class="melk-monitor__titulo-txt">' + TITULO_MONITOR + '</span></div>'
             + '<div class="melk-monitor__selector">'
-            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--prev" aria-label="Categoría anterior">&#9664;</button>'
+            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--prev" aria-label="Categoría anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 5 8 12 15 19"></polyline></svg></button>'
             + '<span class="melk-monitor__cat">' + c.nombre + '</span>'
-            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--next" aria-label="Categoría siguiente">&#9654;</button>'
+            + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--next" aria-label="Categoría siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 5 16 12 9 19"></polyline></svg></button>'
             + '</div>'
             + '<a class="melk-monitor__ingresar" href="' + (c.link || '/productos') + '">Ingresar</a>'
             + '</div>'
