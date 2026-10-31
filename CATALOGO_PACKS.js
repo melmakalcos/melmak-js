@@ -1,53 +1,27 @@
-// =============================================
-// CATALOGO - Seccion del catalogo de productos
-// =============================================
 (function () {
     if (document.getElementById('melk-catalogo')) return;
     var esPortada = location.pathname.replace(/\/+$/, '') === '';
-    if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;   // solo portada
+    if (!esPortada && !document.getElementById('melk-catalogo-preview')) return;
 
-    // =============== DATOS (EDITAR AQUI) ================
     var TITULO_CATALOGO = '¡COMPRÁ YA!';
 
-    // ---------------- BLOQUE MONITOR (categorias) ----------------
-    // Titulo de la seccion del monitor (misma animacion que el titulo del catalogo).
     var TITULO_MONITOR = 'CATÁLOGO';
-    // Texto fijo de la barra navegadora del monitor (se muestra en amarillo sobre la barra negra).
-    var MONITOR_BARRA_TEXTO = '¡ESTAMOS ACTUALIZANDO ESTA FUNCIÓN! GRACIAS POR TU PACIENCIA :)';
-    // Una entrada por categoria: "nombre" = texto del boton; "img" = imagen del contenido.
-    // "zoom" (opcional, por defecto 1) = recorte para tapar el margen transparente del PNG.
-    // "link" (opcional, por defecto /productos) = destino del boton INGRESAR.
-    // Completar "img" y "link" de las categorias que quedan vacias:
+
+    var MONITOR_BARRA_TEXTO = 'ELEGÍ TU CATEGORÍA Y EMPEZÁ A LLENAR TU CARRITO';
+
+    var MONITOR_TITULO_TAMANO = 'auto';
+
     var MONITOR_CATEGORIAS = [
-        { nombre: 'ANIMADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', link: 'https://www.melmakalcos.com.ar/animados' },
-        { nombre: 'ANIMANGA', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', link: 'https://www.melmakalcos.com.ar/animanga' },
-        { nombre: 'CINE Y TV', img: 'https://d22fxaf9t8d39k.cloudfront.net/ad760e277fe0b4c2caa7cb24a5ee65acd195ded8ce4332974ab69e2ddef1302220700.png', link: 'https://www.melmakalcos.com.ar/cine-y-tv' },
-        { nombre: 'COLOR', img: 'https://d22fxaf9t8d39k.cloudfront.net/4b77f8d748be518ccc855e57003072f699eca21836b72f5fbe37b28cd76d852920700.png', link: 'https://www.melmakalcos.com.ar/color' },
-        { nombre: 'COUNTER STRIKE', img: 'https://d22fxaf9t8d39k.cloudfront.net/6efca92c79df38fa3718067cee6888abe887f78fec136bc2cb74d3b38b4c3bf320700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/counter-strike' },
-        { nombre: 'DEPORTES', img: 'https://d22fxaf9t8d39k.cloudfront.net/15a719403c027df836842cf7ce345a901e1bc792dcfb2ee99d9a7c62626dbf3820700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/deportes' },
-        { nombre: 'DRAGON BALL', img: 'https://d22fxaf9t8d39k.cloudfront.net/ef74d39298f77f545ab26242e458f32d235d92ed275159f338c7f2c698497d7b20700.png', link: 'https://www.melmakalcos.com.ar/dragon-ball' },
-        { nombre: 'HARRY POTTER', img: 'https://d22fxaf9t8d39k.cloudfront.net/588e7f1a3614e6df064e2f318770ce3539dd9427588dfdc374e07ac19607187720700.png', link: 'https://www.melmakalcos.com.ar/harry-potter' },
-        { nombre: 'K-POP', img: 'https://d22fxaf9t8d39k.cloudfront.net/bcf9483caae7c48e8e20376a84717efa701c61d1dbca9027dcd9627638f26cb820700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/k-pop' },
-        { nombre: 'LOGOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/186d18c95d11448f921a2cf867dad66a758bd65076bbee1c00846fbda84fc15220700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/logos' },
-        { nombre: 'MEMAZOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/0f314a1613adbe5cb4d07117317fe03b783b02ffb23fd2aa586d1e9099cd9b5e20700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/memazos' },
-        { nombre: 'MÚSICA', img: 'https://d22fxaf9t8d39k.cloudfront.net/b90fbe8ec7fdad9a06796cbc3e532f13501e35a17403f465bf740c5b290a0fc020700.png', link: 'https://www.melmakalcos.com.ar/musica' },
-        { nombre: 'PATRIA / NOSTALGIA', img: 'https://d22fxaf9t8d39k.cloudfront.net/a8106f2e5e97a8022d2f89d3d20108266809a0e31189ea7d6665915f2bd6b51b20700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/patria' },
-        { nombre: 'POKEMON', img: 'https://d22fxaf9t8d39k.cloudfront.net/a835cfad12abdcab7b3815fce500694e94beda9647f8e88477339e72c5d95f4c20700.png', link: 'https://www.melmakalcos.com.ar/pokemon-todos' },
-        { nombre: 'PORTADAS JUEGOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/9607936aecafb541afac117e9c4a01b71c40ddb74b2ebadd0e2665be616f1a2b20700.png', link: 'https://www.melmakalcos.com.ar/stickers-portadas' },
-        { nombre: 'PORTADAS MÚSICA', img: 'https://d22fxaf9t8d39k.cloudfront.net/149f024e474317f09b3889c836ef2b71e399fc063ead364b32e848ace245779a20700.png', link: 'https://www.melmakalcos.com.ar/musica-portadas' },
-        { nombre: 'SIMPSONS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3214e9b4bf7726cd4fe4cfc62326754599fd2b63ba2dc43364d6c00f2a67669c20700.png', link: 'https://www.melmakalcos.com.ar/simpsons' },
-        { nombre: 'STAR WARS', img: 'https://d22fxaf9t8d39k.cloudfront.net/2e293edb1d0df99fd7fca85519fc28f26847744c957b8559df95fc18c398fcf120700.png', link: 'https://www.melmakalcos.com.ar/star-wars' },
-        { nombre: 'STREAM', img: '', link: '' },
-        { nombre: 'UNIVERSO', img: 'https://d22fxaf9t8d39k.cloudfront.net/4df865c4d818d5ddad8e66269fa3cbd49cc387e8637f737223170eae619a187a20700.png', link: 'https://www.melmakalcos.com.ar/universo' },
-        { nombre: 'VALORANT', img: 'https://d22fxaf9t8d39k.cloudfront.net/cdd57e2832fc2771fb882ae2bceaa7934adbd0ca91d57469400fecd3801e65b820700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/valorant' },
-        { nombre: 'VICIO', img: 'https://d22fxaf9t8d39k.cloudfront.net/def51c73662a18942c19e54f23d314eaee5e7970ad10d9832af630300d7b985220700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/vicio' },
-        { nombre: 'WEED', img: 'https://d22fxaf9t8d39k.cloudfront.net/b0ca354ac6c362dc31a93a26fd5dff260f6d6457c1bbd6ee7831aacb3b78f44f20700.png', link: 'https://www.melmakalcos.com.ar/mas-categorias-actualizando/weed' }
+        { nombre: 'STICKERS', img: 'https://d22fxaf9t8d39k.cloudfront.net/3920f45c63ecc8fa017e4b61e7deafea563ba38e4339c2b7832aaed94145f64720700.png', link: 'https://www.melmakalcos.com.ar/stickers' },
+        { nombre: 'PRINTS', img: 'https://d22fxaf9t8d39k.cloudfront.net/748c6fe1f0679a043cc46c8bd803bb19b704a6ab7b755b6f7d77ce5e45b5e80120700.png', link: 'https://www.melmakalcos.com.ar/prints' },
+        { nombre: 'PACKS', img: 'https://d22fxaf9t8d39k.cloudfront.net/ad760e277fe0b4c2caa7cb24a5ee65acd195ded8ce4332974ab69e2ddef1302220700.png', link: 'https://www.melmakalcos.com.ar/packs' },
+        { nombre: 'PERSONALIZADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/4b77f8d748be518ccc855e57003072f699eca21836b72f5fbe37b28cd76d852920700.png', link: 'https://www.melmakalcos.com.ar/personalizados' },
+        { nombre: 'MAYORISTA', img: 'https://d22fxaf9t8d39k.cloudfront.net/6efca92c79df38fa3718067cee6888abe887f78fec136bc2cb74d3b38b4c3bf320700.png', link: 'https://www.melmakalcos.com.ar/mayorista' }
     ];
-    // ============================================================
 
     var VOLUMENES = [
         {
-            status: '',            // '' | 'is-reception' | 'is-end'
+            status: '',
             mainText: 'HACÉ CLICK EN LA OPCIÓN QUE MÁS TE GUSTE',
             join: ['is-red'],
             notes: [
@@ -72,11 +46,8 @@
         }
     ];
 
-    // Selector del bloque banner despues del cual se inserta la seccion.
     var ANCLA_INSERCION = '.header-menu';
-    // ====================================================
 
-    // ---------------- ESTILOS ----------------
     var style = document.createElement('style');
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
@@ -227,8 +198,9 @@
         '.melk-monitor__cambio { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }',
         '.melk-monitor__cambio--on { animation: melk-canal .5s steps(1) 1; }',
         '@keyframes melk-canal { 0% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 4px); } 20% { opacity: 1; background: repeating-linear-gradient(0deg, #000 0 3px, #fff 3px 6px); transform: translateY(4px); } 40% { opacity: 1; background: repeating-linear-gradient(90deg, #fff 0 3px, #000 3px 6px); transform: translate(-3px, -4px); } 60% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 5px); transform: translate(2px, 3px); } 80% { opacity: .5; background: repeating-linear-gradient(0deg, #000 0 2px, #fff 2px 4px); } 100% { opacity: 0; } }',
-        '.melk-monitor__titulo-png { position: relative; text-align: center; pointer-events: none; }',
+        '.melk-monitor__titulo-png { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; pointer-events: none; }',
         '.melk-monitor__titulo-txt { display: inline-block; font-family: \'Press Start 2P\', monospace; font-weight: 700; font-style: italic; font-size: 8cqw; line-height: 1.15; letter-spacing: 0; color: transparent !important; -webkit-text-fill-color: transparent !important; background-image: linear-gradient(100deg, rgba(255,255,255,0) 42%, rgba(255,255,255,.95) 50%, rgba(255,255,255,0) 58%), linear-gradient(180deg, #8a6d00 0%, #ffee26 34%, #fffef0 50%, #ffee26 66%, #8a6d00 100%); background-size: 220% 100%, 100% 100%; background-position: 220% 0, 0 0; -webkit-background-clip: text !important; background-clip: text !important; text-shadow: -0.13cqw -0.13cqw 0 #ffee26, 0.13cqw -0.13cqw 0 #ffee26, -0.13cqw 0.13cqw 0 #ffee26, 0.13cqw 0.13cqw 0 #ffee26, -0.4cqw -0.4cqw 0 #353535, 0.4cqw -0.4cqw 0 #353535, -0.4cqw 0.4cqw 0 #353535, 0.4cqw 0.4cqw 0 #353535, -0.4cqw 0 0 #353535, 0.4cqw 0 0 #353535, 0 -0.4cqw 0 #353535, 0 0.4cqw 0 #353535, -0.27cqw -0.27cqw 0 #353535, 0.27cqw -0.27cqw 0 #353535, -0.27cqw 0.27cqw 0 #353535, 0.27cqw 0.27cqw 0 #353535, -0.27cqw 0 0 #353535, 0.27cqw 0 0 #353535, 0 -0.27cqw 0 #353535, 0 0.27cqw 0 #353535, 0.85cqw 0.85cqw 0 #1b1b1b; animation: melk-titulo-bob 2.2s ease-in-out infinite, melk-titulo-shine 3.6s linear infinite; }',
+        '.melk-monitor__titulo-txt { white-space: nowrap; flex: 0 0 auto; }',
         '@keyframes melk-titulo-shine { 0% { background-position: 220% 0, 0 0; } 100% { background-position: -120% 0, 0 0; } }',
         '@keyframes melk-titulo-bob { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-0.43cqw) scale(1.03); } }',
         '.melk-monitor__spark { position: absolute; width: 1.8cqw; height: 1.8cqw; background: #fff; clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%); filter: drop-shadow(0 0 0.2cqw #353535); pointer-events: none; will-change: transform, opacity; animation: melk-twinkle 2.8s ease-in-out infinite; }',
@@ -255,14 +227,12 @@
         '@keyframes melk-radar-wobble { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.3cqw); } }',
         '.melk-monitor__plasma { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; mix-blend-mode: screen; background: linear-gradient(90deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 42%, rgba(255,255,255,0) 58%, rgba(255,255,255,.5) 100%); animation: melk-plasma-rgb 9s steps(1) infinite; }',
         '@keyframes melk-plasma-rgb { 0%, 82%, 100% { opacity: 0; transform: translateX(0); } 84% { opacity: .85; transform: translateX(-0.7cqw); } 86% { opacity: .7; transform: translateX(1cqw); } 88% { opacity: .5; transform: translateX(-0.4cqw); } 90% { opacity: 0; transform: translateX(0); } }',
-        '.melk-monitor__controles { position: absolute; left: 50%; top: 60%; z-index: 3; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 1.9cqw; }',
-        '.melk-monitor__selector { display: inline-flex; align-items: center; gap: 1.7cqw; padding: 1.28cqw 2.13cqw; background-color: #ffee26; border: 0.43cqw solid #353535; box-shadow: 0.64cqw 0.64cqw 0 #353535; font-family: \'Press Start 2P\', monospace; }',
-        '.melk-monitor__cat { font-size: 2.34cqw; line-height: 1.2; color: #353535; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }',
-        '.melk-monitor__flecha { display: inline-flex; align-items: center; background: none; border: 0; padding: 0; cursor: pointer; color: #353535; }',
-        '.melk-monitor__flecha svg { display: block; width: 2.3cqw; height: 2.3cqw; }',
-        '.melk-monitor__flecha:hover { color: #ff4566; }',
-        '.melk-monitor__flecha--prev { animation: melk-game-bob-izq .85s ease-in-out infinite; }',
-        '.melk-monitor__flecha--next { animation: melk-game-bob-der .85s ease-in-out infinite; }',
+        '.melk-monitor__controles { position: absolute; left: 0; right: 0; top: 60%; z-index: 3; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 1.9cqw; padding: 0 2cqw; }',
+        '.melk-monitor__flecha { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 5.2cqw; height: 5.2cqw; min-width: 32px; min-height: 32px; padding: 0; background-color: #353535; border: 0.35cqw solid #ffee26; box-shadow: 0.35cqw 0.35cqw 0 #1b1b1b; color: #ffee26; cursor: pointer; pointer-events: auto; transition: background-color .15s ease, color .15s ease; }',
+        '.melk-monitor__flecha svg { display: block; width: 2.4cqw; height: 2.4cqw; min-width: 13px; min-height: 13px; }',
+        '.melk-monitor__flecha:hover, .melk-monitor__flecha:focus-visible { background-color: #ffee26; color: #353535; outline: none; }',
+        '.melk-monitor__flecha--prev { position: absolute; left: 1.2cqw; top: 0; bottom: 0; margin: auto 0; animation: melk-game-bob-izq .85s ease-in-out infinite; }',
+        '.melk-monitor__flecha--next { position: absolute; right: 1.2cqw; top: 0; bottom: 0; margin: auto 0; animation: melk-game-bob-der .85s ease-in-out infinite; }',
         '@keyframes melk-game-bob-izq { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.74cqw); } }',
         '@keyframes melk-game-bob-der { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.74cqw); } }',
         '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; animation: melk-ingresar-blink 1.1s steps(1) infinite; }',
@@ -275,7 +245,7 @@
         '.melk-monitor__knob { display: block; width: 1.7cqw; height: 1.7cqw; border: 0.32cqw solid #353535; border-radius: 50%; background-color: #fff; }',
         '.melk-monitor__knob--led { background-color: #ff4566; animation: melk-monitor-led 1.6s ease-in-out infinite; }',
         '@keyframes melk-monitor-led { 0%, 100% { background-color: #ff4566; } 50% { background-color: rgba(255,69,102,0); } }',
-        '@media (max-width: 639px) { .melk-monitor { width: 100%; } }',
+        '@media (max-width: 639px) { .melk-monitor { width: 100%; } .melk-monitor__flecha { width: 4.4cqw; height: 4.4cqw; min-width: 30px; min-height: 30px; } .melk-monitor__flecha--prev { left: 0.5cqw; } .melk-monitor__flecha--next { right: 0.5cqw; } .melk-monitor__controles { padding: 0 1cqw; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-monitor__estatica, .melk-monitor__barrido, .melk-monitor__plasma, .melk-monitor__cuerpo, .melk-monitor__cambio, .melk-cable, .melk-monitor__ingresar, .melk-monitor__flecha--prev, .melk-monitor__flecha--next, .melk-monitor__knob--led, .melk-hud__coin, .melk-monitor__titulo-txt, .melk-monitor__spark { animation: none; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-monitor__ventana, .melk-monitor--encendido .melk-monitor__ventana, .melk-monitor--apagado .melk-monitor__ventana { animation: none; opacity: 1; } }',
         '@media (prefers-reduced-motion: reduce) { .melk-holo__holo { animation: none; } .melk-holo__hint { animation: none; } .melk-holo__palabra--hover { animation: none; } }',
@@ -355,7 +325,6 @@
     ].join('\n');
     document.head.appendChild(style);
 
-    // ---------------- FUENTES (Typekit) ----------------
     if (!document.getElementById('melk-typekit-matt')) {
         var tkMatt = document.createElement('link');
         tkMatt.id = 'melk-typekit-matt';
@@ -396,13 +365,10 @@
         (document.body || document.documentElement).appendChild(pixelSvg);
     }
 
-    // ---------------- RENDER ----------------
     function renderTitulo(title) {
         return '<div class="melk-headline melk-bounce-target"><p class="melk-headline__text">' + title + '</p></div>';
     }
 
-    // Cada cable: [destinoX, destinoY, ondulaciones, amplitud, fase, color]. Origen = centro (600, 360).
-    // Cada cable: [origenX, origenY, destinoX, destinoY, ondulaciones, amplitud, fase, color].
     var MONITOR_CABLES = [
         [500, 336, -40, 150, 2.6, 40, 0.2, 'blanco'],
         [690, 356, -40, 322, 2.3, 52, 1.1, 'amarillo'],
@@ -473,10 +439,9 @@
             + '<div class="melk-hud-wrap melk-hud-wrap--score"><img class="melk-hud__gif" src="https://d22fxaf9t8d39k.cloudfront.net/13219b62c3a4bdf4f71927c8dbcdd50a06a4a3b7a499ec57fcdefb86861e303020700.gif" alt=""><div class="melk-hud melk-hud--score"><span class="melk-hud__label">PUNTAJE</span><span class="melk-hud__val" data-hud="score">000000</span></div></div>'
             + '</div>'
             + '<div class="melk-monitor__controles">'
-            + '<div class="melk-monitor__titulo-png"><span class="melk-monitor__titulo-txt">' + TITULO_MONITOR + '</span></div>'
-            + '<div class="melk-monitor__selector">'
+            + '<div class="melk-monitor__titulo-png">'
             + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--prev" aria-label="Categoría anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 5 8 12 15 19"></polyline></svg></button>'
-            + '<span class="melk-monitor__cat">' + c.nombre + '</span>'
+            + '<span class="melk-monitor__titulo-txt">' + (c.nombre || TITULO_MONITOR) + '</span>'
             + '<button type="button" class="melk-monitor__flecha melk-monitor__flecha--next" aria-label="Categoría siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 5 16 12 9 19"></polyline></svg></button>'
             + '</div>'
             + '<a class="melk-monitor__ingresar" href="' + (c.link || '/productos') + '">Ingresar</a>'
@@ -552,7 +517,7 @@
         var mon = seccion.querySelector('.melk-monitor');
         if (!mon || !MONITOR_CATEGORIAS.length) return;
         var img = mon.querySelector('.melk-monitor__contenido');
-        var cat = mon.querySelector('.melk-monitor__cat');
+        var titulo = mon.querySelector('.melk-monitor__titulo-txt');
         var ingresar = mon.querySelector('.melk-monitor__ingresar');
         var prev = mon.querySelector('.melk-monitor__flecha--prev');
         var next = mon.querySelector('.melk-monitor__flecha--next');
@@ -572,11 +537,47 @@
             }
             if (scoreEl) scoreEl.textContent = pad(score, 6);
         }
+        function ajustarTitulo() {
+            if (!titulo) return;
+            var fila = mon.querySelector('.melk-monitor__titulo-png');
+            var pantalla = mon.querySelector('.melk-monitor__pantalla');
+            var anchoBase = pantalla ? pantalla.clientWidth : mon.clientWidth;
+            if (!fila || !anchoBase) return;
+            var flechas = fila.querySelectorAll('.melk-monitor__flecha');
+            var anchoFlecha = 0;
+            for (var k = 0; k < flechas.length; k++) { anchoFlecha = Math.max(anchoFlecha, flechas[k].offsetWidth); }
+
+            var disponible = anchoBase - 2 * (anchoFlecha + anchoBase * 0.06);
+            if (disponible < 40) return;
+            var tamBase = 8;
+
+            if (MONITOR_TITULO_TAMANO === 'igual') {
+                titulo.style.fontSize = tamBase + 'cqw';
+                var actual = titulo.textContent;
+                var factor = 1;
+                for (var j = 0; j < MONITOR_CATEGORIAS.length; j++) {
+                    titulo.textContent = MONITOR_CATEGORIAS[j].nombre || TITULO_MONITOR;
+                    var anchoCat = titulo.offsetWidth;
+                    if (anchoCat > 0 && anchoCat > disponible) { factor = Math.min(factor, disponible / anchoCat); }
+                }
+                titulo.textContent = actual;
+                titulo.style.fontSize = (tamBase * factor * 0.99) + 'cqw';
+                return;
+            }
+
+            titulo.style.fontSize = tamBase + 'cqw';
+            var ancho = titulo.offsetWidth;
+            if (!ancho) return;
+            if (ancho > disponible) { titulo.style.fontSize = (tamBase * (disponible / ancho) * 0.99) + 'cqw'; }
+        }
         function pintar() {
             var c = MONITOR_CATEGORIAS[i];
             if (img) { if (c.img) img.src = c.img; img.style.transform = 'scale(' + (c.zoom || 1) + ')'; }
-            if (cat) cat.textContent = c.nombre;
             if (ingresar) ingresar.setAttribute('href', c.link || '/productos');
+            if (titulo) {
+                titulo.textContent = c.nombre || TITULO_MONITOR;
+                ajustarTitulo();
+            }
         }
         function mover(d) {
             i = (i + d + MONITOR_CATEGORIAS.length) % MONITOR_CATEGORIAS.length;
@@ -594,11 +595,18 @@
         }
         if (prev) prev.addEventListener('click', function () { mover(-1); });
         if (next) next.addEventListener('click', function () { mover(1); });
+        var tmrTitulo;
+        window.addEventListener('resize', function () {
+            clearTimeout(tmrTitulo);
+            tmrTitulo = setTimeout(ajustarTitulo, 120);
+        });
+        if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+            document.fonts.ready.then(ajustarTitulo);
+        }
         pintar();
         pintarHud();
     }
 
-    // Posicion vertical de un elemento relativa a un ancestro posicionado (ignora transforms).
     function offsetRelativo(el, raiz) {
         var y = 0;
         var n = el;
@@ -609,7 +617,6 @@
         return y;
     }
 
-    // Iguala la separacion "onda superior -> COMPRA YA" con "CATALOGO -> ultima caja".
     function ajustarGrupoMonitor() {
         var grupo = seccion.querySelector('.melk-monitor-grupo');
         var lista = seccion.querySelector('.melk-list');
@@ -626,7 +633,6 @@
         grupo.style.marginTop = Math.round(base + (maxB - listaB)) + 'px';
     }
 
-    // Iguala el espacio "onda superior -> titulo" con "titulo -> primera caja".
     function ajustarHeadline() {
         var fondo = seccion.querySelector('.melk-catalogo__fondo');
         var onda = seccion.querySelector('.melk-onda--top');
@@ -644,9 +650,8 @@
         head.style.marginTop = Math.round(Math.max(0, base + (abajo - arriba))) + 'px';
     }
 
-    // Con los packs ocultos: iguala "onda superior -> COMPRA YA" con "COMPRA YA -> monitor".
     function ajustarEspaciado() {
-        if (seccion.querySelector('.melk-list')) return; // con packs visibles lo maneja ajustarHeadline
+        if (seccion.querySelector('.melk-list')) return;
         var fondo = seccion.querySelector('.melk-catalogo__fondo');
         var onda = seccion.querySelector('.melk-onda--top');
         var head = seccion.querySelector('.melk-headline');
@@ -722,7 +727,6 @@
             + '</div></li>';
     }
 
-    // ---------------- HTML DE LA SECCION ----------------
     var ONDA_TOP = '<div class="melk-onda melk-onda--top" style="position:absolute;top:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 0 L0 0 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
     var ONDA_BOTTOM = '<div style="position:absolute;bottom:0;left:0;right:0;height:18px;pointer-events:none;background-repeat:repeat-x;background-size:26px 18px;background-position:0 0;animation:mmOnda 1.5s linear infinite;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffffff%22/><path d=%22M0 12 Q6.5 7 13 12 T26 12%22 fill=%22none%22 stroke=%22%23353535%22 stroke-width=%223%22 stroke-linecap=%22round%22/></svg>\');"></div>';
 
@@ -733,11 +737,9 @@
     for (var i = 0; i < VOLUMENES.length; i++) {
         lista += renderVolumen(VOLUMENES[i], i);
     }
-    // ---- PACKS (COMPRA POR UNIDAD / PACK) OCULTOS ----
-    // Se ocultaron para que debajo de "COMPRA YA" quede el monitor.
-    // Para volver a mostrarlos, descomentar la linea de abajo:
+
     var packsHtml = '';
-    // packsHtml = '<ul class="melk-list">' + lista + '</ul>';
+
     seccion.innerHTML = '<div class="melk-catalogo__fondo">'
         + ONDA_TOP
         + ONDA_BOTTOM
@@ -749,12 +751,11 @@
         + '</div>'
         + '</div>';
 
-    // ---------------- BLOQUE AGREGADO (PERSONALIZADOS / MAYORISTA) ----------------
     var PNG_PERSONALIZADOS = 'https://d22fxaf9t8d39k.cloudfront.net/57608062870301647f3403c21081f04df6de9e96628d6d1b2a805b1f49d0f59920700.png';
     var PNG_MAYORISTA = 'https://d22fxaf9t8d39k.cloudfront.net/93620b539094d29f9e440936b202fec6029413adf9de377258c87dba28fabc9120700.png';
     var PNG_BONO = 'https://d22fxaf9t8d39k.cloudfront.net/195c8b64bf4c0b8ca087f7458890a2f8fab6a0e96ac49e8b2415e80f1a68d52720700.png';
     var PNG_BONO_MAYORISTA = 'https://d22fxaf9t8d39k.cloudfront.net/82ae0816b6c737f82ff7e5e412359fc41e6dcf829c5a24a904d1945e85ad2d5520700.png';
-    // BOTON ¡QUIERO! - pegá aca el link (ej: 'https://www.melmakalcos.com.ar/...'). Mientras empiece con URL_ el boton no navega.
+
     var LINK_QUIERO = 'URL_REEMPLAZAR_LINK_QUIERO';
 
     var dual = document.createElement('div');
@@ -799,8 +800,6 @@
         + '<div class="melk-holo__hint melk-holo__hint--top"></div>'
         + '</div>';
 
-    // ---------------- BLOQUE HOLO (debajo de todo) ----------------
-    // Fondo blanco con la mascota que aparece girando al hacer scroll.
     var PNG_HOLO = 'https://d22fxaf9t8d39k.cloudfront.net/4fbeab78973904aded3e9a7b1112ed4dd2874bf4d2ac72fc47e56dc145ea04ff20700.png';
     var TEXTO_HOLO = 'HOLOGRÁFICOS';
     var TEXTO_HOLO_HOVER = '>>>>>>CATÁLOGO';
@@ -815,7 +814,7 @@
     }
     var letrasHolo = generarLetrasHolo(TEXTO_HOLO);
     var letrasHoloHover = generarLetrasHolo(TEXTO_HOLO_HOVER);
-    // LINK del texto HOLO - pegar aca el link (ej: 'https://...'). Mientras empiece con URL_ no navega.
+
     var LINK_HOLO = 'URL_LINK_HOLO';
     var holo = document.createElement('div');
     holo.className = 'melk-holo';
@@ -837,7 +836,6 @@
         + '</div>'
         + '</div>';
 
-    // ---------------- INSERTAR DESPUES DEL BANNER ----------------
     function insertarSeccion() {
         if (seccion.parentNode) return;
         var ref = document.querySelector(ANCLA_INSERCION);
@@ -849,7 +847,6 @@
         seccion.parentNode.insertBefore(dual, seccion.nextSibling);
         seccion.parentNode.insertBefore(holo, dual.nextSibling);
 
-        // Si el link de los botones ¡QUIERO! es todavia placeholder, no navegan
         var botonesQuiero = dual.querySelectorAll('.melk-dual__btn');
         for (var q = 0; q < botonesQuiero.length; q++) {
             if ((botonesQuiero[q].getAttribute('href') || '').indexOf('URL_') === 0) {
@@ -858,7 +855,6 @@
             }
         }
 
-        // Si el link del texto HOLO es todavia placeholder, no navega
         var enlaceHolo = holo.querySelector('.melk-holo__texto');
         if (enlaceHolo && (enlaceHolo.getAttribute('href') || '').indexOf('URL_') === 0) {
             enlaceHolo.addEventListener('click', function (e) { e.preventDefault(); });
@@ -866,7 +862,6 @@
         }
     }
 
-    // ---------------- ANIMACION DE ENTRADA (bounce) ----------------
     function animarEntrada() {
         var targets = seccion.querySelectorAll('.melk-bounce-target');
         if (!('IntersectionObserver' in window)) {
@@ -884,24 +879,19 @@
         for (var i = 0; i < targets.length; i++) obs.observe(targets[i]);
     }
 
-    // ---------------- ANIMACION DEL BLOQUE AGREGADO (atada al scroll, suave y reversible) ----------------
-    // La posicion objetivo se calcula por scroll, pero el PNG va "persiguiendo"
-    // esa posicion con un amortiguador (lerp), asi el movimiento es fluido y
-    // no violento. Al bajar entra deslizandose desde el borde real de la pantalla;
-    // al subir vuelve a salir. Sin difuminado ni opacidad, con leve inclinacion.
     var dualFilas = [];
     var dualVinculado = false;
     var dualCorriendo = false;
     function aplicarDual() {
         var vh = window.innerHeight || 1;
-        var llegada = vh * 0.35; // punto del viewport donde el PNG termina de entrar
+        var llegada = vh * 0.35;
         var activo = false;
         for (var f = 0; f < dualFilas.length; f++) {
             var fl = dualFilas[f];
             if (!fl || !fl.target) continue;
             var rect = fl.fila.getBoundingClientRect();
             var tp = Math.max(0, Math.min(1, (vh - rect.top) / (vh - llegada)));
-            fl.cur += (tp - fl.cur) * 0.10; // amortiguador: ~10% por frame
+            fl.cur += (tp - fl.cur) * 0.10;
             if (fl.cur < 0.003 && tp === 0) fl.cur = 0;
             if (Math.abs(tp - fl.cur) > 0.004) activo = true;
             var off = 130 * (1 - fl.cur);
@@ -951,23 +941,18 @@
         pedirDual();
     }
 
-    // ---------------- ANIMACION DEL PERSONAJE HOLO (misma sensibilidad que el dual) ----------------
-    // La mascota entra girando desde fuera de pantalla (izquierda) hacia un
-    // margen a la derecha, atada al scroll con el mismo lerp/damping del dual.
     var holoMover = null;
     var holoPersonaje = null;
     var holoTexto = null;
     var holoCur = 0;
     var holoVinculado = false;
     var holoCorriendo = false;
-    var HOLO_INICIO = -60;  // vw, fuera de pantalla (izquierda)
-    var HOLO_FIN = 76;      // vw, posicion final (se recalcula para centrar)
+    var HOLO_INICIO = -60;
+    var HOLO_FIN = 76;
     function esMovilHolo() {
         return window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
     }
-    // Centra horizontalmente el grupo (texto + circulo). El texto cuelga a la
-    // izquierda del circulo, asi que corregimos la posicion final segun el
-    // ancho real del texto: mover.left = 0.5*vw - 108 + textW/2.
+
     function medirHolo() {
         if (!holoTexto) return;
         var vw = window.innerWidth || 1;
@@ -1027,14 +1012,13 @@
         function alRedimensionar() { medirHolo(); pedirHolo(); }
         window.addEventListener('scroll', pedirHolo, { passive: true });
         window.addEventListener('resize', alRedimensionar);
-        // Recalculo cuando carga la tipografia (cambia el ancho del texto).
+
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(function () { medirHolo(); pedirHolo(); });
         }
         pedirHolo();
     }
 
-    // ---------------- FLECHAS GUIA (se ocultan al escrollear) ----------------
     var hintHoloVinculado = false;
     function aplicarHintHolo() {
         var vh = window.innerHeight || 1;
@@ -1054,7 +1038,6 @@
         aplicarHintHolo();
     }
 
-    // ---------------- VIBRACION + ZOOM AL HOVER (segun tiempo) ----------------
     function efectoPaso() {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var cajas = seccion.querySelectorAll('.melk-note');
@@ -1088,7 +1071,6 @@
         }
     }
 
-    // ---------------- RESET AL VOLVER ATRAS (bfcache) ----------------
     function reiniciarSeccion() {
         seccion.innerHTML = '<div class="melk-catalogo__fondo">'
             + ONDA_TOP
@@ -1118,17 +1100,16 @@
         reiniciarSeccion();
     });
 
-    // ---------------- MASCOTA VOLADORA (izq ↔ der, 1s de pausa al salir) ----------------
     var mascotaSesion = 0;
     function animarMascota() {
         var m = seccion.querySelector('.melk-catalogo__mascota');
         if (!m) return;
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var token = ++mascotaSesion;
-        var XMIN = -20, XMAX = 110;   // % posiciones fuera de pantalla
-        var VEL = 26;                 // % por segundo de cruce
-        var ESPERA = 1000;            // 1 s fuera antes de la siguiente entrada
-        var YMIN = 6, YMAX = 80;      // recorre todo el alto de la seccion
+        var XMIN = -20, XMAX = 110;
+        var VEL = 26;
+        var ESPERA = 1000;
+        var YMIN = 6, YMAX = 80;
         var dir = 1;
         var x = XMIN;
         var yIni = 30, yFin = 30;
@@ -1186,7 +1167,6 @@
         requestAnimationFrame(paso);
     }
 
-    // ---------------- ARRANQUE ----------------
     function iniciar() {
         insertarSeccion();
         animarEntrada();
