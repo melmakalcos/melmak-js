@@ -1,10 +1,6 @@
-/* =========================================================
-   MELMAK — BANNER PRINCIPAL
-   ========================================================= */
 (function () {
     'use strict';
 
-    /* ================= EDITAR AQUÍ ================= */
     var TEXTO = {
         kicker: 'DESDE 2019',
         titulo1: 'STICKERS A',
@@ -26,8 +22,7 @@
             pregunta: 'HACEMOS ENVÍOS A TODO EL PAÍS.\nPODÉS RETIRAR EN MORÓN (CENTRO)\nBUENOS AIRES'
         }
     ];
-    /* Fotos del carrusel. Reemplazar "src" por las fotos reales y "sticker"
-       por la URL del PNG superpuesto (opcional; dejar '' para no mostrar). */
+
     var FOTOS = [
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/b2caa17a5655c9e1148c53a589e5e4131a2e31649329d59af688697e45a5c76f20700.png', alt: 'Trabajo MELMAK 1', sticker: '' },
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/76fcbcd4c93bb52718e518ec5149e5c2da84c8a9414d91ea0bf589b325843b8320700.png', alt: 'Trabajo MELMAK 2', sticker: '' },
@@ -38,7 +33,6 @@
     var COLOR_BG = '#ffee26';
     var COLOR_INK = '#353535';
     var CURDA_URL = 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf';
-    /* ================================================ */
 
     var root = document.getElementById('melmak-bbs-root');
     if (!root) {
@@ -59,7 +53,7 @@
         '  font-family:Rubik,Arial,sans-serif;',
         '  overflow-x:clip;overflow-y:visible;}',
         '#melmak-bbs,#melmak-bbs *{box-sizing:border-box;}',
-        /* ---------- Panel principal ---------- */
+
         '.mbbs-panel{position:absolute;top:0;bottom:0;left:-40px;right:-40px;z-index:0;',
         '  pointer-events:none;overflow:hidden;',
         '  background-color:var(--bg);',
@@ -67,7 +61,7 @@
         '#melmak-bbs__inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;',
         '  padding:clamp(24px,3.5vw,54px) 20px clamp(30px,5vw,60px);}',
         '#melmak-bbs__scroll-block,#melmak-bbs__carrusel,#melmak-bbs__post,#melmak-bbs__head{will-change:opacity,transform;}',
-        /* ---------- Carrusel (franja #353535) ---------- */
+
         '#melmak-bbs__carrusel{position:relative;z-index:3;width:100%;background:var(--ink);display:flex;align-items:center;padding:16px 0;white-space:nowrap;}',
         '.mbbs-carrusel-clip{width:100%;overflow:hidden;}',
         '#melmak-bbs__carrusel-inner{display:flex;width:max-content;align-items:center;animation:mbbs-marquee 22s linear infinite;will-change:transform;}',
@@ -86,7 +80,7 @@
         '  font-size:clamp(20px,3vw,34px);line-height:1.15;letter-spacing:.02em;text-transform:uppercase;}',
         '@keyframes mbbs-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}',
         '@keyframes mbbs-ola-top{from{background-position-x:0;}to{background-position-x:180px;}}',
-        /* ---------- Galeria de fotos (slider con enfasis central) ---------- */
+
         '#melmak-bbs__galeria{position:relative;z-index:2;width:100%;overflow-x:clip;overflow-y:visible;background:#fff;',
         '  padding:clamp(74px,9vw,124px) 0 clamp(60px,4.6vw,170px);}',
         '.mbbs-galeria-viewport{position:relative;width:100%;}',
@@ -104,7 +98,6 @@
         '  height:auto;object-fit:contain;pointer-events:none;}',
         '.mbbs-galeria-slide.is-c .mbbs-galeria-card__img,.mbbs-galeria-slide.is-r2 .mbbs-galeria-card__img,.mbbs-galeria-slide.is-l2 .mbbs-galeria-card__img{--mbg-border:var(--ink);}',
         '.mbbs-galeria-slide.is-r1 .mbbs-galeria-card__img,.mbbs-galeria-slide.is-l1 .mbbs-galeria-card__img{--mbg-border:var(--bg);}',
-        '/* collage: la foto activa al centro crece; las vecinas se inclinan y suben */',
         '.mbbs-galeria-slide.is-c{transform:scale(1.22);z-index:3;}',
         '.mbbs-galeria-slide.is-r1{transform:translate(24px,8px) rotate(3deg);z-index:2;}',
         '.mbbs-galeria-slide.is-r2{transform:translate(24px,-56px) rotate(-3deg);z-index:2;}',
@@ -117,7 +110,7 @@
         '.mbbs-galeria-slide.is-l2 .mbbs-galeria-sticker{top:-22px;right:34px;transform:rotate(-16deg);}',
         '.mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:mbbs-sticker .45s cubic-bezier(.34,1.56,.64,1) both;}',
         '@keyframes mbbs-sticker{from{scale:0;}to{scale:1;}}',
-        /* ---------- Hero ---------- */
+
         '#melmak-bbs__hero{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;',
         '  margin-top:clamp(28px,5vh,80px);margin-bottom:clamp(50px,10vh,150px);',
         '  transition:opacity .6s cubic-bezier(.34,1.56,.64,1),transform .6s cubic-bezier(.34,1.56,.64,1);}',
@@ -133,14 +126,14 @@
         '  text-shadow:6px 6px 0 var(--ink);}',
         '#melmak-bbs__art{position:relative;text-align:center;}',
         '#melmak-bbs__mascot{display:inline-block;width:min(280px,60vw);height:auto;transform:translateX(-48px);}',
-        /* ---------- Indicador de scroll (flecha) ---------- */
+
         '.mbbs-scroll-hint{position:absolute;left:50%;bottom:-140px;z-index:4;transform:translateX(-50%);',
         '  transition:opacity .3s ease;animation:mbbs-hint-bounce 1.7s ease-in-out infinite;}',
         '.mbbs-scroll-hint::after{content:"";display:block;width:16px;height:16px;',
         '  border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg);margin:0 auto;}',
         '@keyframes mbbs-hint-bounce{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,10px);}}',
         '@keyframes mbbs-hero-plop{from{opacity:0;transform:scale(.5);}to{opacity:1;transform:scale(1);}}',
-        /* ---------- Lista de posts ---------- */
+
         '#melmak-bbs__head{display:flex;align-items:center;gap:16px;margin:clamp(18px,3vw,34px) 0 clamp(22px,3vw,32px);}',
         '#melmak-bbs__head:after{content:"";flex:1;height:3px;background:var(--ink);border-radius:999px;margin-left:8px;}',
         '#melmak-bbs__head-title{font-family:"Curda Gouda",Rubik,Arial,sans-serif;',
@@ -158,11 +151,11 @@
         '  font-size:16px;font-weight:700;color:var(--ink);text-align:left;}',
         '#melmak-bbs__post-question{margin:0;font-size:15px;line-height:1.55;color:var(--ink);text-align:left;padding-left:64px;white-space:pre-line;',
         '  font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;}',
-        /* ---------- Personaje gif en las 3 minicajas ---------- */
+
         '#melmak-bbs .mbbs-personaje-wrap{position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;overflow:hidden;pointer-events:none;}',
         '#melmak-bbs .mbbs-personaje{position:absolute;top:50%;left:-8px;width:110px;height:110px;',
         '  object-fit:contain;transform:translateY(-50%);pointer-events:none;display:block;}',
-        /* ---------- Responsive ---------- */
+
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -188,7 +181,7 @@
         '  #melmak-bbs__post-question{padding-left:64px;}',
         '  #melmak-bbs .mbbs-personaje{left:-8px;width:112px;height:112px;}',
         '}',
-        /* ---------- Bloque nuevo (caja blanca debajo de la franja) ---------- */
+
         '#melmak-bbs__merit{position:relative;width:100%;background:#fff;',
         '  padding:clamp(26px,3vw,44px) 20px clamp(30px,5vw,60px);}',
         '#melmak-bbs__merit *{box-sizing:border-box;margin:0;',
@@ -202,7 +195,7 @@
         '  letter-spacing:.06em;text-transform:uppercase;line-height:1.25;}',
         '.mbms-merit__texto{white-space:pre-line;margin:0;padding-top:8px;',
         '  font-size:clamp(14px,1.8vw,18px);line-height:1.55;color:var(--ink);text-align:justify;text-transform:uppercase;}',
-        /* ---------- Aviso (mensaje de advertencia sobre la caja blanca) ---------- */
+
         '.mbms-merit__aviso{position:absolute;z-index:2;bottom:-24px;right:-14px;background:var(--bg);',
         '  border:3px solid var(--ink);border-radius:14px;box-shadow:5px 5px 0 var(--ink);',
         '  padding:10px 22px;font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;',
@@ -266,7 +259,6 @@
         var inner = document.createElement('div');
         inner.id = 'melmak-bbs__inner';
 
-        /* ---------- Hero ---------- */
         var hero = document.createElement('div');
         hero.id = 'melmak-bbs__hero';
         hero.style.opacity = '0';
@@ -294,7 +286,6 @@
         var art = document.createElement('div');
         art.id = 'melmak-bbs__art';
 
-        /* Espacio reservado para el personaje (se reemplazará luego). */
         var img = document.createElement('img');
         img.id = 'melmak-bbs__mascot';
         img.src = TEXTO.mascotaHero;
@@ -310,7 +301,6 @@
 
         inner.appendChild(hero);
 
-        /* ---------- Posts (bloque con animación al scrollear en PC) ---------- */
         var scrollBlock = document.createElement('div');
         scrollBlock.id = 'melmak-bbs__scroll-block';
         var head = document.createElement('div');
@@ -329,7 +319,6 @@
             var li = document.createElement('li');
             li.id = 'melmak-bbs__post';
 
-            /* Personaje gif en el lado izquierdo de cada minicaja. */
             var wrap = document.createElement('div');
             wrap.className = 'mbbs-personaje-wrap';
             var imgBadge = document.createElement('img');
@@ -364,7 +353,6 @@
         scrollBlock.appendChild(ul);
         inner.appendChild(scrollBlock);
 
-        /* ---------- Carrusel debajo de las minicajas ---------- */
         var carrusel = document.createElement('div');
         carrusel.id = 'melmak-bbs__carrusel';
         var barra = document.createElement('div');
@@ -398,10 +386,6 @@
         return sec;
     }
 
-    /* ---------- Carrusel de fotos (slider autoplay, foco central) ----------
-       Replica el comportamiento de referencia: loop, avance cada 4s, 4 fotos
-       en desktop / 2 en movil, y la foto activa al centro se agranda mientras
-       las vecinas se inclinan. Autoplay propio, sin librerias externas.       */
     function crearGaleria() {
         var CLONES = 4;
         var TOTAL = FOTOS.length;
@@ -445,7 +429,6 @@
             return slide;
         }
 
-        /* Clonamos 4 fotos al inicio y 4 al final para el loop continuo. */
         var orden = [];
         for (var c = 0; c < CLONES; c++) { orden.push(FOTOS[(TOTAL - CLONES + c + TOTAL) % TOTAL]); }
         for (var r = 0; r < TOTAL; r++) { orden.push(FOTOS[r]); }
@@ -514,7 +497,6 @@
         var sinMovimiento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         function arrancar() { if (!temporizador) { temporizador = setInterval(avanzar, PASO_MS); } }
 
-        /* Efecto "pop" al entrar en pantalla. */
         function popEntrada() {
             var gal = document.getElementById('melmak-bbs__galeria');
             if (!gal || sinMovimiento) { return; }
@@ -546,7 +528,6 @@
         return g;
     }
 
-    /* ---------- Bloque nuevo (debajo de la franja) ---------- */
     function crearMerit() {
         var m = document.createElement('div');
         m.id = 'melmak-bbs__merit';
@@ -580,7 +561,6 @@
 
     root.appendChild(crearSeccion());
 
-    /* Plop del hero: al tocar ENTRAR (si hay bienvenida) o al cargar (si no). */
     var heroPlop = document.getElementById('melmak-bbs__hero');
     if (heroPlop) {
         function plopHero() {
@@ -596,7 +576,6 @@
         }
     }
 
-    /* ---------- Aparicion divertida del aviso ---------- */
     (function animarMbo() {
         var cards = document.querySelectorAll('#melmak-bbs__merit .mbms-merit__aviso');
         if (!cards.length) { return; }
@@ -639,7 +618,6 @@
         }, 2500);
     })();
 
-    /* ---------- Aparecer/ocultar con el scroll ---------- */
     function aplicarScroll(el) {
         if (!el) { return; }
         var r = el.getBoundingClientRect();
@@ -650,24 +628,23 @@
         el.style.opacity = p.toFixed(3);
         el.style.transform = 'translateY(' + Math.round((1 - p) * 48) + 'px)';
     }
-    /* Aparecer/ocultar con el scroll. */
+
     function animacionScroll() {
         var esMovil = window.innerWidth <= 600;
         if (esMovil) {
-            /* Móvil: cada minicaja aparece individualmente. */
+
             var lis = document.querySelectorAll('#melmak-bbs__post');
             for (var i = 0; i < lis.length; i++) { aplicarScroll(lis[i]); }
             aplicarScroll(document.getElementById('melmak-bbs__head'));
             return;
         }
-        /* PC: bloque de preguntas. */
+
         aplicarScroll(document.getElementById('melmak-bbs__scroll-block'));
     }
     window.addEventListener('scroll', animacionScroll, { passive: true });
     window.addEventListener('resize', animacionScroll, { passive: true });
     animacionScroll();
 
-    /* ---------- Ocultar la flecha al scrollear ---------- */
     var hintEl = document.querySelector('.mbbs-scroll-hint');
     function ocultarHint() {
         if (hintEl) { hintEl.style.opacity = (window.scrollY > 60) ? '0' : '1'; }
