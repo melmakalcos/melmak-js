@@ -19,6 +19,25 @@
         { nombre: 'MAYORISTA', img: 'https://d22fxaf9t8d39k.cloudfront.net/6efca92c79df38fa3718067cee6888abe887f78fec136bc2cb74d3b38b4c3bf320700.png', link: 'https://www.melmakalcos.com.ar/mayorista' }
     ];
 
+    var MONITOR_KERNING = {
+        'I': [-0.14, 0.07],
+        'T': [-0.12, 0.00],
+        'L': [-0.05, 0.02],
+        'J': [-0.05, 0.02],
+        '1': [-0.06, 0.02]
+    };
+
+    function tituloHtml(txt) {
+        var salida = '';
+        for (var k = 0; k < txt.length; k++) {
+            var ch = txt.charAt(k);
+            var par = MONITOR_KERNING[ch];
+            if (!par) { salida += ch; continue; }
+            salida += '<span class="melk-monitor__k" style="margin-left:' + par[0] + 'em;margin-right:' + par[1] + 'em">' + ch + '</span>';
+        }
+        return salida;
+    }
+
     var VOLUMENES = [
         {
             status: '',
@@ -553,14 +572,14 @@
 
             if (MONITOR_TITULO_TAMANO === 'igual') {
                 titulo.style.fontSize = tamBase + 'cqw';
-                var actual = titulo.textContent;
+                var actual = titulo.innerHTML;
                 var factor = 1;
                 for (var j = 0; j < MONITOR_CATEGORIAS.length; j++) {
-                    titulo.textContent = MONITOR_CATEGORIAS[j].nombre || TITULO_MONITOR;
+                    titulo.innerHTML = tituloHtml(MONITOR_CATEGORIAS[j].nombre || TITULO_MONITOR);
                     var anchoCat = titulo.offsetWidth;
                     if (anchoCat > 0 && anchoCat > disponible) { factor = Math.min(factor, disponible / anchoCat); }
                 }
-                titulo.textContent = actual;
+                titulo.innerHTML = actual;
                 titulo.style.fontSize = (tamBase * factor * 0.99) + 'cqw';
                 return;
             }
@@ -575,7 +594,7 @@
             if (img) { if (c.img) img.src = c.img; img.style.transform = 'scale(' + (c.zoom || 1) + ')'; }
             if (ingresar) ingresar.setAttribute('href', c.link || '/productos');
             if (titulo) {
-                titulo.textContent = c.nombre || TITULO_MONITOR;
+                titulo.innerHTML = tituloHtml(c.nombre || TITULO_MONITOR);
                 ajustarTitulo();
             }
         }
