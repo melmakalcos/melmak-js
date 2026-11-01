@@ -21,7 +21,8 @@
             alt: 'MÁS VENDIDO',
             alturaDesktop: 500,    // alto del póster en px (compu)
             alturaMovil: 250,      // alto del póster en px (celular)
-            segundosPorVuelta: 14  // más segundos = gira más lento
+            segundosPorVuelta: 14, // más segundos = gira más lento
+            textoBoton: 'LO QUIERO' // texto del botón que aparece al pasar el mouse
         }
     };
 
@@ -92,12 +93,23 @@
         '.msn-carrusel__mas svg { width: 22px; height: 22px; }',
 
         '.msn-vendidos { position: relative; text-align: center; padding: 0 20px; margin-bottom: 22px; }',
-        '.msn-vendidos__link { display: inline-block; margin-top: 12px; perspective: 900px; text-decoration: none; }',
+        '.msn-vendidos__link { position: relative; display: inline-block; margin-top: 12px; perspective: 900px; text-decoration: none; }',
         '.msn-vendidos__giro { position: relative; display: block; height: ' + CONFIG.masVendidos.alturaDesktop + 'px; transform-style: preserve-3d; animation: msn-giro ' + CONFIG.masVendidos.segundosPorVuelta + 's linear infinite; }',
         '.msn-vendidos__img { display: block; height: 100%; width: auto; -webkit-backface-visibility: hidden; backface-visibility: hidden; filter: drop-shadow(0 6px 8px rgba(53, 53, 53, .25)); -webkit-user-drag: none; user-select: none; }',
         '.msn-vendidos__img--dorso { position: absolute; top: 0; left: 0; width: 100%; object-fit: contain; transform: rotateY(180deg); }',
         '.msn-vendidos__link:hover .msn-vendidos__giro { animation-play-state: paused; }',
         '@keyframes msn-giro { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }',
+
+        '.msn-vendidos__boton { display: none; }',
+        '@media (hover: hover) and (pointer: fine) {',
+        '  .msn-vendidos__boton { display: inline-block; position: absolute; left: 50%; bottom: 8%; z-index: 5; opacity: 0; transform: translate(-50%, 14px) scale(.7); pointer-events: none; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; color: #fff; background-color: #353535; border: 2px solid #353535; border-radius: 100px; padding: 10px 26px; transition: opacity .25s ease, transform .3s cubic-bezier(.34, 1.56, .64, 1), background-color .2s ease, color .2s ease; }',
+        '  .msn-vendidos__link:hover .msn-vendidos__boton { opacity: 1; transform: translate(-50%, 0) scale(1); pointer-events: auto; }',
+        '  .msn-vendidos__boton:hover { background-color: #fff; color: #353535; }',
+        '}',
+
+        '@media (min-width: 640px) {',
+        '  .msn-vendidos__link { margin: 44px 0 60px; perspective: 2400px; }',
+        '}',
 
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 22px; }',
@@ -210,6 +222,11 @@
             giroMv.appendChild(frenteMv);
             giroMv.appendChild(dorsoMv);
             linkMv.appendChild(giroMv);
+            var botonMv = document.createElement('span');
+            botonMv.className = 'msn-vendidos__boton';
+            botonMv.textContent = mv.textoBoton || 'LO QUIERO';
+            botonMv.setAttribute('aria-hidden', 'true');
+            linkMv.appendChild(botonMv);
             bloqueMv.appendChild(tituloMv);
             bloqueMv.appendChild(linkMv);
             root.appendChild(bloqueMv);
