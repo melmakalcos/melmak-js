@@ -3,7 +3,7 @@
     if (document.getElementById(ID_ROOT)) return;
 
     var CONFIG = {
-        titulo: 'PRODUCTOS NUEVOS',
+        titulo: 'STICKERS NUEVOS',
         visibleMovil: 2,
         visibleDesktop: 3,
         maxAnchoCardMovil: 220,
@@ -13,7 +13,16 @@
         gutterDesktop: 28,
         autoplayMs: 3200,
         mostrarVerTodos: true,
-        linkVerTodos: '/productos'
+        linkVerTodos: '/productos',
+        masVendidos: {
+            titulo: 'EL MÁS VENDIDO DE LA SEMANA',
+            imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',            // PEGÁ ACÁ el link del PNG del póster
+            link: 'https://www.melmakalcos.com.ar/prints/musica/poster-bts-6',              // PEGÁ ACÁ el link del producto
+            alt: 'MÁS VENDIDO',
+            alturaDesktop: 210,    // alto del póster en px (compu)
+            alturaMovil: 150,      // alto del póster en px (celular)
+            segundosPorVuelta: 14  // más segundos = gira más lento
+        }
     };
 
     var SECCION = '.block-products-feed--1339226';
@@ -82,8 +91,17 @@
         '.msn-carrusel__mas a:hover * { color: #353535 !important; }',
         '.msn-carrusel__mas svg { width: 22px; height: 22px; }',
 
+        '.msn-vendidos { position: relative; text-align: center; padding: 0 20px; margin-bottom: 22px; }',
+        '.msn-vendidos__link { display: inline-block; margin-top: 12px; perspective: 900px; text-decoration: none; }',
+        '.msn-vendidos__giro { position: relative; display: block; height: ' + CONFIG.masVendidos.alturaDesktop + 'px; transform-style: preserve-3d; animation: msn-giro ' + CONFIG.masVendidos.segundosPorVuelta + 's linear infinite; }',
+        '.msn-vendidos__img { display: block; height: 100%; width: auto; -webkit-backface-visibility: hidden; backface-visibility: hidden; filter: drop-shadow(0 6px 8px rgba(53, 53, 53, .25)); -webkit-user-drag: none; user-select: none; }',
+        '.msn-vendidos__img--dorso { position: absolute; top: 0; left: 0; width: 100%; object-fit: contain; transform: rotateY(180deg); }',
+        '.msn-vendidos__link:hover .msn-vendidos__giro { animation-play-state: paused; }',
+        '@keyframes msn-giro { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }',
+
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 22px; }',
+        '  .msn-vendidos__giro { height: ' + CONFIG.masVendidos.alturaMovil + 'px; }',
         '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
@@ -96,6 +114,7 @@
         '@media (prefers-reduced-motion: reduce) {',
         '  .msn-carrusel__track { transition: none; }',
         '  .msn-carrusel .block-products-feed__product-wrapper:hover { transform: none; }',
+        '  .msn-vendidos__giro { animation: none; }',
         '}'
     ].join('\n');
     document.head.appendChild(style);
@@ -163,6 +182,38 @@
         var onda = document.createElement('div');
         onda.className = 'msn-carrusel__onda';
         root.appendChild(onda);
+
+        var mv = CONFIG.masVendidos;
+        if (mv && mv.imagen && mv.link) {
+            var bloqueMv = document.createElement('div');
+            bloqueMv.className = 'msn-vendidos';
+            var tituloMv = document.createElement('h2');
+            tituloMv.className = 'msn-carrusel__titulo';
+            tituloMv.textContent = mv.titulo;
+            var linkMv = document.createElement('a');
+            linkMv.className = 'msn-vendidos__link';
+            linkMv.href = mv.link;
+            linkMv.setAttribute('aria-label', mv.titulo);
+            var giroMv = document.createElement('span');
+            giroMv.className = 'msn-vendidos__giro';
+            var frenteMv = document.createElement('img');
+            frenteMv.className = 'msn-vendidos__img';
+            frenteMv.src = mv.imagen;
+            frenteMv.alt = mv.alt || '';
+            frenteMv.decoding = 'async';
+            var dorsoMv = document.createElement('img');
+            dorsoMv.className = 'msn-vendidos__img msn-vendidos__img--dorso';
+            dorsoMv.src = mv.imagen;
+            dorsoMv.alt = '';
+            dorsoMv.setAttribute('aria-hidden', 'true');
+            dorsoMv.decoding = 'async';
+            giroMv.appendChild(frenteMv);
+            giroMv.appendChild(dorsoMv);
+            linkMv.appendChild(giroMv);
+            bloqueMv.appendChild(tituloMv);
+            bloqueMv.appendChild(linkMv);
+            root.appendChild(bloqueMv);
+        }
 
         var head = document.createElement('div');
         head.className = 'msn-carrusel__head';
