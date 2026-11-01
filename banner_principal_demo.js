@@ -242,7 +242,9 @@
     (document.head || document.documentElement).appendChild(style);
 
     var CARRUSEL_TEXTOS = [
-        { t: 'TIEMPO DE ELABORACIÓN', c: COLOR_BG },
+        { t: 'TIEMPO DE ELABORACIÓN POSTERS', c: COLOR_BG },
+        { t: '1 A 2 DÍAS HÁBILES', c: '#ffffff' },
+        { t: 'TIEMPO DE ELABORACIÓN STICKERS', c: COLOR_BG },
         { t: '7 A 10 DÍAS HÁBILES', c: '#ffffff' }
     ];
 

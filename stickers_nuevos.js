@@ -3,7 +3,7 @@
     if (document.getElementById(ID_ROOT)) return;
 
     var CONFIG = {
-        titulo: 'STICKERS NUEVOS',
+        titulo: 'PRODUCTOS NUEVOS',
         visibleMovil: 2,
         visibleDesktop: 3,
         maxAnchoCardMovil: 220,
