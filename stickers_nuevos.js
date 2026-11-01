@@ -19,8 +19,8 @@
             imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',            // PEGÁ ACÁ el link del PNG del póster
             link: 'https://www.melmakalcos.com.ar/prints/musica/poster-bts-6',              // PEGÁ ACÁ el link del producto
             alt: 'MÁS VENDIDO',
-            alturaDesktop: 210,    // alto del póster en px (compu)
-            alturaMovil: 150,      // alto del póster en px (celular)
+            alturaDesktop: 500,    // alto del póster en px (compu)
+            alturaMovil: 250,      // alto del póster en px (celular)
             segundosPorVuelta: 14  // más segundos = gira más lento
         }
     };
