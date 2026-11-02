@@ -890,6 +890,7 @@ function melkHolo() {
     mascara.id = 'melkh-mascara';
     mascara.setAttribute('maskUnits', 'objectBoundingBox');
     mascara.setAttribute('maskContentUnits', 'objectBoundingBox');
+    mascara.setAttribute('style', 'mask-type:alpha');
 
     var mascaraImg = document.createElementNS(svgNS, 'image');
     mascaraImg.id = 'melkh-mascara-img';
