@@ -622,3 +622,210 @@
     iniciar();
   }
 })();
+
+function melkRelacionados() {
+  var ficha = document.querySelector('section.product-vip, .product-vip');
+  if (!ficha || document.getElementById('melk-rel')) return;
+
+  var GENERICAS = {};
+  'POSTER POSTERS PACK PACKS STICKER STICKERS PRINT PRINTS LAMINA LAMINAS CUADRO CUADROS VINILO DECO SET COMBO NUEVO NUEVA OFERTA EDICION LIMITADA TAMANO TAMANOS CHICO CHICA GRANDE MEDIANO MINI DE DEL LA EL LOS LAS Y CON PARA X A4 A3 A5'.split(' ').forEach(function (p) { GENERICAS[p] = 1; });
+
+  function limpiar(t) {
+    return (t || '').toUpperCase().replace(/[^A-Z0-9ÁÉÍÓÚÑÜ ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function palabras(t) {
+    return limpiar(t).split(' ').filter(function (p) {
+      return p.length > 1 && !/\d/.test(p) && !GENERICAS[p];
+    });
+  }
+
+  var ruta = location.pathname.replace(/\/+$/, '');
+  var h1 = document.querySelector('.product-vip h1, h1');
+  if (!h1) return;
+
+  function rutaDe(href) {
+    try {
+      return new URL(href, location.origin).pathname.replace(/\/+$/, '');
+    } catch (e) {
+      return '';
+    }
+  }
+
+  var tema = palabras(h1.textContent).join(' ');
+  var categoriaNom = '';
+  var categoriaUrl = '';
+  var migas = [].slice.call(document.querySelectorAll('.breadcrumb__item a'));
+  for (var i = migas.length - 1; i >= 0; i--) {
+    var destino = migas[i].getAttribute('href') || '';
+    if (!destino) continue;
+    var camino = rutaDe(destino);
+    if (!camino || camino === '/' || camino === ruta) continue;
+    categoriaUrl = camino;
+    categoriaNom = limpiar(migas[i].textContent);
+    break;
+  }
+  if (!tema && !categoriaUrl) return;
+
+  function bajar(url) {
+    return fetch(url, { credentials: 'same-origin' }).then(function (r) {
+      if (!r.ok) throw new Error('http');
+      return r.text();
+    });
+  }
+
+  function extraer(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var nodos = doc.querySelectorAll('.products-feed__product');
+    var salida = [];
+    var vistos = {};
+    for (var k = 0; k < nodos.length; k++) {
+      var c = nodos[k];
+      var a = c.querySelector('.products-feed__product-link');
+      var img = c.querySelector('.products-feed__product-image');
+      var nom = c.querySelector('.products-feed__product-name');
+      var pre = c.querySelector('.products-feed__product-price');
+      if (!a || !img || !nom) continue;
+      var href = a.getAttribute('href') || '';
+      if (href.indexOf('http') !== 0) continue;
+      if (rutaDe(href) === ruta) continue;
+      if (vistos[href]) continue;
+      var texto = c.textContent.toUpperCase();
+      if (texto.indexOf('SIN STOCK') >= 0 || texto.indexOf('AGOTADO') >= 0) continue;
+      var boton = c.querySelector('[class*="product-buttons-buy"]');
+      if (boton && boton.className.indexOf('disabled') >= 0) continue;
+      vistos[href] = 1;
+      salida.push({
+        url: href,
+        img: img.getAttribute('src') || '',
+        nom: nom.textContent.trim(),
+        pre: pre ? pre.textContent.trim() : '',
+        busca: limpiar(nom.textContent)
+      });
+    }
+    return salida;
+  }
+
+  function porTema() {
+    if (!tema) return Promise.resolve(null);
+    return bajar('/search?q=' + encodeURIComponent(tema)).then(function (html) {
+      var tokens = tema.split(' ');
+      var buenos = extraer(html).filter(function (p) {
+        for (var k = 0; k < tokens.length; k++) {
+          if (p.busca.indexOf(tokens[k]) < 0) return false;
+        }
+        return true;
+      });
+      if (buenos.length < 4) return null;
+      return { titulo: 'MÁS DE ' + tema, items: buenos };
+    }).catch(function () { return null; });
+  }
+
+  function porCategoria() {
+    if (!categoriaUrl) return Promise.resolve(null);
+    return bajar(categoriaUrl).then(function (html) {
+      var todos = extraer(html);
+      if (todos.length < 4) return null;
+      return { titulo: 'MÁS EN ' + categoriaNom, items: todos };
+    }).catch(function () { return null; });
+  }
+
+  function asegurarEstilo() {
+    if (document.getElementById('melk-rel-style')) return;
+    var s = document.createElement('style');
+    s.id = 'melk-rel-style';
+    s.textContent = [
+      '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
+      '.melk-rel { padding: 56px 16px 64px; background: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+      '.melk-rel__caja { max-width: 1150px; margin: 0 auto; }',
+      '.melk-rel__titulo { margin: 0 0 28px; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 40px; font-weight: 400; line-height: 1; text-align: center; text-transform: uppercase; color: #353535; }',
+      '.melk-rel__grilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px 18px; }',
+      '.melk-rel__card { display: block; text-decoration: none; color: inherit; }',
+      '.melk-rel__foto { position: relative; overflow: hidden; background: #f3f3f3; aspect-ratio: 1 / 1; }',
+      '.melk-rel__foto img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }',
+      '.melk-rel__card:hover .melk-rel__foto img { transform: scale(1.05); }',
+      '.melk-rel__nombre { margin-top: 10px; font-size: 13px; font-weight: 500; line-height: 1.3; text-align: center; text-transform: uppercase; letter-spacing: .02em; }',
+      '.melk-rel__precio { margin-top: 3px; font-size: 13px; font-weight: 700; text-align: center; }',
+      '@media (max-width: 959px) { .melk-rel { padding: 40px 14px 48px; } .melk-rel__titulo { font-size: 28px; margin-bottom: 20px; } .melk-rel__grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; } }'
+    ].join('');
+    document.head.appendChild(s);
+  }
+
+  function pintar(datos) {
+    if (document.getElementById('melk-rel')) return;
+    asegurarEstilo();
+
+    var seccion = document.createElement('section');
+    seccion.className = 'melk-rel';
+    seccion.id = 'melk-rel';
+
+    var caja = document.createElement('div');
+    caja.className = 'melk-rel__caja';
+
+    var titulo = document.createElement('h2');
+    titulo.className = 'melk-rel__titulo';
+    titulo.textContent = datos.titulo;
+    caja.appendChild(titulo);
+
+    var grilla = document.createElement('div');
+    grilla.className = 'melk-rel__grilla';
+
+    for (var k = 0; k < datos.items.length; k++) {
+      var p = datos.items[k];
+      var card = document.createElement('a');
+      card.className = 'melk-rel__card';
+      card.href = p.url;
+
+      var foto = document.createElement('div');
+      foto.className = 'melk-rel__foto';
+      var im = document.createElement('img');
+      im.src = p.img;
+      im.alt = p.nom;
+      im.loading = 'lazy';
+      foto.appendChild(im);
+      card.appendChild(foto);
+
+      var nom = document.createElement('div');
+      nom.className = 'melk-rel__nombre';
+      nom.textContent = p.nom;
+      card.appendChild(nom);
+
+      if (p.pre) {
+        var pre = document.createElement('div');
+        pre.className = 'melk-rel__precio';
+        pre.textContent = p.pre;
+        card.appendChild(pre);
+      }
+
+      grilla.appendChild(card);
+    }
+
+    caja.appendChild(grilla);
+    seccion.appendChild(caja);
+    ficha.insertAdjacentElement('afterend', seccion);
+  }
+
+  var guardado = null;
+  try { guardado = sessionStorage.getItem('melkrel1:' + ruta); } catch (e) { }
+  if (guardado) {
+    try {
+      var dato = JSON.parse(guardado);
+      if (dato && dato.items && dato.items.length) { pintar(dato); return; }
+    } catch (e) { }
+  }
+
+  porTema().then(function (r) {
+    return r || porCategoria();
+  }).then(function (r) {
+    if (!r) return;
+    r.items = r.items.slice(0, 8);
+    pintar(r);
+    try { sessionStorage.setItem('melkrel1:' + ruta, JSON.stringify(r)); } catch (e) { }
+  }).catch(function () { });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', melkRelacionados);
+} else {
+  melkRelacionados();
+}
