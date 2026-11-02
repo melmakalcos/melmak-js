@@ -866,6 +866,10 @@ function melkHolo() {
       '.melkh--moviendo .melkh__capa::before { animation-play-state: running; }',
       '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
 
+      '.melkh-badge { position: absolute; top: 12px; right: 12px; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
+      '@media (hover: hover) and (pointer: fine) { .melkh.activo .melkh-badge { display: flex; } }',
+      '.melkh-holo-wrap:hover .melkh-badge { opacity: 0; transform: rotate(-8deg) scale(.8); }',
+      '@media (hover: none) { .melkh.activo .melkh__capa::before { left: 0; top: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0px, #bff6ff 48px, #f6ffbf 96px, #bfffe0 144px, #cfc9ff 192px, #ffe3c9 240px, #ffc9f2 288px); animation: melkh-loop 9s linear infinite; animation-play-state: running; } @keyframes melkh-loop { 0% { background-position: 0 0; } 100% { background-position: 261px 121.7px; } } }',
       '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
       '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
       '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
@@ -936,6 +940,11 @@ function melkHolo() {
   var capa = document.createElement('span');
   capa.className = 'melkh__capa';
   caja.appendChild(capa);
+  var badge = document.createElement('span');
+  badge.className = 'melkh-badge';
+  badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
+  caja.appendChild(badge);
+
   wrap.appendChild(caja);
 
   var actualizarMascara = function () {
