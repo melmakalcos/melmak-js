@@ -1142,3 +1142,91 @@ var melkHoloTimer = window.setInterval(function () {
     iniciar();
   }
 })();
+
+
+(function () {
+  var estilo = document.createElement('style');
+  estilo.id = 'melk-prodinfo-style';
+  estilo.textContent = [
+    '.melk-prodinfo { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; font-family: Rubik, system-ui, sans-serif !important; color: #353535 !important; }',
+    '.melk-prodinfo .melk-prodinfo__tag { display: inline-block !important; max-width: 100% !important; box-sizing: border-box !important; margin: 0 0 8px !important; padding: 7px 14px !important; border: 2px solid #353535 !important; border-radius: 999px !important; background: #ffe600 !important; color: #353535 !important; font-family: Rubik, system-ui, sans-serif !important; font-size: 10.5px !important; font-weight: 700 !important; line-height: 1.25 !important; letter-spacing: .04em !important; text-transform: uppercase !important; text-align: center !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding: 12px 14px !important; border: 2px solid #353535 !important; border-radius: 12px !important; background: #fff !important; color: #353535 !important; font-family: Rubik, system-ui, sans-serif !important; font-size: 12.5px !important; font-weight: 400 !important; line-height: 1.5 !important; overflow-wrap: break-word !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja p { margin: 0 0 8px !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja p:last-child { margin-bottom: 0 !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja strong, .melk-prodinfo .melk-prodinfo__caja b { font-weight: 700 !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja em, .melk-prodinfo .melk-prodinfo__caja i { font-style: italic !important; }',
+    '.melk-prodinfo .melk-prodinfo__caja ul, .melk-prodinfo .melk-prodinfo__caja ol { margin: 0 0 8px 18px !important; padding: 0 !important; }',
+    '.melk-alerta { display: flex !important; align-items: flex-start !important; gap: 10px !important; margin: 0 !important; padding: 12px 14px !important; border: 0 !important; border-radius: 12px !important; background: #353535 !important; color: #fff !important; font-family: Rubik, system-ui, sans-serif !important; font-size: 13px !important; font-weight: 400 !important; line-height: 1.5 !important; }',
+    '.melk-alerta .uk-icon { flex: 0 0 22px !important; width: 22px !important; height: 22px !important; border-radius: 50% !important; background: #ffe600 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; color: #111 !important; }',
+    '.melk-alerta .uk-icon svg { width: 15px !important; height: 15px !important; }',
+    '.melk-alerta .uk-icon svg circle { stroke: #111 !important; }',
+    '.melk-alerta .uk-icon svg path { fill: #111 !important; }',
+    '.melk-alerta-padre { background: transparent !important; padding: 0 !important; }',
+    '.product-vip__attribute-item { border-radius: 8px !important; }'
+  ].join('\n');
+  document.head.appendChild(estilo);
+
+  function envolver() {
+    var descs = document.querySelectorAll('.product-vip__description');
+    for (var i = 0; i < descs.length; i++) {
+      var d = descs[i];
+      if (d.getAttribute('data-melk-prodinfo')) continue;
+      d.setAttribute('data-melk-prodinfo', '1');
+      d.classList.add('melk-prodinfo');
+      var tag = document.createElement('span');
+      tag.className = 'melk-prodinfo__tag';
+      tag.textContent = 'INFORMACIÓN DEL PRODUCTO';
+      var caja = document.createElement('div');
+      caja.className = 'melk-prodinfo__caja';
+      while (d.firstChild) caja.appendChild(d.firstChild);
+      d.appendChild(tag);
+      d.appendChild(caja);
+    }
+  }
+
+  function respaldo() {
+    if (document.querySelector('.melk-prodinfo')) return;
+    var cantidad = document.querySelector('.product-vip__quantity');
+    if (!cantidad) return;
+    var fila = cantidad.closest ? cantidad.closest('.uk-grid') : null;
+    var info = document.createElement('div');
+    info.className = 'melk-prodinfo';
+    var tag = document.createElement('span');
+    tag.className = 'melk-prodinfo__tag';
+    tag.textContent = 'INFORMACIÓN DEL PRODUCTO';
+    var caja = document.createElement('div');
+    caja.className = 'melk-prodinfo__caja';
+    info.appendChild(tag);
+    info.appendChild(caja);
+    if (fila && fila.parentNode) fila.parentNode.insertBefore(info, fila);
+    else if (cantidad.parentNode) cantidad.parentNode.insertBefore(info, cantidad);
+  }
+
+  function alerta() {
+    var a = document.querySelector('.product-vip__alert-text');
+    if (!a) return;
+    a.classList.add('melk-alerta');
+    if (a.parentElement) a.parentElement.classList.add('melk-alerta-padre');
+  }
+
+  function iniciar() {
+    envolver();
+    respaldo();
+    alerta();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+
+  var n = 0;
+  var t = window.setInterval(function () {
+    n++;
+    envolver();
+    respaldo();
+    alerta();
+    if (n >= 20) window.clearInterval(t);
+  }, 500);
+})();
