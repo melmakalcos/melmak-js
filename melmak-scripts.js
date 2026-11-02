@@ -836,6 +836,8 @@ if (document.readyState === 'loading') {
 
 /* ---------- EFECTO HOLOGRÁFICO + INFO ESTÁTICA (ficha de producto) ---------- */
 (function () {
+var melkHoloTextura = 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@f894bee6582cdda78af047a5cbfc4004cbdb8fbb/holo-texture.webp';
+
 function melkHolo() {
   if (document.getElementById('melkh-caja')) return;
   var img = document.querySelector('.product-vip__carrousel-image');
@@ -861,10 +863,10 @@ function melkHolo() {
 
       '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
       '.melkh.activo { opacity: 1; }',
-      '.melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; }',
-      '.melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); filter: saturate(1.8); animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
+      '.melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; background-image: radial-gradient(circle at 74% 18%, #ff9fdc 0%, rgba(255,159,220,0) 55%), radial-gradient(circle at 18% 48%, #eaff8f 0%, rgba(234,255,143,0) 55%), radial-gradient(circle at 78% 84%, #d9b8ff 0%, rgba(217,184,255,0) 58%), radial-gradient(circle at 52% 52%, #7fe8ff 0%, #8fd8ff 62%, #c8ecff 100%); background-size: 100% 100%; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; filter: saturate(1.45); }',
+      '.melkh__capa::before { content: ""; position: absolute; left: -15%; top: -15%; width: 130%; height: 130%; background-image: var(--melk-textura, none); background-size: cover; background-position: 48% 48%; mix-blend-mode: luminosity; opacity: 1; animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
       '.melkh--moviendo .melkh__capa::before { animation-play-state: running; }',
-      '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
+      '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(-5%, -2%, 0) scale(1.03); } }',
 
       '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
       '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
@@ -1007,6 +1009,11 @@ function melkHolo() {
     var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
     var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
     caja.classList.toggle('activo', activo);
+    if (activo) {
+      caja.style.setProperty('--melk-textura', 'url("' + melkHoloTextura + '")');
+    } else {
+      caja.style.removeProperty('--melk-textura');
+    }
     if (activo && puedeHover) {
       try {
         if (img.matches(':hover')) caja.classList.add('melkh--moviendo');
