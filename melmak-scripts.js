@@ -862,15 +862,14 @@ function melkHolo() {
       '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
       '.melkh.activo { opacity: 1; }',
       '.melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; }',
-      '.melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); filter: saturate(1.8); animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
-      '.melkh--moviendo .melkh__capa::before { animation-play-state: running; }',
+      '.melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); filter: saturate(1.0); transition: filter .3s ease; animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
+      '.melkh--moviendo .melkh__capa::before { animation-play-state: running; filter: saturate(1.8); }',
       '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
 
-      '.melkh-badge { position: absolute; top: 12px; right: 12px; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
-      '@media (hover: hover) and (pointer: fine) { .melkh.activo .melkh-badge { display: flex; } }',
-      '.melkh-holo-wrap:hover .melkh-badge { opacity: 0; transform: rotate(-8deg) scale(.8); }',
-      '@media (hover: none) { .melkh.activo .melkh__capa::before { left: 0; top: 0; width: 100%; height: 100%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0px, #bff6ff 48px, #f6ffbf 96px, #bfffe0 144px, #cfc9ff 192px, #ffe3c9 240px, #ffc9f2 288px); animation: melkh-loop 9s linear infinite; animation-play-state: running; } @keyframes melkh-loop { 0% { background-position: 0 0; } 100% { background-position: 261px 121.7px; } } }',
-      '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+      '.melkh-badge { position: absolute; left: 0; top: 0; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
+      '@media (hover: hover) and (pointer: fine) { .melkh-badge--visible { display: flex; } }',
+      '.melkh-badge--oculto { opacity: 0; transform: rotate(-8deg) scale(.8); }',
+      '@media (hover: none) { .melkh.activo .melkh__capa::before { left: -100%; top: -100%; width: 300%; height: 300%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0px, #bff6ff 48px, #f6ffbf 96px, #bfffe0 144px, #cfc9ff 192px, #ffe3c9 240px, #ffc9f2 288px); background-size: 288px 288px; background-repeat: repeat; filter: saturate(1.8); animation: melkh-loop 9s linear infinite; animation-play-state: running; } @keyframes melkh-loop { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(261px, 121.7px, 0); } } }',      '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
       '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
       '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
       '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
@@ -943,7 +942,9 @@ function melkHolo() {
   var badge = document.createElement('span');
   badge.className = 'melkh-badge';
   badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
-  caja.appendChild(badge);
+  var contenedorBadge = document.querySelector('.product-vip__left-container') || (caja.parentNode && caja.parentNode.parentNode) || document.body;
+  if (getComputedStyle(contenedorBadge).position === 'static') contenedorBadge.style.position = 'relative';
+  contenedorBadge.appendChild(badge);
 
   wrap.appendChild(caja);
 
@@ -964,6 +965,13 @@ function melkHolo() {
     caja.style.top = '0px';
     caja.style.width = w + 'px';
     caja.style.height = h + 'px';
+
+    if (badge && badge.parentNode) {
+      var rb = img.getBoundingClientRect();
+      var pb = badge.parentNode.getBoundingClientRect();
+      badge.style.left = (rb.right - pb.left - 74) + 'px';
+      badge.style.top = (rb.top - pb.top - 14) + 'px';
+    }
   };
 
   actualizarMascara();
@@ -975,8 +983,14 @@ function melkHolo() {
 
   var puedeHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
   if (puedeHover) {
-    img.addEventListener('mouseenter', function () { caja.classList.add('melkh--moviendo'); });
-    img.addEventListener('mouseleave', function () { caja.classList.remove('melkh--moviendo'); });
+    img.addEventListener('mouseenter', function () {
+      caja.classList.add('melkh--moviendo');
+      badge.classList.add('melkh-badge--oculto');
+    });
+    img.addEventListener('mouseleave', function () {
+      caja.classList.remove('melkh--moviendo');
+      badge.classList.remove('melkh-badge--oculto');
+    });
   }
 
   var info = document.createElement('div');
@@ -1016,6 +1030,7 @@ function melkHolo() {
     var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
     var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
     caja.classList.toggle('activo', activo);
+    if (badge) badge.classList.toggle('melkh-badge--visible', activo);
     if (activo && puedeHover) {
       try {
         if (img.matches(':hover')) caja.classList.add('melkh--moviendo');
