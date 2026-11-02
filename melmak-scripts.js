@@ -61,8 +61,10 @@
         var r = img.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width;
         var y = (e.clientY - r.top) / r.height;
+        var objetivo = img.closest && img.closest('.melkh-holo-wrap') ? img.closest('.melkh-holo-wrap') : img;
 
-        img.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
+        objetivo.style.transform = 'perspective(500px) rotateX(' + ((0.5 - y) * 20) + 'deg) rotateY(' + ((x - 0.5) * 20) + 'deg) scale(1.05)';
+        objetivo.style.transition = 'transform .05s ease-out';
 
         var brightness = 1 + (0.5 - y) * 0.60;
         img.style.filter = 'brightness(' + brightness + ')';
@@ -70,7 +72,9 @@
       });
 
       img.addEventListener('mouseleave', function () {
-        img.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)';
+        var objetivo = img.closest && img.closest('.melkh-holo-wrap') ? img.closest('.melkh-holo-wrap') : img;
+        objetivo.style.transform = 'perspective(500px) rotateX(0deg) rotateY(0deg) scale(1)';
+        objetivo.style.transition = 'transform .3s ease-out';
         img.style.filter = 'brightness(1)';
         img.style.transition = 'transform .3s ease-out, filter .3s ease-out';
       });
@@ -845,28 +849,33 @@ function melkHolo() {
   });
   if (!hayHolo) return;
 
+  var BORDE = 10;
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var xlinkNS = 'http://www.w3.org/1999/xlink';
+
   if (!document.getElementById('melkh-estilo')) {
     var estilo = document.createElement('style');
     estilo.id = 'melkh-estilo';
     estilo.textContent = [
-      '.melkh { position: absolute; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
+      '.melkh-holo-wrap { position: relative; display: block; width: 100%; line-height: 0; }',
+      '.melkh-holo-wrap > img { display: block; width: 100%; height: auto; }',
+
+      '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
       '.melkh.activo { opacity: 1; }',
-      '.melkh__borde, .melkh__capa { position: absolute; inset: 0; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); background-size: 220% 220%; animation: melkh-mover 6s linear infinite; }',
-      '.melkh__borde { transform: scale(1.036); opacity: .9; mix-blend-mode: multiply; }',
-      '.melkh__capa { mix-blend-mode: multiply; opacity: .9; }',
-      '@keyframes melkh-mover { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }',
-      '@media (prefers-reduced-motion: reduce) { .melkh__borde, .melkh__capa { animation: none; } }',
+      '.melkh__borde, .melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; }',
+      '.melkh__capa { -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; }',
+      '.melkh__borde { -webkit-mask-image: url(#melkh-mascara-borde); mask-image: url(#melkh-mascara-borde); mix-blend-mode: multiply; opacity: .9; }',
+      '.melkh__borde::before, .melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); animation: melkh-mover 7s linear infinite; animation-play-state: paused; will-change: transform; }',
+      '.melkh--moviendo .melkh__borde::before, .melkh--moviendo .melkh__capa::before { animation-play-state: running; }',
+      '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-30%, 0, 0); } }',
 
       '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-      '.melkh-info__tag { display: inline-block; margin-bottom: 8px; padding: 5px 12px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: .06em; text-transform: uppercase; }',
+      '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
       '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
       '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
     ].join('');
     document.head.appendChild(estilo);
   }
-
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var xlinkNS = 'http://www.w3.org/1999/xlink';
 
   if (!document.getElementById('melkh-svg')) {
     var svg = document.createElementNS(svgNS, 'svg');
@@ -878,13 +887,21 @@ function melkHolo() {
 
     var defs = document.createElementNS(svgNS, 'defs');
 
-    var filtro = document.createElementNS(svgNS, 'filter');
-    filtro.id = 'melkh-blanco';
-    filtro.setAttribute('color-interpolation-filters', 'sRGB');
-    var matriz = document.createElementNS(svgNS, 'feColorMatrix');
-    matriz.setAttribute('type', 'matrix');
-    matriz.setAttribute('values', '0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0');
-    filtro.appendChild(matriz);
+    var filtroBlanco = document.createElementNS(svgNS, 'filter');
+    filtroBlanco.id = 'melkh-blanco';
+    filtroBlanco.setAttribute('color-interpolation-filters', 'sRGB');
+    var matrizBlanco = document.createElementNS(svgNS, 'feColorMatrix');
+    matrizBlanco.setAttribute('type', 'matrix');
+    matrizBlanco.setAttribute('values', '0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0');
+    filtroBlanco.appendChild(matrizBlanco);
+
+    var filtroNegro = document.createElementNS(svgNS, 'filter');
+    filtroNegro.id = 'melkh-negro';
+    filtroNegro.setAttribute('color-interpolation-filters', 'sRGB');
+    var matrizNegro = document.createElementNS(svgNS, 'feColorMatrix');
+    matrizNegro.setAttribute('type', 'matrix');
+    matrizNegro.setAttribute('values', '0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0');
+    filtroNegro.appendChild(matrizNegro);
 
     var mascara = document.createElementNS(svgNS, 'mask');
     mascara.id = 'melkh-mascara';
@@ -900,12 +917,54 @@ function melkHolo() {
     mascaraImg.setAttribute('height', '1');
     mascaraImg.setAttribute('preserveAspectRatio', 'none');
     mascaraImg.setAttribute('filter', 'url(#melkh-blanco)');
-
     mascara.appendChild(mascaraImg);
-    defs.appendChild(filtro);
+
+    var mascaraBorde = document.createElementNS(svgNS, 'mask');
+    mascaraBorde.id = 'melkh-mascara-borde';
+    mascaraBorde.setAttribute('maskUnits', 'objectBoundingBox');
+    mascaraBorde.setAttribute('maskContentUnits', 'objectBoundingBox');
+
+    var bordeAfuera = document.createElementNS(svgNS, 'image');
+    bordeAfuera.id = 'melkh-borde-afuera';
+    bordeAfuera.setAttribute('x', '0');
+    bordeAfuera.setAttribute('y', '0');
+    bordeAfuera.setAttribute('width', '1');
+    bordeAfuera.setAttribute('height', '1');
+    bordeAfuera.setAttribute('preserveAspectRatio', 'none');
+    bordeAfuera.setAttribute('filter', 'url(#melkh-blanco)');
+
+    var bordeAdentro = document.createElementNS(svgNS, 'image');
+    bordeAdentro.id = 'melkh-borde-adentro';
+    bordeAdentro.setAttribute('x', '0');
+    bordeAdentro.setAttribute('y', '0');
+    bordeAdentro.setAttribute('width', '1');
+    bordeAdentro.setAttribute('height', '1');
+    bordeAdentro.setAttribute('preserveAspectRatio', 'none');
+    bordeAdentro.setAttribute('filter', 'url(#melkh-negro)');
+
+    mascaraBorde.appendChild(bordeAfuera);
+    mascaraBorde.appendChild(bordeAdentro);
+
+    defs.appendChild(filtroBlanco);
+    defs.appendChild(filtroNegro);
     defs.appendChild(mascara);
+    defs.appendChild(mascaraBorde);
     svg.appendChild(defs);
     document.body.appendChild(svg);
+  }
+
+  var wrap = document.createElement('div');
+  wrap.className = 'melkh-holo-wrap';
+  var padre = img.parentNode;
+  padre.insertBefore(wrap, img);
+  wrap.appendChild(img);
+
+  if (img.style.transform || img.style.filter) {
+    wrap.style.transform = img.style.transform;
+    wrap.style.filter = img.style.filter;
+    wrap.style.transition = img.style.transition;
+    img.style.transform = '';
+    img.style.filter = '';
   }
 
   var caja = document.createElement('span');
@@ -919,27 +978,45 @@ function melkHolo() {
   capa.className = 'melkh__capa';
   caja.appendChild(borde);
   caja.appendChild(capa);
-
-  var contenedor = img.parentNode;
-  if (getComputedStyle(contenedor).position === 'static') contenedor.style.position = 'relative';
-  contenedor.appendChild(caja);
+  wrap.appendChild(caja);
 
   var actualizarMascara = function () {
     var src = img.currentSrc || img.src || '';
     if (!src) return;
-    var mascaraImg = document.getElementById('melkh-mascara-img');
-    if (!mascaraImg) return;
-    mascaraImg.setAttribute('href', src);
-    mascaraImg.setAttributeNS(xlinkNS, 'xlink:href', src);
+    ['melkh-mascara-img', 'melkh-borde-afuera', 'melkh-borde-adentro'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.setAttribute('href', src);
+      el.setAttributeNS(xlinkNS, 'xlink:href', src);
+    });
   };
 
   var ubicar = function () {
-    var li = caja.parentNode.getBoundingClientRect();
-    var r = img.getBoundingClientRect();
-    caja.style.left = (r.left - li.left) + 'px';
-    caja.style.top = (r.top - li.top) + 'px';
-    caja.style.width = r.width + 'px';
-    caja.style.height = r.height + 'px';
+    var w = img.offsetWidth || img.getBoundingClientRect().width;
+    var h = img.offsetHeight || img.getBoundingClientRect().height;
+    if (!w || !h) return;
+
+    caja.style.left = '0px';
+    caja.style.top = '0px';
+    caja.style.width = w + 'px';
+    caja.style.height = h + 'px';
+
+    var W = w + BORDE * 2;
+    var H = h + BORDE * 2;
+    borde.style.left = (-BORDE) + 'px';
+    borde.style.top = (-BORDE) + 'px';
+    borde.style.width = W + 'px';
+    borde.style.height = H + 'px';
+
+    var bx = BORDE / W;
+    var by = BORDE / H;
+    var adentro = document.getElementById('melkh-borde-adentro');
+    if (adentro) {
+      adentro.setAttribute('x', bx);
+      adentro.setAttribute('y', by);
+      adentro.setAttribute('width', 1 - bx * 2);
+      adentro.setAttribute('height', 1 - by * 2);
+    }
   };
 
   actualizarMascara();
@@ -949,13 +1026,19 @@ function melkHolo() {
   if (window.ResizeObserver) new ResizeObserver(ubicar).observe(img);
   new MutationObserver(function () { actualizarMascara(); ubicar(); }).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
 
+  var puedeHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  if (puedeHover) {
+    img.addEventListener('mouseenter', function () { caja.classList.add('melkh--moviendo'); });
+    img.addEventListener('mouseleave', function () { caja.classList.remove('melkh--moviendo'); });
+  }
+
   var info = document.createElement('div');
   info.className = 'melkh-info';
   info.id = 'melkh-info';
 
   var tag = document.createElement('span');
   tag.className = 'melkh-info__tag';
-  tag.textContent = 'VER INFO';
+  tag.textContent = 'INFORMACIÓN IMPORTANTE SOBRE STICKERS HOLOGRÁFICOS';
 
   var cajaInfo = document.createElement('div');
   cajaInfo.className = 'melkh-info__caja';
@@ -986,6 +1069,11 @@ function melkHolo() {
     var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
     var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
     caja.classList.toggle('activo', activo);
+    if (activo && puedeHover) {
+      try {
+        if (img.matches(':hover')) caja.classList.add('melkh--moviendo');
+      } catch (e) { }
+    }
   }
 
   for (var k = 0; k < items.length; k++) {
