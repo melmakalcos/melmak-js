@@ -1064,3 +1064,81 @@ var melkHoloTimer = window.setInterval(function () {
   melkHolo();
 }, 250);
 })();
+
+
+(function () {
+  var estilo = document.createElement('style');
+  estilo.id = 'melk-menu-fix';
+  estilo.textContent = [
+    '.desktop-list__menu > ul > li > a.desktop-list-link__text--bold:hover,',
+    '.desktop-list__menu > ul > li > a.desktop-list-link__text--bold:focus {',
+    '  animation: melk-levitar 2.6s ease-in-out infinite !important;',
+    '  transform-origin: 50% 60% !important;',
+    '  transition: transform .3s ease !important;',
+    '  will-change: transform;',
+    '}',
+    '@keyframes melk-levitar {',
+    '  0%, 100% { transform: translateY(0) scale(1.04); }',
+    '  50% { transform: translateY(-4px) scale(1.05); }',
+    '}',
+    '.desktop-list__menu ul ul a.desktop-list-link__text:hover,',
+    '.desktop-list__menu ul ul a.desktop-list-link__text:focus {',
+    '  animation: none !important;',
+    '  transform: none !important;',
+    '}',
+    '.desktop-list__menu > ul > li > a.desktop-list-link__text--bold:hover,',
+    '.desktop-list__menu > ul > li > a.desktop-list-link__text--bold:focus { background: transparent !important; background-color: transparent !important; box-shadow: none !important; color: #353535 !important; -webkit-text-fill-color: #353535 !important; text-shadow: none !important; }',
+    '.melk-ver-todo-wrap { display: block !important; text-align: right; margin: 18px 4px 2px; }',
+    '#melk-ver-todo-btn { display: inline-flex !important; align-items: center !important; justify-content: center !important; padding: 10px 18px !important; border: 0 !important; border-radius: 8px !important; background: #353535 !important; background-color: #353535 !important; color: #ffee26 !important; font-family: Rubik, system-ui, sans-serif !important; font-size: 11px !important; font-weight: 800 !important; line-height: 1 !important; letter-spacing: .06em !important; text-transform: uppercase !important; text-decoration: none !important; box-shadow: none !important; transition: background .2s ease, transform .2s ease !important; }',
+    '#melk-ver-todo-btn:hover, #melk-ver-todo-btn:focus { background: #000 !important; background-color: #000 !important; color: #ffee26 !important; transform: translateY(-2px); }'
+  ].join('\n');
+  document.head.appendChild(estilo);
+
+  function arreglarMenu() {
+    var dropdown = document.querySelector('.header-menu__desktop-list__container-list');
+    if (!dropdown) return;
+
+    var barra = null;
+    for (var i = 0; i < dropdown.children.length; i++) {
+      var el = dropdown.children[i];
+      if (el.tagName === 'A' && el.className.indexOf('desktop-list__hover') >= 0) {
+        barra = el;
+        break;
+      }
+    }
+    if (barra) {
+      var siguiente = barra.nextElementSibling;
+      dropdown.removeChild(barra);
+      if (siguiente && siguiente.tagName === 'HR') dropdown.removeChild(siguiente);
+    }
+
+    var menu = dropdown.querySelector('.desktop-list__menu');
+    if (menu && !dropdown.querySelector('.melk-ver-todo')) {
+      var wrap = document.createElement('div');
+      wrap.className = 'melk-ver-todo-wrap';
+      var a = document.createElement('a');
+      a.className = 'melk-ver-todo';
+      a.id = 'melk-ver-todo-btn';
+      a.href = '/productos';
+      a.textContent = 'VER TODO';
+      wrap.appendChild(a);
+      menu.parentNode.insertBefore(wrap, menu.nextSibling);
+    }
+  }
+
+  function iniciar() {
+    arreglarMenu();
+    var n = 0;
+    var timer = window.setInterval(function () {
+      n++;
+      arreglarMenu();
+      if (n >= 30) window.clearInterval(timer);
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+})();
