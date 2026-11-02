@@ -829,3 +829,149 @@ if (document.readyState === 'loading') {
 } else {
   melkRelacionados();
 }
+
+/* ---------- EFECTO HOLOGRÁFICO + INFO ESTÁTICA (ficha de producto) ---------- */
+(function () {
+function melkHolo() {
+  if (document.getElementById('melkh-caja')) return;
+  var img = document.querySelector('.product-vip__carrousel-image');
+  if (!img) return;
+
+  var items = [].slice.call(document.querySelectorAll('.product-vip__attribute-item'));
+  if (!items.length) return;
+
+  var hayHolo = items.some(function (a) {
+    return (a.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
+  });
+  if (!hayHolo) return;
+
+  if (!document.getElementById('melkh-estilo')) {
+    var estilo = document.createElement('style');
+    estilo.id = 'melkh-estilo';
+    estilo.textContent = [
+      '.melkh { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
+      '.melkh.activo { opacity: 1; }',
+      '.melkh__borde, .melkh__capa { position: absolute; inset: 0; -webkit-mask-image: var(--melk-mask); mask-image: var(--melk-mask); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: var(--mx, 0) var(--my, 0); mask-position: var(--mx, 0) var(--my, 0); -webkit-mask-size: var(--mw, 100%) var(--mh, 100%); mask-size: var(--mw, 100%) var(--mh, 100%); background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); background-size: 220% 220%; animation: melkh-mover 6s linear infinite; }',
+      '.melkh__borde { transform: scale(1.035); opacity: .9; mix-blend-mode: multiply; }',
+      '.melkh__capa { mix-blend-mode: multiply; opacity: .9; }',
+      '@keyframes melkh-mover { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }',
+      '@media (prefers-reduced-motion: reduce) { .melkh__borde, .melkh__capa { animation: none; } }',
+
+      '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+      '.melkh-info__tag { display: inline-block; margin-bottom: 8px; padding: 5px 12px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: .06em; text-transform: uppercase; }',
+      '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
+      '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
+    ].join('');
+    document.head.appendChild(estilo);
+  }
+
+  var caja = document.createElement('span');
+  caja.className = 'melkh';
+  caja.id = 'melkh-caja';
+  caja.setAttribute('aria-hidden', 'true');
+
+  var borde = document.createElement('span');
+  borde.className = 'melkh__borde';
+  var capa = document.createElement('span');
+  capa.className = 'melkh__capa';
+  caja.appendChild(borde);
+  caja.appendChild(capa);
+
+  var mascara = function () {
+    var src = img.currentSrc || img.src || '';
+    if (src) caja.style.setProperty('--melk-mask', 'url("' + src + '")');
+  };
+  var ubicar = function () {
+    var li = caja.parentNode.getBoundingClientRect();
+    var r = img.getBoundingClientRect();
+    var x = r.left - li.left;
+    var y = r.top - li.top;
+    var w = r.width;
+    var h = r.height;
+    capa.style.setProperty('--mx', x + 'px');
+    capa.style.setProperty('--my', y + 'px');
+    capa.style.setProperty('--mw', w + 'px');
+    capa.style.setProperty('--mh', h + 'px');
+    var e = 0.036;
+    borde.style.setProperty('--mx', (x - w * e / 2) + 'px');
+    borde.style.setProperty('--my', (y - h * e / 2) + 'px');
+    borde.style.setProperty('--mw', (w * (1 + e)) + 'px');
+    borde.style.setProperty('--mh', (h * (1 + e)) + 'px');
+  };
+  mascara();
+  var contenedor = img.parentNode;
+  if (getComputedStyle(contenedor).position === 'static') contenedor.style.position = 'relative';
+  contenedor.appendChild(caja);
+  ubicar();
+  img.addEventListener('load', ubicar);
+  window.addEventListener('resize', ubicar);
+  if (window.ResizeObserver) new ResizeObserver(ubicar).observe(img);
+
+  new MutationObserver(mascara).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
+
+  var info = document.createElement('div');
+  info.className = 'melkh-info';
+  info.id = 'melkh-info';
+
+  var tag = document.createElement('span');
+  tag.className = 'melkh-info__tag';
+  tag.textContent = 'VER INFO';
+
+  var cajaInfo = document.createElement('div');
+  cajaInfo.className = 'melkh-info__caja';
+  var texto = document.createElement('span');
+  texto.textContent = 'Material que cambia de color según la luz y el ángulo. El corte se hace sobre el holo. Si el diseño tiene borde de color, se agrega un margen de 1 a 2 mm.';
+  var aviso = document.createElement('b');
+  aviso.className = 'melkh-info__aviso';
+  aviso.textContent = 'No incluye tinta blanca. Imagen ilustrativa.';
+  cajaInfo.appendChild(texto);
+  cajaInfo.appendChild(aviso);
+
+  info.appendChild(tag);
+  info.appendChild(cajaInfo);
+
+  var cantidad = document.querySelector('.product-vip__quantity');
+  var filaCantidad = cantidad && cantidad.closest ? cantidad.closest('.uk-grid') : null;
+  var contenedorAtributos = document.getElementById('product-vip__attributes');
+
+  if (filaCantidad && filaCantidad.parentNode) {
+    filaCantidad.parentNode.insertBefore(info, filaCantidad);
+  } else if (contenedorAtributos && contenedorAtributos.parentNode) {
+    contenedorAtributos.parentNode.insertBefore(info, contenedorAtributos.nextSibling);
+  } else if (cantidad && cantidad.parentNode) {
+    cantidad.parentNode.insertBefore(info, cantidad);
+  }
+
+  function actualizar() {
+    var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
+    var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
+    caja.classList.toggle('activo', activo);
+    if (activo) { ubicar(); window.setTimeout(ubicar, 120); }
+  }
+
+  for (var k = 0; k < items.length; k++) {
+    (function (a) {
+      a.addEventListener('click', function () { window.setTimeout(actualizar, 40); });
+      new MutationObserver(actualizar).observe(a, { attributes: true, attributeFilter: ['class'] });
+    })(items[k]);
+  }
+
+  actualizar();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', melkHolo);
+} else {
+  melkHolo();
+}
+
+var melkHoloVueltas = 0;
+var melkHoloTimer = window.setInterval(function () {
+  melkHoloVueltas++;
+  if (document.getElementById('melkh-caja') || melkHoloVueltas > 40) {
+    window.clearInterval(melkHoloTimer);
+    return;
+  }
+  melkHolo();
+}, 250);
+})();
