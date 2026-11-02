@@ -849,10 +849,10 @@ function melkHolo() {
     var estilo = document.createElement('style');
     estilo.id = 'melkh-estilo';
     estilo.textContent = [
-      '.melkh { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
+      '.melkh { position: absolute; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
       '.melkh.activo { opacity: 1; }',
-      '.melkh__borde, .melkh__capa { position: absolute; inset: 0; -webkit-mask-image: var(--melk-mask); mask-image: var(--melk-mask); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: var(--mx, 0) var(--my, 0); mask-position: var(--mx, 0) var(--my, 0); -webkit-mask-size: var(--mw, 100%) var(--mh, 100%); mask-size: var(--mw, 100%) var(--mh, 100%); background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); background-size: 220% 220%; animation: melkh-mover 6s linear infinite; }',
-      '.melkh__borde { transform: scale(1.035); opacity: .9; mix-blend-mode: multiply; }',
+      '.melkh__borde, .melkh__capa { position: absolute; inset: 0; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); background-size: 220% 220%; animation: melkh-mover 6s linear infinite; }',
+      '.melkh__borde { transform: scale(1.036); opacity: .9; mix-blend-mode: multiply; }',
       '.melkh__capa { mix-blend-mode: multiply; opacity: .9; }',
       '@keyframes melkh-mover { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }',
       '@media (prefers-reduced-motion: reduce) { .melkh__borde, .melkh__capa { animation: none; } }',
@@ -863,6 +863,48 @@ function melkHolo() {
       '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
     ].join('');
     document.head.appendChild(estilo);
+  }
+
+  var svgNS = 'http://www.w3.org/2000/svg';
+  var xlinkNS = 'http://www.w3.org/1999/xlink';
+
+  if (!document.getElementById('melkh-svg')) {
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.id = 'melkh-svg';
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('width', '0');
+    svg.setAttribute('height', '0');
+    svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+
+    var defs = document.createElementNS(svgNS, 'defs');
+
+    var filtro = document.createElementNS(svgNS, 'filter');
+    filtro.id = 'melkh-blanco';
+    filtro.setAttribute('color-interpolation-filters', 'sRGB');
+    var matriz = document.createElementNS(svgNS, 'feColorMatrix');
+    matriz.setAttribute('type', 'matrix');
+    matriz.setAttribute('values', '0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0');
+    filtro.appendChild(matriz);
+
+    var mascara = document.createElementNS(svgNS, 'mask');
+    mascara.id = 'melkh-mascara';
+    mascara.setAttribute('maskUnits', 'objectBoundingBox');
+    mascara.setAttribute('maskContentUnits', 'objectBoundingBox');
+
+    var mascaraImg = document.createElementNS(svgNS, 'image');
+    mascaraImg.id = 'melkh-mascara-img';
+    mascaraImg.setAttribute('x', '0');
+    mascaraImg.setAttribute('y', '0');
+    mascaraImg.setAttribute('width', '1');
+    mascaraImg.setAttribute('height', '1');
+    mascaraImg.setAttribute('preserveAspectRatio', 'none');
+    mascaraImg.setAttribute('filter', 'url(#melkh-blanco)');
+
+    mascara.appendChild(mascaraImg);
+    defs.appendChild(filtro);
+    defs.appendChild(mascara);
+    svg.appendChild(defs);
+    document.body.appendChild(svg);
   }
 
   var caja = document.createElement('span');
@@ -877,37 +919,34 @@ function melkHolo() {
   caja.appendChild(borde);
   caja.appendChild(capa);
 
-  var mascara = function () {
-    var src = img.currentSrc || img.src || '';
-    if (src) caja.style.setProperty('--melk-mask', 'url("' + src + '")');
-  };
-  var ubicar = function () {
-    var li = caja.parentNode.getBoundingClientRect();
-    var r = img.getBoundingClientRect();
-    var x = r.left - li.left;
-    var y = r.top - li.top;
-    var w = r.width;
-    var h = r.height;
-    capa.style.setProperty('--mx', x + 'px');
-    capa.style.setProperty('--my', y + 'px');
-    capa.style.setProperty('--mw', w + 'px');
-    capa.style.setProperty('--mh', h + 'px');
-    var e = 0.036;
-    borde.style.setProperty('--mx', (x - w * e / 2) + 'px');
-    borde.style.setProperty('--my', (y - h * e / 2) + 'px');
-    borde.style.setProperty('--mw', (w * (1 + e)) + 'px');
-    borde.style.setProperty('--mh', (h * (1 + e)) + 'px');
-  };
-  mascara();
   var contenedor = img.parentNode;
   if (getComputedStyle(contenedor).position === 'static') contenedor.style.position = 'relative';
   contenedor.appendChild(caja);
+
+  var actualizarMascara = function () {
+    var src = img.currentSrc || img.src || '';
+    if (!src) return;
+    var mascaraImg = document.getElementById('melkh-mascara-img');
+    if (!mascaraImg) return;
+    mascaraImg.setAttribute('href', src);
+    mascaraImg.setAttributeNS(xlinkNS, 'xlink:href', src);
+  };
+
+  var ubicar = function () {
+    var li = caja.parentNode.getBoundingClientRect();
+    var r = img.getBoundingClientRect();
+    caja.style.left = (r.left - li.left) + 'px';
+    caja.style.top = (r.top - li.top) + 'px';
+    caja.style.width = r.width + 'px';
+    caja.style.height = r.height + 'px';
+  };
+
+  actualizarMascara();
   ubicar();
-  img.addEventListener('load', ubicar);
+  img.addEventListener('load', function () { ubicar(); actualizarMascara(); });
   window.addEventListener('resize', ubicar);
   if (window.ResizeObserver) new ResizeObserver(ubicar).observe(img);
-
-  new MutationObserver(mascara).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
+  new MutationObserver(function () { actualizarMascara(); ubicar(); }).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
 
   var info = document.createElement('div');
   info.className = 'melkh-info';
@@ -946,7 +985,6 @@ function melkHolo() {
     var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
     var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
     caja.classList.toggle('activo', activo);
-    if (activo) { ubicar(); window.setTimeout(ubicar, 120); }
   }
 
   for (var k = 0; k < items.length; k++) {
