@@ -27,7 +27,7 @@
     var NOTICIAS = [
         {
             "titulo": "¡EVENTOS CONFIRMADOS!",
-            "texto": "Estaremos participando en la FERIA KAWAII (7/11) y en el K-POP REVOLUTION (14/11). Ambos eventos se realizarán en el colegio San José (Balvanera), de 12 a 19 h. Como siempre, llevaremos miles de stickers y pósters de todas las categorías. Podés reservar los tuyos para retirar en los eventos sin cargo. (RECIBIMOS PEDIDOS PARA RETIRAR, HASTA UNA SEMANA ANTES DE CADA EVENTO - NO LO DEJES PARA ÚLTIMO MOMENTOOOO)",
+            "texto": "Estaremos participando en la FERIA KAWAII (7/11)(STAND 116 - SALÓN) y en la K-POP REVOLUTION (14/11)(STAND 39 - PATIO PLANTA BAJA). Ambos eventos se realizarán en el colegio San José (Balvanera), de 12 a 19 hs. Como siempre, llevaremos miles de stickers y pósters de todas las categorías. Podés reservar los tuyos para retirar en los eventos sin cargo. (RECIBIMOS PEDIDOS PARA RETIRAR, HASTA UNA SEMANA ANTES DE CADA EVENTO - NO LO DEJES PARA ÚLTIMO MOMENTOOOO)",
             "link": ""
         },
         {
@@ -38,6 +38,11 @@
         {
             "titulo": "¡NUEVA CATEGORÍA DESBLOQUEADA!",
             "texto": "En los eventos y ferias no paramos de vender prints. Lo que arrancó como una variante terminó impulsando las ganas de crear nuevos diseños. Encontralos en el CATÁLOGO. Podés retirarlos en MORÓN CENTRO (ZONA OESTE-BS.AS) o te los enviamos a tu casa :)",
+            "link": ""
+        },
+        {
+            "titulo": "TODO ES HOLOGRÁFICO",
+            "texto": "¡Siiii, al fin! Ahora todos los stickers de nuestro catálogo se pueden imprimir sobre vinilo holográfico. Podés elegirlo entre las opciones de compra de cualquier diseño. Además, sumamos información con detalles importantes a tener en cuenta. Y pará, que eso no es todo: en unos días habilitaremos esta opción también para los pedidos personalizados. ¿Tus perritos y michis brillando? Obvioooo",
             "link": ""
         }
     ];
