@@ -24,7 +24,23 @@
     ];
 
     /* MELMAK_NOTICIAS_INICIO */
-    var NOTICIAS = [];
+    var NOTICIAS = [
+        {
+            "titulo": "¡EVENTOS CONFIRMADOS!",
+            "texto": "Estaremos participando en la FERIA KAWAII (7/11) y en el K-POP REVOLUTION (14/11). Ambos eventos se realizarán en el colegio San José (Balvanera), de 12 a 19 h. Como siempre, llevaremos miles de stickers y pósters de todas las categorías. Podés reservar los tuyos para retirar en los eventos sin cargo. (RECIBIMOS PEDIDOS PARA RETIRAR, HASTA UNA SEMANA ANTES DE CADA EVENTO - NO LO DEJES PARA ÚLTIMO MOMENTOOOO)",
+            "link": ""
+        },
+        {
+            "titulo": "¿NOS CONOCES DE ANTES Y NO PODÉS VER EL CATÁLOGO DE STICKERS ANTERIOR?",
+            "texto": "Decidimos darle un nuevo comienzo a MELMAK. Se vienen mucho fan-art y diseños propios. Si te quedaste con ganas de comprar stickers del catálogo viejo, este estará disponible (tanto para compras mayoristas como minoristas) durante unas semanas más mientras actualizamos todo lo nuevo. Solicitalo haciendo una consulta o por MD en nuestro Instagram.",
+            "link": ""
+        },
+        {
+            "titulo": "¡NUEVA CATEGORÍA DESBLOQUEADA!",
+            "texto": "En los eventos y ferias no paramos de vender prints. Lo que arrancó como una variante terminó impulsando las ganas de crear nuevos diseños. Encontralos en el CATÁLOGO. Podés retirarlos en MORÓN CENTRO (ZONA OESTE-BS.AS) o te los enviamos a tu casa :)",
+            "link": ""
+        }
+    ];
     /* MELMAK_NOTICIAS_FIN */
 
     var FOTOS = [
