@@ -128,7 +128,8 @@
         '@keyframes mbbs-ola-top{from{background-position-x:0;}to{background-position-x:180px;}}',
 
         /* ===== BARRA DE CLIMA (específico) ===== */
-        '#melmak-bbs__clima{margin:clamp(28px,4vw,56px) 0;}',
+        '#melmak-bbs__clima-wrap{position:relative;z-index:2;background:#fff;padding:clamp(40px,6vw,80px) 0;}',
+        '#melmak-bbs__clima{margin:0;}',
         '#melmak-bbs__clima .mbbs-barra-inner{animation-duration:32s;}',
         '.mbbs-clima-item{display:inline-flex;align-items:center;gap:14px;margin:0 26px;}',
         '.mbbs-clima-icono{display:inline-flex;flex:none;width:34px;height:34px;line-height:1;}',
@@ -224,7 +225,7 @@
         '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
-        '#melmak-bbs__clima + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
+        '#melmak-bbs__clima-wrap + #melmak-bbs__galeria{padding-top:0;}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -249,7 +250,6 @@
         '  #melmak-bbs__post-about{padding-left:64px;}',
         '  #melmak-bbs__post-question{padding-left:64px;}',
         '  #melmak-bbs .mbbs-personaje{left:-8px;width:112px;height:112px;}',
-        '  #melmak-bbs__clima{margin:24px 0;}',
         '  .mbbs-clima-icono{width:26px;height:26px;}',
         '}',
 
@@ -356,6 +356,10 @@
     }
 
     function crearBarraClima() {
+        /* Envoltorio blanco: oculta el amarillo del panel detrás de la barra negra
+           y maneja el aire arriba/abajo (misma distancia que carrusel → NOTICIAS). */
+        var wrap = document.createElement('div');
+        wrap.id = 'melmak-bbs__clima-wrap';
         var barra = document.createElement('div');
         barra.id = 'melmak-bbs__clima';
         barra.className = 'mbbs-barra';
@@ -372,7 +376,8 @@
 
         clip.appendChild(inner);
         barra.appendChild(clip);
-        return barra;
+        wrap.appendChild(barra);
+        return wrap;
     }
 
     function pintarClima(key) {
