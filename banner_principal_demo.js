@@ -129,14 +129,19 @@
 
         /* ===== BARRA DE CLIMA (específico) ===== */
         '#melmak-bbs__clima-wrap{position:relative;z-index:2;background:#fff;padding:clamp(40px,6vw,80px) 0;}',
-        '#melmak-bbs__clima{margin:0;}',
+        /* Barra de clima: amarilla, texto e íconos en negro. */
+        '#melmak-bbs__clima{margin:0;background:var(--bg);}',
+        '#melmak-bbs__clima:before{background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 10H100V9C87.5 9 87.5 3 75 3C62.5 3 62.5 9 50 9C37.5 9 37.5 3 25 3C12.5 3 12.5 9 0 9Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");}',
+        '#melmak-bbs__clima:after{background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 0H100V3C87.5 3 87.5 9 75 9C62.5 9 62.5 3 50 3C37.5 3 37.5 9 25 9C12.5 3 12.5 3 0 3Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");}',
         '#melmak-bbs__clima .mbbs-barra-inner{animation-duration:32s;}',
         '.mbbs-clima-item{display:inline-flex;align-items:center;gap:14px;margin:0 26px;}',
         '.mbbs-clima-icono{display:inline-flex;flex:none;width:34px;height:34px;line-height:1;}',
         '.mbbs-clima-icono svg{display:block;width:100%;height:100%;}',
+        /* Íconos del clima en negro (monocromo). */
+        '#melmak-bbs__clima .mbbs-clima-icono svg *{fill:#353535 !important;stroke:#353535 !important;}',
         '.mbbs-clima-texto{font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;',
         '  font-size:clamp(20px,3vw,34px);line-height:1.15;letter-spacing:.02em;text-transform:uppercase;',
-        '  color:#ffee26;}',
+        '  color:#353535;}',
 
         '#melmak-bbs__galeria{position:relative;z-index:2;width:100%;overflow-x:clip;overflow-y:visible;background:#fff;',
         '  padding:clamp(74px,9vw,124px) 0 clamp(60px,4.6vw,170px);}',
@@ -213,6 +218,11 @@
         '#melmak-bbs .mbbs-personaje{position:absolute;top:50%;left:-8px;width:110px;height:110px;',
         '  object-fit:contain;transform:translateY(-50%);pointer-events:none;display:block;}',
 
+        /* Entrada plop de NOTICIAS al scrollear (título + caja). */
+        '#melmak-bbs__noticias.is-init .mbbs-noticias__titulo,',
+        '#melmak-bbs__noticias.is-init .mbbs-noticias__caja{opacity:0;}',
+        '#melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__titulo{animation:mbbs-galeria-pop .7s cubic-bezier(.34,1.56,.64,1) both;}',
+        '#melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__caja{animation:mbbs-galeria-pop .7s cubic-bezier(.34,1.56,.64,1) .12s both;}',
         '#melmak-bbs__noticias{position:relative;z-index:2;width:100%;background:#fff;padding:clamp(44px,6vw,80px) 20px clamp(20px,3vw,36px);}',
         '.mbbs-noticias__titulo{margin:0 auto clamp(18px,2.5vw,28px);text-align:center;font-family:"Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;font-size:46px;line-height:1;color:var(--ink);}',
         '.mbbs-noticias__caja{max-width:min(1180px,95vw);margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:26px;padding:clamp(24px,3vw,36px) clamp(22px,3vw,40px);box-sizing:border-box;}',
@@ -305,6 +315,10 @@
         '  .mbbs-barra-inner{animation:none;}',
         '  .mbbs-barra:before,.mbbs-barra:after{animation:none;}',
         '  #melmak-bbs__galeria.is-pop .mbbs-galeria-viewport{animation:none;}',
+        '  #melmak-bbs__noticias.is-init .mbbs-noticias__titulo,',
+        '  #melmak-bbs__noticias.is-init .mbbs-noticias__caja{opacity:1;}',
+        '  #melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__titulo,',
+        '  #melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__caja{animation:none;}',
         '  .mbbs-galeria-track,.mbbs-galeria-slide{transition:none;}',
         '  .mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:none;}',
         '  .mbms-merit__aviso{animation:none;opacity:1;}',
@@ -674,6 +688,24 @@
 
         caja.appendChild(ul);
         s.appendChild(caja);
+
+        /* Plop al scrollear: se marca is-init antes de insertar (primer paint
+           oculto, sin flash) y se agrega is-pop cuando entra en viewport. */
+        var sinMovimientoNoticias = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!sinMovimientoNoticias && 'IntersectionObserver' in window) {
+            s.classList.add('is-init');
+            var ioNoticias = new IntersectionObserver(function (ent) {
+                for (var k = 0; k < ent.length; k++) {
+                    if (ent[k].isIntersecting) {
+                        s.classList.add('is-pop');
+                        ioNoticias.disconnect();
+                        return;
+                    }
+                }
+            }, { threshold: 0.2 });
+            requestAnimationFrame(function () { ioNoticias.observe(s); });
+        }
+
         return s;
     }
 
