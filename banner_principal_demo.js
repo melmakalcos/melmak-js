@@ -127,8 +127,10 @@
         '@keyframes mbbs-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}',
         '@keyframes mbbs-ola-top{from{background-position-x:0;}to{background-position-x:180px;}}',
 
-        /* ===== BARRA DE CLIMA (específico) ===== */
-        '#melmak-bbs__clima{margin:clamp(28px,4vw,56px) 0;}',
+        /* ===== BARRA DE CLIMA (específico) =====
+           FIX: antes tenía margin, dejaba ver el amarillo del .mbbs-panel detrás.
+           Ahora usa background:#fff + padding, así el amarillo queda tapado. */
+        '#melmak-bbs__clima{background:#fff;padding:clamp(28px,4vw,56px) 0;margin:0;}',
         '#melmak-bbs__clima .mbbs-barra-inner{animation-duration:32s;}',
         '.mbbs-clima-item{display:inline-flex;align-items:center;gap:14px;margin:0 26px;}',
         '.mbbs-clima-icono{display:inline-flex;flex:none;width:34px;height:34px;line-height:1;}',
@@ -224,7 +226,22 @@
         '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
-        '#melmak-bbs__clima + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
+
+        /* ===== PLOP de entrada para NOTICIAS =====
+           La sección arranca oculta (is-init) y con IntersectionObserver se
+           agrega is-pop para animar título y caja (con delay escalonado).
+           Reusa los keyframes mbbs-galeria-pop. */
+        '#melmak-bbs__noticias.is-init .mbbs-noticias__titulo,',
+        '#melmak-bbs__noticias.is-init .mbbs-noticias__caja{opacity:0;}',
+        '#melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__titulo{',
+        '  animation:mbbs-galeria-pop .7s cubic-bezier(.34,1.56,.64,1) both;}',
+        '#melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__caja{',
+        '  animation:mbbs-galeria-pop .7s cubic-bezier(.34,1.56,.64,1) .12s both;}',
+
+        /* ===== Separación galería ↔ barra de clima =====
+           Mismo padding-top que NOTICIAS para que el aire desde la onda
+           sea equivalente. En mobile se compensa el overhang de las cards. */
+        '#melmak-bbs__clima + #melmak-bbs__galeria{padding-top:clamp(44px,6vw,80px);}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -249,8 +266,12 @@
         '  #melmak-bbs__post-about{padding-left:64px;}',
         '  #melmak-bbs__post-question{padding-left:64px;}',
         '  #melmak-bbs .mbbs-personaje{left:-8px;width:112px;height:112px;}',
-        '  #melmak-bbs__clima{margin:24px 0;}',
+        /* FIX móvil: padding en vez de margin para tapar el amarillo */
+        '  #melmak-bbs__clima{padding:24px 0;}',
         '  .mbbs-clima-icono{width:26px;height:26px;}',
+        /* Compensar el overhang de las cards (34px) para que el aire visual
+           desde la onda hasta la primera card coincida con NOTICIAS. */
+        '  #melmak-bbs__clima + #melmak-bbs__galeria{padding-top:50px;}',
         '}',
 
         '#melmak-bbs__merit{position:relative;width:100%;background:#fff;',
@@ -308,6 +329,11 @@
         '  .mbms-merit__mascota{animation:none;}',
         '  .mbbs-scroll-hint{animation:none;}',
         '  #melmak-bbs__hero{transition:none;}',
+        /* Si por algún motivo is-init quedó puesto, no ocultar noticias */
+        '  #melmak-bbs__noticias.is-init .mbbs-noticias__titulo,',
+        '  #melmak-bbs__noticias.is-init .mbbs-noticias__caja{opacity:1;}',
+        '  #melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__titulo,',
+        '  #melmak-bbs__noticias.is-init.is-pop .mbbs-noticias__caja{animation:none;}',
         '}'
     ].join('\n');
     (document.head || document.documentElement).appendChild(style);
@@ -666,6 +692,17 @@
 
         caja.appendChild(ul);
         s.appendChild(caja);
+
+        /* Preparar animación plop de entrada:
+           - Solo si el navegador soporta IntersectionObserver y no hay
+             preferencia de movimiento reducido.
+           - Se agrega is-init ANTES de que el elemento entre al DOM,
+             así el primer paint ya lo muestra oculto (sin flash). */
+        var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reducedMotion && 'IntersectionObserver' in window) {
+            s.classList.add('is-init');
+        }
+
         return s;
     }
 
@@ -843,6 +880,28 @@
     }
 
     root.appendChild(crearSeccion());
+
+    /* ==========================================================
+       Animación plop de NOTICIAS al aparecer en viewport
+       ========================================================== */
+    (function animarNoticias() {
+        var noticias = document.getElementById('melmak-bbs__noticias');
+        if (!noticias || !noticias.classList.contains('is-init')) { return; }
+        if (!('IntersectionObserver' in window)) {
+            noticias.classList.remove('is-init');
+            return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) {
+                    noticias.classList.add('is-pop');
+                    io.disconnect();
+                    return;
+                }
+            }
+        }, { threshold: 0.2 });
+        io.observe(noticias);
+    })();
 
     /* Arrancar la barra de clima (async, no bloquea el render) */
     cargarClima();
