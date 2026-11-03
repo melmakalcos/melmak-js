@@ -225,7 +225,9 @@
         '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
-        '#melmak-bbs__clima-wrap + #melmak-bbs__galeria{padding-top:0;}',
+        /* Compensa el vuelo de las tarjetas laterales (translateY -56px + rotación):
+           así el aire visual barra → galería iguala carrusel → NOTICIAS. */
+        '#melmak-bbs__clima-wrap + #melmak-bbs__galeria{padding-top:64px;}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -290,6 +292,7 @@
         '    line-height:1.3;padding:9px 14px;transform:rotate(-2deg);box-shadow:none;}',
         '  .mbms-merit__mascota{width:88px;height:88px;top:-108px;left:calc(50% - 44px);right:auto;transform:rotate(-4deg);}',
         '  #melmak-bbs__galeria{padding:58px 0 40px;}',
+        '  #melmak-bbs__clima-wrap + #melmak-bbs__galeria{padding-top:40px;}',
         '  .mbbs-galeria-card__img{border-radius:14px;}',
         '  .mbbs-galeria-sticker{width:clamp(56px,13vw,80px);}',
         '  .mbbs-galeria-slide.is-c{transform:scale(1.12);}',
