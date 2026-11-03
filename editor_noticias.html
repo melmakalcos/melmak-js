@@ -36,7 +36,7 @@ textarea{min-height:60px;resize:vertical}textarea:focus,input:focus{outline:2px 
 .ptitulo{font-family:"Curda Gouda",Rubik,sans-serif;font-size:46px;line-height:1;text-align:center;margin:0 0 16px}
 .pcaja{max-width:720px;margin:0 auto;border:3px solid var(--t);border-radius:26px;padding:17px 21px}
 .pcaja ul{margin:0;padding-left:23px;list-style:disc outside}.pcaja li{margin:0 0 8px;font-size:14px;line-height:1.5}.pcaja li:last-child{margin-bottom:0}
-.pcaja a{color:var(--t);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.pcaja a{color:var(--t);font-weight:700;text-decoration:underline;text-underline-offset:3px}.pcaja strong{display:block;font-weight:700;line-height:1.35}.pcaja .ptexto{display:block;margin-top:2px}
 .pvacio{text-align:center;color:#777;font-size:13px;margin:0}
 .ayuda{margin:24px 0 0;font-size:12.5px;line-height:1.6;color:#666}.ayuda strong{color:var(--t)}
 @media(max-width:640px){header{align-items:flex-start;flex-direction:column;gap:10px}.barra{position:static}.btn{flex:1 1 auto}.ptitulo{font-size:42px}}
@@ -56,7 +56,7 @@ textarea{min-height:60px;resize:vertical}textarea:focus,input:focus{outline:2px 
 <p class="archivo" id="archivo">Ningún archivo cargado.</p>
 <section class="lista" id="lista"></section>
 <section class="preview"><h2>Vista previa</h2><div class="marco"><div class="ptitulo">NOTICIAS</div><div class="pcaja" id="pcaja"><ul id="plista"></ul></div><p class="pvacio" id="pvacio" hidden>Si no hay noticias, la sección se oculta en la web.</p></div></section>
-<p class="ayuda"><strong>1.</strong> Abrí <code>banner_principal_demo.js</code>. <strong>2.</strong> Agregá o editá las noticias. <strong>3.</strong> Guardá. <strong>4.</strong> Subí el archivo al repositorio y actualizá el hash del script. Si no guarda directo, se descarga una copia: reemplazá el archivo en <code>_test</code>.</p>
+<p class="ayuda"><strong>1.</strong> Abrí <code>banner_principal_demo.js</code>. <strong>2.</strong> Cada noticia lleva un <strong>título en negrita</strong> y el texto debajo; el link es opcional. <strong>3.</strong> Guardá. <strong>4.</strong> Subí el archivo al repositorio y actualizá el hash del script. Si no guarda directo, se descarga una copia: reemplazá el archivo en <code>_test</code>.</p>
 </main>
 <script>
 (function(){
@@ -71,7 +71,7 @@ function parsear(texto){
   var b=texto.slice(i+INICIO.length,f), m=b.match(/var\s+NOTICIAS\s*=\s*([\s\S]*?);\s*$/);
   if(!m) throw new Error("No encontré var NOTICIAS = [...]; dentro de los marcadores.");
   var a=JSON.parse(m[1]); if(!Array.isArray(a)) throw new Error("NOTICIAS no es una lista.");
-  return a.map(function(n){return{texto:n&&n.texto?String(n.texto):"",link:n&&n.link?String(n.link):""};});
+  return a.map(function(n){return{titulo:n&&n.titulo?String(n.titulo):"",texto:n&&n.texto?String(n.texto):"",link:n&&n.link?String(n.link):""};});
 }
 function serializar(a){
   var j=JSON.stringify(a,null,4).replace(/\n/g,"\n    "), i=textoOriginal.indexOf(INICIO), f=textoOriginal.indexOf(FIN);
@@ -84,7 +84,7 @@ function cargar(texto,nombreArchivo,h){
   estado("Archivo cargado. "+items.length+" noticia"+(items.length===1?"":"s")+".","ok"); render();
 }
 function leer(f){if(!f)return; f.text().then(function(t){cargar(t,f.name,null);}).catch(function(){estado("No se pudo leer el archivo.","error");});}
-function agregar(){items.push({texto:"",link:""});sucio=true;render();var a=listaEl.querySelectorAll("textarea");if(a.length)a[a.length-1].focus();}
+function agregar(){items.push({titulo:"",texto:"",link:""});sucio=true;render();var a=listaEl.querySelectorAll("input[type=text]");if(a.length)a[a.length-1].focus();}
 function mover(i,d){var j=i+d;if(j<0||j>=items.length)return;var x=items[i];items[i]=items[j];items[j]=x;sucio=true;render();}
 function borrar(i){items.splice(i,1);sucio=true;render();}
 function render(){
@@ -100,21 +100,36 @@ function render(){
     var dn=document.createElement("button");dn.className="mini";dn.type="button";dn.title="Bajar";dn.textContent="↓";dn.disabled=i===items.length-1;dn.onclick=function(){mover(i,1);};
     var x=document.createElement("button");x.className="mini mini--x";x.type="button";x.title="Borrar";x.textContent="✕";x.onclick=function(){borrar(i);};
     ctr.appendChild(up);ctr.appendChild(dn);ctr.appendChild(x);cab.appendChild(num);cab.appendChild(tit);cab.appendChild(ctr);
+    var lti=document.createElement("label");lti.textContent="Título de la noticia";
+    var ti=document.createElement("input");ti.type="text";ti.value=it.titulo;ti.placeholder="Ej: ¡EVENTOS CONFIRMADOS!";ti.oninput=function(){items[i].titulo=ti.value;sucio=true;preview();};
     var lt=document.createElement("label");lt.textContent="Texto de la noticia";
     var ta=document.createElement("textarea");ta.value=it.texto;ta.placeholder="Escribí la noticia...";ta.oninput=function(){items[i].texto=ta.value;sucio=true;preview();};
     var ll=document.createElement("label");ll.textContent="Link (opcional)";
     var inp=document.createElement("input");inp.type="url";inp.value=it.link;inp.placeholder="https://... o /productos";inp.oninput=function(){items[i].link=inp.value;sucio=true;preview();};
-    c.appendChild(cab);c.appendChild(lt);c.appendChild(ta);c.appendChild(ll);c.appendChild(inp);listaEl.appendChild(c);
+    c.appendChild(cab);c.appendChild(lti);c.appendChild(ti);c.appendChild(lt);c.appendChild(ta);c.appendChild(ll);c.appendChild(inp);listaEl.appendChild(c);
   });
   preview();
 }
 function preview(){
-  plista.innerHTML="";var vis=items.filter(function(n){return(n.texto||"").trim();});pvacio.hidden=vis.length>0;pcaja.hidden=vis.length===0;
-  vis.forEach(function(n){var li=document.createElement("li"),t=(n.texto||"").trim(),l=(n.link||"").trim();if(l&&LINK.test(l)){var a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener noreferrer";a.textContent=t;li.appendChild(a);}else{li.textContent=t;}plista.appendChild(li);});
+  plista.innerHTML="";var vis=items.filter(function(n){return((n.titulo||"").trim()||(n.texto||"").trim());});pvacio.hidden=vis.length>0;pcaja.hidden=vis.length===0;
+  vis.forEach(function(n){
+    var li=document.createElement("li"),t=(n.titulo||"").trim(),b=(n.texto||"").trim(),l=(n.link||"").trim();
+    var st=document.createElement("strong");st.textContent=t;
+    var sp=document.createElement("span");sp.className="ptexto";sp.textContent=b;
+    if(t&&l){var a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener noreferrer";a.appendChild(st);li.appendChild(a);}else if(t){li.appendChild(st);}
+    if(b&&!t&&l){var a2=document.createElement("a");a2.href=l;a2.target="_blank";a2.rel="noopener noreferrer";a2.appendChild(sp);li.appendChild(a2);}else if(b){li.appendChild(sp);}
+    plista.appendChild(li);
+  });
 }
 function validar(){
-  for(var i=0;i<items.length;i++){var t=(items[i].texto||"").trim(),l=(items[i].link||"").trim();if(!t&&!l)continue;if(!t){estado("La noticia "+(i+1)+" no tiene texto.","error");return null;}if(l&&!LINK.test(l)){estado("El link de la noticia "+(i+1)+" no es válido. Usá https://, http://, /, # o mailto:.","error");return null;}}
-  return items.map(function(n){return{texto:(n.texto||"").trim(),link:(n.link||"").trim()};}).filter(function(n){return n.texto;});
+  for(var i=0;i<items.length;i++){
+    var t=(items[i].titulo||"").trim(),b=(items[i].texto||"").trim(),l=(items[i].link||"").trim();
+    if(!t&&!b&&!l)continue;
+    if(!t){estado("La noticia "+(i+1)+" no tiene título.","error");return null;}
+    if(!b){estado("La noticia "+(i+1)+" no tiene texto.","error");return null;}
+    if(l&&!LINK.test(l)){estado("El link de la noticia "+(i+1)+" no es válido. Usá https://, http://, /, # o mailto:.","error");return null;}
+  }
+  return items.map(function(n){return{titulo:(n.titulo||"").trim(),texto:(n.texto||"").trim(),link:(n.link||"").trim()};}).filter(function(n){return n.titulo&&n.texto;});
 }
 function descargar(texto,nombreArchivo){
   var b=new Blob([texto],{type:"text/javascript;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");

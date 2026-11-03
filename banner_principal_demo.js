@@ -168,6 +168,8 @@
         '.mbbs-noticias__lista li{margin:0 0 10px;padding-left:4px;}',
         '.mbbs-noticias__lista li:last-child{margin-bottom:0;}',
         '.mbbs-noticias__lista a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;}',
+        '.mbbs-noticias__lista strong{display:block;font-weight:700;line-height:1.35;}',
+        '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
         '#melmak-bbs__noticias + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
@@ -407,7 +409,10 @@
         var activas = [];
         for (var i = 0; i < NOTICIAS.length; i++) {
             var n = NOTICIAS[i];
-            if (!n || !n.texto || !String(n.texto).trim()) { continue; }
+            if (!n) { continue; }
+            var _t = n.titulo ? String(n.titulo).trim() : '';
+            var _b = n.texto ? String(n.texto).trim() : '';
+            if (!_t && !_b) { continue; }
             activas.push(n);
         }
         if (!activas.length) { return null; }
@@ -428,19 +433,41 @@
 
         for (var j = 0; j < activas.length; j++) {
             var it = activas[j];
-            var li = document.createElement('li');
-            var texto = String(it.texto).trim();
+            var titulo = it.titulo ? String(it.titulo).trim() : '';
+            var texto = it.texto ? String(it.texto).trim() : '';
+            if (!titulo && !texto) { continue; }
             var link = it.link ? String(it.link).trim() : '';
-            if (link) {
+
+            var li = document.createElement('li');
+            var tit = document.createElement('strong');
+            tit.className = 'mbbs-noticia__titulo';
+            tit.textContent = titulo;
+            var cuerpo = document.createElement('span');
+            cuerpo.className = 'mbbs-noticia__texto';
+            cuerpo.textContent = texto;
+
+            if (titulo && link) {
                 var a = document.createElement('a');
                 a.href = link;
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
-                a.textContent = texto;
+                a.appendChild(tit);
                 li.appendChild(a);
-            } else {
-                li.textContent = texto;
+            } else if (titulo) {
+                li.appendChild(tit);
             }
+
+            if (texto && !titulo && link) {
+                var a2 = document.createElement('a');
+                a2.href = link;
+                a2.target = '_blank';
+                a2.rel = 'noopener noreferrer';
+                a2.appendChild(cuerpo);
+                li.appendChild(a2);
+            } else if (texto) {
+                li.appendChild(cuerpo);
+            }
+
             ul.appendChild(li);
         }
 
