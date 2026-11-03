@@ -1161,6 +1161,8 @@ var melkHoloTimer = window.setInterval(function () {
     '.melk-alerta .uk-icon svg { width: 15px !important; height: 15px !important; }',
     '.melk-alerta .uk-icon svg circle { stroke: #111 !important; }',
     '.melk-alerta .uk-icon svg path { fill: #111 !important; }',
+    '.melk-alerta__texto { flex: 1 1 auto !important; min-width: 0 !important; display: flex !important; flex-direction: column !important; gap: 2px !important; }',
+    '.melk-alerta__linea { display: block !important; }',
     '.melk-alerta-padre { background: transparent !important; padding: 0 !important; }',
     '.product-vip__attribute-item { border-radius: 8px !important; }'
   ].join('\n');
@@ -1207,6 +1209,27 @@ var melkHoloTimer = window.setInterval(function () {
     if (!a) return;
     a.classList.add('melk-alerta');
     if (a.parentElement) a.parentElement.classList.add('melk-alerta-padre');
+
+    /* Prints: el alerta del tema es global (lo comparten stickers), así que el
+       texto propio de posters se aplica solo en las páginas /prints/... */
+    if (!/^\/prints\//.test(location.pathname) || a.getAttribute('data-melk-alerta-prints')) return;
+
+    a.setAttribute('data-melk-alerta-prints', '1');
+    var icono = a.querySelector('.uk-icon');
+    var texto = document.createElement('div');
+    texto.className = 'melk-alerta__texto';
+    var linea1 = document.createElement('span');
+    linea1.className = 'melk-alerta__linea';
+    linea1.textContent = 'TIEMPO DE ELABORACIÓN - 2 DÍAS HÁBILES (MÁS TIEMPO DE ENVÍO)';
+    var linea2 = document.createElement('span');
+    linea2.className = 'melk-alerta__linea';
+    linea2.textContent = 'EN CASO DE COMBINAR POSTERS + STICKERS, EL TIEMPO DE ELABORACIÓN ES DE 7 A 10 DÍAS HÁBILES.';
+    texto.appendChild(linea1);
+    texto.appendChild(linea2);
+
+    a.textContent = '';
+    if (icono) a.appendChild(icono);
+    a.appendChild(texto);
   }
 
   function iniciar() {
