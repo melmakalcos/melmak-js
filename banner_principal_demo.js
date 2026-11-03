@@ -43,6 +43,31 @@
     ];
     /* MELMAK_NOTICIAS_FIN */
 
+    /* ==========================================================
+       BARRA DE CLIMA DINÁMICA
+       ========================================================== */
+    var CLIMA_TEXTOS = {
+        cargando: 'CARGANDO EL CLIMA...',
+        despejado: 'UFFFF, QUÉ SOLCITO. HERMOSO DÍA PARA COMPRAR STICKERS',
+        nublado: 'ESTÁ NUBLADO. PERO NO IMPORTA, VOY A LLENAR EL CARRITO DE STICKERS PARA ALEGRAR MI DÍA',
+        lluvia: '¡CÓMO LLUEVE! NO PUEDO SALIR DE CASA, NO ME QUIERO MOJAR. MELMAK HACE ENVÍOS A DOMICILIO',
+        tormenta: 'NO PUEDO SALIR. ¿SI ME PARTE UN RAYO? MEJOR COMPRO DESDE CASA, MELMAK HACE ENVÍOS A DOMICILIO',
+        nieve: '¿NIEVE? ACÁ NO PASA NADA. MELMAK TE LLEVA LOS STICKERS A DONDE ESTÉS',
+        niebla: 'HAY NIEBLA, PERO LOS STICKERS SE VEN IGUAL DE BIEN. MELMAK HACE ENVÍOS A DOMICILIO',
+        fallback: 'HOY ES EL MEJOR DÍA PARA COMPRAR STICKERS Y PRINTS'
+    };
+
+    var CLIMA_ICONOS = {
+        cargando: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FFD93D"/><g stroke="#FFD93D" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4" y1="4" x2="5.5" y2="5.5"/><line x1="18.5" y1="18.5" x2="20" y2="20"/><line x1="4" y1="20" x2="5.5" y2="18.5"/><line x1="18.5" y1="5.5" x2="20" y2="4"/></g></svg>',
+        despejado: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FFD93D"/><g stroke="#FFD93D" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4" y1="4" x2="5.5" y2="5.5"/><line x1="18.5" y1="18.5" x2="20" y2="20"/><line x1="4" y1="20" x2="5.5" y2="18.5"/><line x1="18.5" y1="5.5" x2="20" y2="4"/></g></svg>',
+        nublado: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 18h10a4 4 0 0 0 0-8 5 5 0 0 0-9-2 4 4 0 0 0-1 10z" fill="#B0BEC5"/></svg>',
+        lluvia: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9-2 4 4 0 0 0-1 10z" fill="#90A4AE"/><g stroke="#42A5F5" stroke-width="1.6" stroke-linecap="round"><line x1="9" y1="18" x2="8" y2="21"/><line x1="13" y1="18" x2="12" y2="21"/><line x1="17" y1="18" x2="16" y2="21"/></g></svg>',
+        tormenta: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9-2 4 4 0 0 0-1 10z" fill="#78909C"/><path d="M13 16l-3 4h3l-2 3 5-4h-3l2-3z" fill="#FFD93D"/></svg>',
+        nieve: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9-2 4 4 0 0 0-1 10z" fill="#E0E0E0"/><g fill="#fff"><circle cx="9" cy="19" r="1"/><circle cx="13" cy="20" r="1"/><circle cx="17" cy="19" r="1"/></g></svg>',
+        niebla: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g stroke="#B0BEC5" stroke-width="2" stroke-linecap="round"><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="4" y1="18" x2="20" y2="18"/></g></svg>',
+        fallback: '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="#FFD93D"/><g stroke="#FFD93D" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4" y1="4" x2="5.5" y2="5.5"/><line x1="18.5" y1="18.5" x2="20" y2="20"/><line x1="4" y1="20" x2="5.5" y2="18.5"/><line x1="18.5" y1="5.5" x2="20" y2="4"/></g></svg>'
+    };
+
     var FOTOS = [
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/b2caa17a5655c9e1148c53a589e5e4131a2e31649329d59af688697e45a5c76f20700.png', alt: 'Trabajo MELMAK 1', sticker: '' },
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/76fcbcd4c93bb52718e518ec5149e5c2da84c8a9414d91ea0bf589b325843b8320700.png', alt: 'Trabajo MELMAK 2', sticker: '' },
@@ -82,15 +107,16 @@
         '  padding:clamp(24px,3.5vw,54px) 20px clamp(30px,5vw,60px);}',
         '#melmak-bbs__scroll-block,#melmak-bbs__carrusel,#melmak-bbs__post,#melmak-bbs__head{will-change:opacity,transform;}',
 
-        '#melmak-bbs__carrusel{position:relative;z-index:3;width:100%;background:var(--ink);display:flex;align-items:center;padding:16px 0;white-space:nowrap;}',
+        /* ===== BARRA COMPARTIDA (carrusel + clima) ===== */
+        '.mbbs-barra{position:relative;z-index:3;width:100%;background:var(--ink);display:flex;align-items:center;padding:16px 0;white-space:nowrap;}',
         '.mbbs-carrusel-clip{width:100%;overflow:hidden;}',
-        '#melmak-bbs__carrusel-inner{display:flex;width:max-content;align-items:center;animation:mbbs-marquee 22s linear infinite;will-change:transform;}',
-        '#melmak-bbs__carrusel:before,#melmak-bbs__carrusel:after{content:"";position:absolute;left:0;right:0;z-index:1;}',
-        '#melmak-bbs__carrusel:before{top:-10px;height:10px;',
+        '.mbbs-barra-inner{display:flex;width:max-content;align-items:center;animation:mbbs-marquee 22s linear infinite;will-change:transform;}',
+        '.mbbs-barra:before,.mbbs-barra:after{content:"";position:absolute;left:0;right:0;z-index:1;}',
+        '.mbbs-barra:before{top:-10px;height:10px;',
         '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 10H100V9C87.5 9 87.5 3 75 3C62.5 3 62.5 9 50 9C37.5 9 37.5 3 25 3C12.5 3 12.5 9 0 9Z\' fill=\'%23353535\'/%3E%3C/svg%3E");',
         '  background-size:180px 10px;background-repeat:repeat-x;',
         '  animation:mbbs-ola-top 6s linear infinite;}',
-        '#melmak-bbs__carrusel:after{bottom:-10px;height:10px;',
+        '.mbbs-barra:after{bottom:-10px;height:10px;',
         '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 0H100V3C87.5 3 87.5 9 75 9C62.5 9 62.5 3 50 3C37.5 3 37.5 9 25 9C12.5 9 12.5 3 0 3Z\' fill=\'%23353535\'/%3E%3C/svg%3E");',
         '  background-size:180px 10px;background-repeat:repeat-x;',
         '  animation:mbbs-ola-top 6s linear infinite;animation-delay:-1.5s;}',
@@ -100,6 +126,16 @@
         '  font-size:clamp(20px,3vw,34px);line-height:1.15;letter-spacing:.02em;text-transform:uppercase;}',
         '@keyframes mbbs-marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}',
         '@keyframes mbbs-ola-top{from{background-position-x:0;}to{background-position-x:180px;}}',
+
+        /* ===== BARRA DE CLIMA (específico) ===== */
+        '#melmak-bbs__clima{margin:clamp(28px,4vw,56px) 0;}',
+        '#melmak-bbs__clima .mbbs-barra-inner{animation-duration:32s;}',
+        '.mbbs-clima-item{display:inline-flex;align-items:center;gap:14px;margin:0 26px;}',
+        '.mbbs-clima-icono{display:inline-flex;flex:none;width:34px;height:34px;line-height:1;}',
+        '.mbbs-clima-icono svg{display:block;width:100%;height:100%;}',
+        '.mbbs-clima-texto{font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;',
+        '  font-size:clamp(20px,3vw,34px);line-height:1.15;letter-spacing:.02em;text-transform:uppercase;',
+        '  color:#ffee26;}',
 
         '#melmak-bbs__galeria{position:relative;z-index:2;width:100%;overflow-x:clip;overflow-y:visible;background:#fff;',
         '  padding:clamp(74px,9vw,124px) 0 clamp(60px,4.6vw,170px);}',
@@ -188,7 +224,7 @@
         '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
-        '#melmak-bbs__noticias + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
+        '#melmak-bbs__clima + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -213,6 +249,8 @@
         '  #melmak-bbs__post-about{padding-left:64px;}',
         '  #melmak-bbs__post-question{padding-left:64px;}',
         '  #melmak-bbs .mbbs-personaje{left:-8px;width:112px;height:112px;}',
+        '  #melmak-bbs__clima{margin:24px 0;}',
+        '  .mbbs-clima-icono{width:26px;height:26px;}',
         '}',
 
         '#melmak-bbs__merit{position:relative;width:100%;background:#fff;',
@@ -261,8 +299,8 @@
         '  .mbbs-galeria-slide.is-l2{transform:translate(-14px,-34px) rotate(3deg);}',
         '}',
         '@media (prefers-reduced-motion:reduce){',
-        '  #melmak-bbs__carrusel-inner{animation:none;}',
-        '  #melmak-bbs__carrusel:before,#melmak-bbs__carrusel:after{animation:none;}',
+        '  .mbbs-barra-inner{animation:none;}',
+        '  .mbbs-barra:before,.mbbs-barra:after{animation:none;}',
         '  #melmak-bbs__galeria.is-pop .mbbs-galeria-viewport{animation:none;}',
         '  .mbbs-galeria-track,.mbbs-galeria-slide{transition:none;}',
         '  .mbbs-galeria-track.is-moved .mbbs-galeria-sticker{animation:none;}',
@@ -278,6 +316,142 @@
         { t: 'TIEMPO DE ELABORACIÓN DE POSTERS - 1 A 2 DÍAS HÁBILES', c: '#ffffff' },
         { t: 'TIEMPO DE ELABORACIÓN DE STICKERS - 7 A 10 DÍAS HÁBILES', c: COLOR_BG }
     ];
+
+    /* ==========================================================
+       HELPERS DE CLIMA
+       ========================================================== */
+
+    function mapearClima(code) {
+        if (code === 0) return 'despejado';
+        if (code >= 1 && code <= 3) return 'nublado';
+        if (code === 45 || code === 48) return 'niebla';
+        if (code >= 51 && code <= 67) return 'lluvia';
+        if (code >= 71 && code <= 77) return 'nieve';
+        if (code >= 80 && code <= 82) return 'lluvia';
+        if (code >= 95) return 'tormenta';
+        return 'nublado';
+    }
+
+    function crearItemClima(key) {
+        var item = document.createElement('span');
+        item.className = 'mbbs-clima-item';
+        var icono = document.createElement('span');
+        icono.className = 'mbbs-clima-icono';
+        icono.innerHTML = CLIMA_ICONOS[key] || CLIMA_ICONOS.fallback;
+        var txt = document.createElement('span');
+        txt.className = 'mbbs-clima-texto';
+        txt.textContent = CLIMA_TEXTOS[key] || CLIMA_TEXTOS.fallback;
+        item.appendChild(icono);
+        item.appendChild(txt);
+        return item;
+    }
+
+    function crearMitadClima(key) {
+        var mitad = document.createElement('div');
+        mitad.className = 'mbbs-marquee-half';
+        for (var i = 0; i < 3; i++) {
+            mitad.appendChild(crearItemClima(key));
+        }
+        return mitad;
+    }
+
+    function crearBarraClima() {
+        var barra = document.createElement('div');
+        barra.id = 'melmak-bbs__clima';
+        barra.className = 'mbbs-barra';
+        barra.setAttribute('aria-label', 'Clima MELMAK');
+
+        var clip = document.createElement('div');
+        clip.className = 'mbbs-carrusel-clip';
+        var inner = document.createElement('div');
+        inner.id = 'melmak-clima-inner';
+        inner.className = 'mbbs-barra-inner';
+
+        inner.appendChild(crearMitadClima('fallback'));
+        inner.appendChild(crearMitadClima('fallback'));
+
+        clip.appendChild(inner);
+        barra.appendChild(clip);
+        return barra;
+    }
+
+    function pintarClima(key) {
+        var barra = document.getElementById('melmak-bbs__clima');
+        if (!barra) { return; }
+        var items = barra.querySelectorAll('.mbbs-clima-item');
+        var icono = CLIMA_ICONOS[key] || CLIMA_ICONOS.fallback;
+        var texto = CLIMA_TEXTOS[key] || CLIMA_TEXTOS.fallback;
+        for (var i = 0; i < items.length; i++) {
+            var ic = items[i].querySelector('.mbbs-clima-icono');
+            var tx = items[i].querySelector('.mbbs-clima-texto');
+            if (ic) { ic.innerHTML = icono; }
+            if (tx) { tx.textContent = texto; }
+        }
+    }
+
+    function guardarClima(key) {
+        try {
+            sessionStorage.setItem('melmak-clima', JSON.stringify({ key: key, ts: Date.now() }));
+        } catch (e) { }
+    }
+
+    function obtenerGeo(url) {
+        return fetch(url).then(function (r) {
+            if (!r.ok) { throw new Error('geo status ' + r.status); }
+            return r.json();
+        }).then(function (data) {
+            if (!data || data.success === false) { throw new Error('geo no success'); }
+            if (!data.latitude || !data.longitude) { throw new Error('geo sin coords'); }
+            return data;
+        });
+    }
+
+    function obtenerClima(lat, lon) {
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=weather_code';
+        return fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+            var code = (data && data.current && data.current.weather_code != null) ? data.current.weather_code : 3;
+            return mapearClima(code);
+        });
+    }
+
+    function cargarClima() {
+        // 1. Cache (1 hora)
+        try {
+            var raw = sessionStorage.getItem('melmak-clima');
+            if (raw) {
+                var cache = JSON.parse(raw);
+                if (cache && cache.ts && (Date.now() - cache.ts < 3600000) && cache.key) {
+                    pintarClima(cache.key);
+                    return;
+                }
+            }
+        } catch (e) { }
+
+        // 2. Primer intento: ipwho.is
+        obtenerGeo('https://ipwho.is/')
+            .then(function (geo) { return obtenerClima(geo.latitude, geo.longitude); })
+            .then(function (key) {
+                guardarClima(key);
+                pintarClima(key);
+            })
+            .catch(function () {
+                // 3. Fallback: ipapi.co
+                return obtenerGeo('https://ipapi.co/json/')
+                    .then(function (geo) { return obtenerClima(geo.latitude, geo.longitude); })
+                    .then(function (key) {
+                        guardarClima(key);
+                        pintarClima(key);
+                    });
+            })
+            .catch(function () {
+                // 4. Último recurso: texto genérico
+                pintarClima('fallback');
+            });
+    }
+
+    /* ==========================================================
+       CONSTRUCCIÓN DE LA SECCIÓN
+       ========================================================== */
 
     function crearSeccion() {
         var sec = document.createElement('section');
@@ -388,8 +562,10 @@
 
         var carrusel = document.createElement('div');
         carrusel.id = 'melmak-bbs__carrusel';
+        carrusel.className = 'mbbs-barra';
         var barra = document.createElement('div');
         barra.id = 'melmak-bbs__carrusel-inner';
+        barra.className = 'mbbs-barra-inner';
         var clip = document.createElement('div');
         clip.className = 'mbbs-carrusel-clip';
         clip.appendChild(barra);
@@ -416,6 +592,7 @@
         sec.appendChild(carrusel);
         var noticias = crearNoticias();
         if (noticias) { sec.appendChild(noticias); }
+        sec.appendChild(crearBarraClima()); /* NUEVA BARRA DE CLIMA */
         sec.appendChild(crearGaleria());
         sec.appendChild(crearMerit());
         return sec;
@@ -666,6 +843,9 @@
     }
 
     root.appendChild(crearSeccion());
+
+    /* Arrancar la barra de clima (async, no bloquea el render) */
+    cargarClima();
 
     var heroPlop = document.getElementById('melmak-bbs__hero');
     if (heroPlop) {
