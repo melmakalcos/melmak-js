@@ -23,6 +23,10 @@
         }
     ];
 
+    /* MELMAK_NOTICIAS_INICIO */
+    var NOTICIAS = [];
+    /* MELMAK_NOTICIAS_FIN */
+
     var FOTOS = [
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/b2caa17a5655c9e1148c53a589e5e4131a2e31649329d59af688697e45a5c76f20700.png', alt: 'Trabajo MELMAK 1', sticker: '' },
         { src: 'https://d22fxaf9t8d39k.cloudfront.net/76fcbcd4c93bb52718e518ec5149e5c2da84c8a9414d91ea0bf589b325843b8320700.png', alt: 'Trabajo MELMAK 2', sticker: '' },
@@ -156,6 +160,17 @@
         '#melmak-bbs .mbbs-personaje{position:absolute;top:50%;left:-8px;width:110px;height:110px;',
         '  object-fit:contain;transform:translateY(-50%);pointer-events:none;display:block;}',
 
+        '#melmak-bbs__noticias{position:relative;z-index:2;width:100%;background:#fff;padding:clamp(44px,6vw,80px) 20px clamp(20px,3vw,36px);}',
+        '.mbbs-noticias__titulo{margin:0 auto clamp(18px,2.5vw,28px);text-align:center;font-family:"Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;font-size:46px;line-height:1;color:var(--ink);}',
+        '.mbbs-noticias__caja{max-width:min(1180px,95vw);margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:26px;padding:clamp(24px,3vw,36px) clamp(22px,3vw,40px);box-sizing:border-box;}',
+        '.mbbs-noticias__lista{margin:0;padding-left:24px;color:var(--ink);font-family:Rubik,Arial,sans-serif;font-size:clamp(15px,1.8vw,18px);line-height:1.6;text-align:left;list-style:disc outside !important;}',
+        '.mbbs-noticias__lista li{display:list-item !important;}',
+        '.mbbs-noticias__lista li{margin:0 0 10px;padding-left:4px;}',
+        '.mbbs-noticias__lista li:last-child{margin-bottom:0;}',
+        '.mbbs-noticias__lista a{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:3px;}',
+        '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
+        '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
+        '#melmak-bbs__noticias + #melmak-bbs__galeria{padding-top:clamp(24px,4vw,48px);}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
         '  #melmak-bbs__posts{grid-template-columns:repeat(3,1fr);gap:12px;}',
@@ -381,9 +396,57 @@
 
         sec.appendChild(inner);
         sec.appendChild(carrusel);
+        var noticias = crearNoticias();
+        if (noticias) { sec.appendChild(noticias); }
         sec.appendChild(crearGaleria());
         sec.appendChild(crearMerit());
         return sec;
+    }
+
+    function crearNoticias() {
+        var activas = [];
+        for (var i = 0; i < NOTICIAS.length; i++) {
+            var n = NOTICIAS[i];
+            if (!n || !n.texto || !String(n.texto).trim()) { continue; }
+            activas.push(n);
+        }
+        if (!activas.length) { return null; }
+
+        var s = document.createElement('section');
+        s.id = 'melmak-bbs__noticias';
+        s.setAttribute('aria-label', 'Noticias MELMAK');
+
+        var h = document.createElement('h2');
+        h.className = 'mbbs-noticias__titulo';
+        h.textContent = 'NOTICIAS';
+        s.appendChild(h);
+
+        var caja = document.createElement('div');
+        caja.className = 'mbbs-noticias__caja';
+        var ul = document.createElement('ul');
+        ul.className = 'mbbs-noticias__lista';
+
+        for (var j = 0; j < activas.length; j++) {
+            var it = activas[j];
+            var li = document.createElement('li');
+            var texto = String(it.texto).trim();
+            var link = it.link ? String(it.link).trim() : '';
+            if (link) {
+                var a = document.createElement('a');
+                a.href = link;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.textContent = texto;
+                li.appendChild(a);
+            } else {
+                li.textContent = texto;
+            }
+            ul.appendChild(li);
+        }
+
+        caja.appendChild(ul);
+        s.appendChild(caja);
+        return s;
     }
 
     function crearGaleria() {

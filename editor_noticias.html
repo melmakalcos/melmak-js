@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MELMAK · Editor de NOTICIAS</title>
+<style>
+@font-face{font-family:"Curda Gouda";src:url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype");font-weight:400;font-display:swap}
+:root{--a:#ffee26;--t:#353535;--g:#f3f3f3;--l:#d9d9d9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--g);color:var(--t);font-family:Rubik,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+header{background:var(--t);color:#fff;padding:22px 20px;display:flex;align-items:center;gap:14px}
+.marca{background:var(--a);color:var(--t);border-radius:12px;padding:9px 13px;font-weight:900;letter-spacing:.04em;font-size:14px}
+header h1{margin:0;font-size:20px}header p{margin:3px 0 0;color:#d8d8d8;font-size:13px}
+main{max-width:1000px;margin:0 auto;padding:22px 16px 60px}
+.barra{display:flex;flex-wrap:wrap;gap:9px;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px;position:sticky;top:8px;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.btn{border:2px solid var(--t);background:#fff;color:var(--t);border-radius:9px;padding:9px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.btn:hover{transform:translateY(-1px)}
+.btn--a{background:var(--a)}.btn--n{background:var(--t);color:var(--a)}.btn--s{background:#f7f7f7}
+.estado{margin:14px 2px 3px;min-height:18px;font-size:13px;color:#666}.estado.ok{color:#1f7a3d}.estado.error{color:#b3261e}
+.archivo{margin:0 2px 16px;font-size:12px;color:#777;word-break:break-all}
+.lista{display:flex;flex-direction:column;gap:11px}
+.vacio{background:#fff;border:1px dashed var(--l);border-radius:13px;padding:24px;text-align:center;color:#777;font-size:13px}
+.noticia{background:#fff;border:1px solid var(--l);border-radius:13px;padding:13px}
+.cab{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.num{width:25px;height:25px;border-radius:50%;background:var(--a);border:2px solid var(--t);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 25px}
+.tit{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;flex:1}
+.ctr{display:flex;gap:4px}
+.mini{border:1px solid var(--l);background:#fafafa;border-radius:7px;width:29px;height:29px;cursor:pointer;font-size:13px;line-height:1}
+.mini:hover{background:var(--a);border-color:var(--t)}.mini--x:hover{background:#ffd7d4}
+label{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#666;margin:7px 0 4px}
+textarea,input{width:100%;border:1px solid var(--l);border-radius:8px;padding:9px 11px;font:inherit;font-size:14px;color:var(--t);background:#fff}
+textarea{min-height:60px;resize:vertical}textarea:focus,input:focus{outline:2px solid var(--a);border-color:var(--t)}
+.preview{margin-top:26px}.preview h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 9px;color:#666}
+.marco{background:#fff;border:1px solid var(--l);border-radius:15px;padding:22px 16px}
+.ptitulo{font-family:"Curda Gouda",Rubik,sans-serif;font-size:46px;line-height:1;text-align:center;margin:0 0 16px}
+.pcaja{max-width:720px;margin:0 auto;border:3px solid var(--t);border-radius:26px;padding:17px 21px}
+.pcaja ul{margin:0;padding-left:23px;list-style:disc outside}.pcaja li{margin:0 0 8px;font-size:14px;line-height:1.5}.pcaja li:last-child{margin-bottom:0}
+.pcaja a{color:var(--t);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.pvacio{text-align:center;color:#777;font-size:13px;margin:0}
+.ayuda{margin:24px 0 0;font-size:12.5px;line-height:1.6;color:#666}.ayuda strong{color:var(--t)}
+@media(max-width:640px){header{align-items:flex-start;flex-direction:column;gap:10px}.barra{position:static}.btn{flex:1 1 auto}.ptitulo{font-size:42px}}
+</style>
+</head>
+<body>
+<header><div class="marca">MELMAK</div><div><h1>Editor de NOTICIAS</h1><p>Editá las noticias del banner sin tocar el código.</p></div></header>
+<main>
+<section class="barra">
+<button class="btn btn--a" id="abrir">Abrir banner_principal_demo.js</button>
+<button class="btn btn--n" id="guardar">Guardar cambios</button>
+<button class="btn" id="agregar">+ Agregar noticia</button>
+<button class="btn btn--s" id="backup">Descargar backup</button>
+<input type="file" id="file" accept=".js,text/javascript" hidden>
+</section>
+<p class="estado" id="estado">Abrí el archivo del banner para empezar.</p>
+<p class="archivo" id="archivo">Ningún archivo cargado.</p>
+<section class="lista" id="lista"></section>
+<section class="preview"><h2>Vista previa</h2><div class="marco"><div class="ptitulo">NOTICIAS</div><div class="pcaja" id="pcaja"><ul id="plista"></ul></div><p class="pvacio" id="pvacio" hidden>Si no hay noticias, la sección se oculta en la web.</p></div></section>
+<p class="ayuda"><strong>1.</strong> Abrí <code>banner_principal_demo.js</code>. <strong>2.</strong> Agregá o editá las noticias. <strong>3.</strong> Guardá. <strong>4.</strong> Subí el archivo al repositorio y actualizá el hash del script. Si no guarda directo, se descarga una copia: reemplazá el archivo en <code>_test</code>.</p>
+</main>
+<script>
+(function(){
+"use strict";
+var INICIO="/* MELMAK_NOTICIAS_INICIO */", FIN="/* MELMAK_NOTICIAS_FIN */", LINK=/^(https?:\/\/|\/|#|mailto:)/i;
+var estadoEl=document.getElementById("estado"), archivoEl=document.getElementById("archivo"), listaEl=document.getElementById("lista"), plista=document.getElementById("plista"), pvacio=document.getElementById("pvacio"), pcaja=document.getElementById("pcaja"), fileInput=document.getElementById("file");
+var items=[], textoOriginal="", textoBackup="", nombre="", handle=null, sucio=false;
+function estado(m,t){estadoEl.textContent=m;estadoEl.className="estado"+(t?" "+t:"");}
+function parsear(texto){
+  var i=texto.indexOf(INICIO), f=texto.indexOf(FIN);
+  if(i<0||f<0||f<i) throw new Error("No encontré los marcadores MELMAK_NOTICIAS_INICIO / MELMAK_NOTICIAS_FIN.");
+  var b=texto.slice(i+INICIO.length,f), m=b.match(/var\s+NOTICIAS\s*=\s*([\s\S]*?);\s*$/);
+  if(!m) throw new Error("No encontré var NOTICIAS = [...]; dentro de los marcadores.");
+  var a=JSON.parse(m[1]); if(!Array.isArray(a)) throw new Error("NOTICIAS no es una lista.");
+  return a.map(function(n){return{texto:n&&n.texto?String(n.texto):"",link:n&&n.link?String(n.link):""};});
+}
+function serializar(a){
+  var j=JSON.stringify(a,null,4).replace(/\n/g,"\n    "), i=textoOriginal.indexOf(INICIO), f=textoOriginal.indexOf(FIN);
+  return textoOriginal.slice(0,i+INICIO.length)+"\n    var NOTICIAS = "+j+";\n    "+textoOriginal.slice(f);
+}
+function cargar(texto,nombreArchivo,h){
+  var a; try{a=parsear(texto);}catch(e){estado(e.message,"error");return;}
+  items=a; textoOriginal=texto; textoBackup=texto; nombre=nombreArchivo||"banner_principal_demo.js"; handle=h||null; sucio=false;
+  archivoEl.textContent="Archivo: "+nombre+(handle?" (guardado directo disponible)":" (se descargará una copia al guardar)");
+  estado("Archivo cargado. "+items.length+" noticia"+(items.length===1?"":"s")+".","ok"); render();
+}
+function leer(f){if(!f)return; f.text().then(function(t){cargar(t,f.name,null);}).catch(function(){estado("No se pudo leer el archivo.","error");});}
+function agregar(){items.push({texto:"",link:""});sucio=true;render();var a=listaEl.querySelectorAll("textarea");if(a.length)a[a.length-1].focus();}
+function mover(i,d){var j=i+d;if(j<0||j>=items.length)return;var x=items[i];items[i]=items[j];items[j]=x;sucio=true;render();}
+function borrar(i){items.splice(i,1);sucio=true;render();}
+function render(){
+  listaEl.innerHTML="";
+  if(!items.length){var v=document.createElement("div");v.className="vacio";v.textContent="No hay noticias cargadas. Usá “+ Agregar noticia” o abrí el banner.";listaEl.appendChild(v);}
+  items.forEach(function(it,i){
+    var c=document.createElement("article");c.className="noticia";
+    var cab=document.createElement("div");cab.className="cab";
+    var num=document.createElement("span");num.className="num";num.textContent=String(i+1);
+    var tit=document.createElement("span");tit.className="tit";tit.textContent="Noticia "+(i+1);
+    var ctr=document.createElement("div");ctr.className="ctr";
+    var up=document.createElement("button");up.className="mini";up.type="button";up.title="Subir";up.textContent="↑";up.disabled=i===0;up.onclick=function(){mover(i,-1);};
+    var dn=document.createElement("button");dn.className="mini";dn.type="button";dn.title="Bajar";dn.textContent="↓";dn.disabled=i===items.length-1;dn.onclick=function(){mover(i,1);};
+    var x=document.createElement("button");x.className="mini mini--x";x.type="button";x.title="Borrar";x.textContent="✕";x.onclick=function(){borrar(i);};
+    ctr.appendChild(up);ctr.appendChild(dn);ctr.appendChild(x);cab.appendChild(num);cab.appendChild(tit);cab.appendChild(ctr);
+    var lt=document.createElement("label");lt.textContent="Texto de la noticia";
+    var ta=document.createElement("textarea");ta.value=it.texto;ta.placeholder="Escribí la noticia...";ta.oninput=function(){items[i].texto=ta.value;sucio=true;preview();};
+    var ll=document.createElement("label");ll.textContent="Link (opcional)";
+    var inp=document.createElement("input");inp.type="url";inp.value=it.link;inp.placeholder="https://... o /productos";inp.oninput=function(){items[i].link=inp.value;sucio=true;preview();};
+    c.appendChild(cab);c.appendChild(lt);c.appendChild(ta);c.appendChild(ll);c.appendChild(inp);listaEl.appendChild(c);
+  });
+  preview();
+}
+function preview(){
+  plista.innerHTML="";var vis=items.filter(function(n){return(n.texto||"").trim();});pvacio.hidden=vis.length>0;pcaja.hidden=vis.length===0;
+  vis.forEach(function(n){var li=document.createElement("li"),t=(n.texto||"").trim(),l=(n.link||"").trim();if(l&&LINK.test(l)){var a=document.createElement("a");a.href=l;a.target="_blank";a.rel="noopener noreferrer";a.textContent=t;li.appendChild(a);}else{li.textContent=t;}plista.appendChild(li);});
+}
+function validar(){
+  for(var i=0;i<items.length;i++){var t=(items[i].texto||"").trim(),l=(items[i].link||"").trim();if(!t&&!l)continue;if(!t){estado("La noticia "+(i+1)+" no tiene texto.","error");return null;}if(l&&!LINK.test(l)){estado("El link de la noticia "+(i+1)+" no es válido. Usá https://, http://, /, # o mailto:.","error");return null;}}
+  return items.map(function(n){return{texto:(n.texto||"").trim(),link:(n.link||"").trim()};}).filter(function(n){return n.texto;});
+}
+function descargar(texto,nombreArchivo){
+  var b=new Blob([texto],{type:"text/javascript;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");
+  a.href=u;a.download=nombreArchivo||"banner_principal_demo.js";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1500);
+}
+async function guardar(){
+  if(!textoOriginal){estado("Primero abrí banner_principal_demo.js.","error");return;}
+  var limpio=validar();if(!limpio)return;var salida=serializar(limpio);
+  if(handle&&handle.createWritable){try{var w=await handle.createWritable();await w.write(salida);await w.close();textoOriginal=salida;sucio=false;estado("Guardado directo en "+nombre+".","ok");return;}catch(e){estado("No se pudo guardar directo; se descarga una copia.","error");}}
+  descargar(salida,nombre||"banner_principal_demo.js");estado("Se descargó "+(nombre||"banner_principal_demo.js")+". Reemplazá el archivo en _test.","ok");
+}
+document.getElementById("abrir").onclick=async function(){
+  if(window.showOpenFilePicker){try{var hs=await window.showOpenFilePicker({multiple:false,types:[{description:"JavaScript",accept:{"text/javascript":[".js"]}}]});var f=await hs[0].getFile(),t=await f.text();cargar(t,f.name,hs[0]);return;}catch(e){if(e&&e.name==="AbortError")return;estado("No se pudo abrir directo. Elegí el archivo con el selector.","error");}}
+  fileInput.value="";fileInput.click();
+};
+fileInput.onchange=function(){leer(fileInput.files&&fileInput.files[0]);};
+document.getElementById("agregar").onclick=agregar;
+document.getElementById("guardar").onclick=guardar;
+document.getElementById("backup").onclick=function(){if(!textoBackup){estado("Todavía no abriste el banner.","error");return;}descargar(textoBackup,"banner_principal_demo-BACKUP.js");estado("Backup descargado.","ok");};
+document.addEventListener("dragover",function(e){e.preventDefault();});
+document.addEventListener("drop",function(e){e.preventDefault();var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)leer(f);});
+window.addEventListener("beforeunload",function(e){if(sucio){e.preventDefault();e.returnValue="";}});
+})();
+</script>
+</body>
+</html>
