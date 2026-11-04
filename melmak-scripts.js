@@ -1254,75 +1254,72 @@ var melkHoloTimer = window.setInterval(function () {
   }, 500);
 })();
 /* ==========================================================
-   FIXES GLOBALES DE HEADER (MELMAK) - V2
+   FIXES GLOBALES DE HEADER (MELMAK) - V3
    ========================================================== */
 (function arreglarHeaderYMarquee() {
   var styleHeader = document.createElement('style');
   styleHeader.textContent = [
-    /* 1. LOGO: Anular la animación extraña del tema y forzar un hover limpio */
-    /* Al quitar el transform en hover, evitamos que se "levante" de un solo lado */
-    '.header-logo, .header-logo__image, a.header-logo {',
-    '  transform: none !important;',
-    '  transition: opacity 0.3s ease !important;',
+    /* 1. LOGO: Animación de flotación centrada (eje en el medio) */
+    '@keyframes melmak-logo-float {',
+    '  0% { transform: scale(1) translateY(0); }',
+    '  50% { transform: scale(1.05) translateY(-4px); }', /* Sube un poquito y agranda */
+    '  100% { transform: scale(1) translateY(0); }',
     '}',
+    '.header-logo, .header-logo__image, a.header-logo {',
+    '  transform-origin: center center !important;', /* Eje perfectamente centrado */
+    '  animation: melmak-logo-float 4s ease-in-out infinite !important;', /* Movimiento constante */
+    '  display: inline-block !important;',
+    '}',
+    /* Al pasar el mouse, se pausa la flotación y hace un zoom suave */
     '.header-logo:hover, .header-logo__image:hover, a.header-logo:hover {',
-    '  transform: scale(1.05) !important;', /* Un escalado suave y simétrico */
-    '  transform-origin: center center !important;',
+    '  animation-play-state: paused !important;',
+    '  transform: scale(1.08) !important;',
+    '  transition: transform 0.3s ease !important;',
     '}',
 
-    /* 2. RESPONSIVO: Evitar que el logo se meta debajo de la franja negra */
-    /* Hacemos que la franja negra empuje el contenido hacia abajo en lugar de superponerse */
+    /* 2. RESPONSIVO: Más espacio en blanco y evitar superposición */
     '@media (max-width: 768px) {',
+    '  .header, header, .header__container {',
+    '    padding-top: 25px !important;', /* Aumenta el espacio blanco general */
+    '    margin-top: 0 !important;',
+    '    position: relative !important;',
+    '  }',
+    '  .header-logo, .header__left {',
+    '    margin-top: 15px !important;', /* Empuja el logo más abajo para que respire */
+    '    position: relative !important;',
+    '    z-index: 5 !important;',
+    '  }',
     '  .header-announcement {',
     '    position: relative !important;',
     '    z-index: 10 !important;',
-    '  }',
-    '  .header, header {',
-    '    padding-top: 10px !important;',
-    '    margin-top: 0 !important;',
-    '  }',
-    '  /* Si el logo está posicionado de forma absoluta, lo forzamos a estar estático */',
-    '  .header-logo, .header__left {',
-    '    position: relative !important;',
-    '    top: 0 !important;',
-    '    margin-top: 15px !important; /* Agrega el espacio blanco extra */',
     '  }',
     '}'
   ].join('\n');
   document.head.appendChild(styleHeader);
 
-  /* 3. MARQUEE AMARILLO: Forzar el inicio de CUALQUIER animación de marquesina */
+  /* 3. MARQUEE AMARILLO: Fuerza el arranque de la animación si se traba */
   function forzarTodasLasAnimaciones() {
-    // Busca cualquier elemento que tenga una animación en su CSS computado
     var todos = document.querySelectorAll('*');
     for (var i = 0; i < todos.length; i++) {
       var el = todos[i];
       var estilo = window.getComputedStyle(el);
-
-      // Si el elemento tiene una animación activa (marquee, slide, scroll, etc.)
-      if (estilo.animationName !== 'none' && estilo.animationName.indexOf('marquee') !== -1 || estilo.animationName.indexOf('slide') !== -1) {
+      if (estilo.animationName !== 'none' && (estilo.animationName.indexOf('marquee') !== -1 || estilo.animationName.indexOf('slide') !== -1)) {
         el.style.animation = 'none';
-        void el.offsetWidth; // Fuerza el repintado (reflow)
-        el.style.animation = ''; // Vuelve a aplicar la animación
+        void el.offsetWidth;
+        el.style.animation = '';
       }
     }
   }
 
-  // Ejecutar en varios momentos clave de la carga de la página
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', forzarTodasLasAnimaciones);
   } else {
     forzarTodasLasAnimaciones();
   }
-
   window.addEventListener('load', forzarTodasLasAnimaciones);
-
-  // Si el tema usa fuentes de Typekit, al cargar mueven el layout y traban el marquee
   if (document.fonts) {
     document.fonts.ready.then(forzarTodasLasAnimaciones);
   }
-
-  // Refuerzos con setTimeout
   setTimeout(forzarTodasLasAnimaciones, 300);
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
