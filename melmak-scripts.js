@@ -865,75 +865,59 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   FIX MENÚ INFORMACIÓN (V4 - ANIMACIÓN Y CAJA)
+   FIX MENÚ INFORMACIÓN (V5 - JS + CSS A PRUEBA DE UIKIT)
    ========================================================== */
 (function () {
+  // 1. CSS para la animación de levitación
   var s = document.createElement('style');
   s.textContent = [
-    /* 1. MATAR CUALQUIER CAJA O SOMBRA EN EL ÍTEM PADRE (Soluciona la caja transparente) */
-    '.header-menu__desktop-list__container-list li,',
-    '.header-menu__desktop-list__container-list li:hover,',
-    '.header-menu__desktop-list__container-list li.uk-open,',
-    '.header-menu__desktop-list__container-list li.uk-active {',
-    '  background: transparent !important;',
-    '  background-color: transparent !important;',
-    '  box-shadow: none !important;',
-    '  border: none !important;',
-    '  outline: none !important;',
-    '}',
-
-    '.header-menu__desktop-list__container-list li > a {',
-    '  background: transparent !important;',
-    '  box-shadow: none !important;',
-    '  border: none !important;',
-    '  outline: none !important;',
-    '}',
-
-    /* 2. ANIMACIÓN DE LEVITACIÓN (Igual al menú de CATÁLOGO) */
-    '.header-menu__desktop-list__container-list li:hover > a.desktop-list__link {',
-    '  animation: melk-levitar-info 2.6s ease-in-out infinite !important;',
+    /* Forzamos a que el enlace sea inline-block para que la animación funcione */
+    '.header-menu__desktop-list__container-list ul > li > a {',
+    '  display: inline-block !important;',
     '  transform-origin: 50% 60% !important;',
-    '  will-change: transform;',
+    '}',
+    /* Aplicamos la animación al pasar el mouse sobre cualquier ítem */
+    '.header-menu__desktop-list__container-list ul > li:hover > a {',
+    '  animation: melk-levitar-info 2.6s ease-in-out infinite !important;',
     '}',
     '@keyframes melk-levitar-info {',
     '  0%, 100% { transform: translateY(0) scale(1.04); }',
     '  50% { transform: translateY(-4px) scale(1.05); }',
     '}',
-
-    /* 3. ESTILO DE LA CAJA DESPLEGABLE (Amarilla, redondeada, al ras) */
-    '.header-menu .uk-dropdown,',
-    '.uk-dropdown-bottom-left,',
-    '.uk-dropdown-bottom-right {',
-    '  background-color: #ffee26 !important;',
-    '  border-radius: 16px !important;',
-    '  padding: 12px 16px !important;',
-    '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
-    '  border: none !important;',
-    '  margin-top: 0px !important;',
-    '  top: 100% !important;',
-    '  animation: melk-dropdown-fade 0.3s ease-out !important;',
-    '}',
-
-    /* Animación sutil de aparición para la caja */
-    '@keyframes melk-dropdown-fade {',
-    '  from { opacity: 0; transform: translateY(10px); }',
-    '  to { opacity: 1; transform: translateY(0); }',
-    '}',
-
-    /* 4. ESTILO DE LOS ENLACES INTERNOS */
-    '.header-menu .uk-dropdown a,',
-    '.header-menu .uk-dropdown .uk-nav-sub a {',
+    /* Aseguramos que los textos del dropdown sean oscuros */
+    '.header-menu .uk-dropdown a {',
     '  color: #353535 !important;',
     '  font-weight: 500 !important;',
-    '  display: block !important;',
-    '  padding: 8px 12px !important;',
-    '  border-radius: 8px !important;',
-    '  background: transparent !important;',
-    '}',
-
-    '.header-menu .uk-dropdown a:hover {',
-    '  background-color: rgba(255,255,255,0.4) !important;',
     '}'
   ].join('\n');
   document.head.appendChild(s);
+
+  // 2. JS para matar la caja transparente y alinear el menú
+  document.addEventListener('mouseover', function (e) {
+    var a = e.target.closest('.header-menu a');
+    if (!a) return;
+
+    var li = a.parentElement;
+    if (!li) return;
+
+    // Forzamos fondo transparente al <li> para matar la caja transparente
+    li.style.setProperty('background', 'transparent', 'important');
+    li.style.setProperty('background-color', 'transparent', 'important');
+    li.style.setProperty('box-shadow', 'none', 'important');
+
+    // Forzamos fondo transparente al <a> también
+    a.style.setProperty('background', 'transparent', 'important');
+    a.style.setProperty('box-shadow', 'none', 'important');
+
+    // Buscamos el dropdown que está dentro de este <li> y lo alineamos
+    var drop = li.querySelector('.uk-dropdown');
+    if (drop) {
+      drop.style.setProperty('top', '100%', 'important');
+      drop.style.setProperty('margin-top', '0px', 'important');
+      drop.style.setProperty('background-color', '#ffee26', 'important');
+      drop.style.setProperty('border-radius', '16px', 'important');
+      drop.style.setProperty('border', 'none', 'important');
+      drop.style.setProperty('box-shadow', '0 8px 24px rgba(0,0,0,0.15)', 'important');
+    }
+  });
 })();
