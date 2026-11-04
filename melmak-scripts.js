@@ -865,33 +865,45 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   MANTENER TAMAÑO ORIGINAL Y CENTRAR IMAGEN (V4 - CORREGIDO)
+   MANTENER TAMAÑO ORIGINAL EXACTO Y CENTRAR (V5 - DEFINITIVO)
    ========================================================== */
 (function () {
   function ajustarImagen() {
     var img = document.querySelector('.product-vip__carrousel-image');
     if (!img) return;
 
-    // 1. Forzar a la imagen a su tamaño natural, bloque y centrada
+    // 1. Forzar a la imagen a su tamaño natural, sin estiramientos
     img.style.setProperty('width', 'auto', 'important');
-    img.style.setProperty('max-width', '100%', 'important');
     img.style.setProperty('height', 'auto', 'important');
+    img.style.setProperty('max-width', '100%', 'important');
+    img.style.setProperty('max-height', '500px', 'important'); // Tu límite máximo
     img.style.setProperty('object-fit', 'contain', 'important');
-    img.style.setProperty('display', 'block', 'important'); // La convierte en bloque
-    img.style.setProperty('margin', '0 auto', 'important'); // La centra horizontalmente
+    img.style.setProperty('aspect-ratio', 'auto', 'important'); // <-- CLAVE: respeta la proporción del archivo
+    img.style.setProperty('display', 'block', 'important');
+    img.style.setProperty('margin', '0 auto', 'important');
 
-    // 2. Forzar al contenedor a centrar su contenido (por si usa flexbox)
-    var contenedor = img.closest('.product-vip__carrousel');
-    if (contenedor) {
-      contenedor.style.setProperty('max-width', '500px', 'important');
-      contenedor.style.setProperty('margin', '0 auto', 'important');
-      contenedor.style.setProperty('display', 'flex', 'important'); // Asegura flexbox
-      contenedor.style.setProperty('justify-content', 'center', 'important'); // Centra horizontalmente en flex
-      contenedor.style.setProperty('align-items', 'center', 'important'); // Centra verticalmente en flex
+    // 2. Ajustar los contenedores inmediatos para que no la fuercen
+    var padre1 = img.parentElement;
+    var padre2 = padre1 ? padre1.parentElement : null;
+
+    [padre1, padre2].forEach(function (el) {
+      if (el) {
+        el.style.setProperty('height', 'auto', 'important'); // Evita que el contenedor la estire verticalmente
+        el.style.setProperty('display', 'flex', 'important');
+        el.style.setProperty('justify-content', 'center', 'important');
+        el.style.setProperty('align-items', 'center', 'important');
+        el.style.setProperty('overflow', 'hidden', 'important');
+      }
+    });
+
+    // 3. La caja principal (opcional, para limitar el ancho máximo de todo el carrusel)
+    var carrousel = img.closest('.product-vip__carrousel');
+    if (carrousel) {
+      carrousel.style.setProperty('max-width', '600px', 'important');
+      carrousel.style.setProperty('margin', '0 auto', 'important');
     }
   }
 
-  // Ejecutar en varios momentos para asegurar que el tema no lo pise después
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', ajustarImagen);
   } else {
