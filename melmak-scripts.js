@@ -591,6 +591,7 @@ else melkRelacionados();
   function intentarHolo() {
     melkHoloVueltas++;
     if (document.getElementById('melkh-caja') || melkHoloVueltas > 40) return;
+    melkHolo(); // <-- ESTA LÍNEA FALTABA: vuelve a intentar crear la caja
     setTimeout(intentarHolo, 250);
   }
   setTimeout(intentarHolo, 250);
