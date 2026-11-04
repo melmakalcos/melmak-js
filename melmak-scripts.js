@@ -1326,11 +1326,24 @@ var melkHoloTimer = window.setInterval(function () {
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
 /* ==========================================================
-   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO (V2 - BLINDADO)
+   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO (V3 - BUSCA POR TEXTO)
    ========================================================== */
 (function avisoEnvioGratis() {
+  // Función que busca el botón por su texto, sin importar la clase
+  function buscarBoton() {
+    var botones = document.querySelectorAll('button, a, input[type="submit"]');
+    for (var i = 0; i < botones.length; i++) {
+      var texto = (botones[i].textContent || botones[i].value || '').toLowerCase();
+      if (texto.includes('agregar al carrito') || texto.includes('comprar') || texto.includes('añadir al carrito')) {
+        return botones[i];
+      }
+    }
+    return null;
+  }
+
+  // Intentamos insertar el aviso cada 500ms hasta 20 veces (10 segundos)
   var intentos = 0;
-  var maxIntentos = 20; // Intenta durante 10 segundos (20 * 500ms)
+  var maxIntentos = 20;
 
   var timer = setInterval(function () {
     // Si ya lo insertamos o nos quedamos sin intentos, cortamos
@@ -1340,19 +1353,13 @@ var melkHoloTimer = window.setInterval(function () {
     }
     intentos++;
 
-    // Buscamos el botón por varias clases posibles (Tiendanube cambia esto a veces)
-    var btnCompra = document.querySelector(
-      '.js-add-to-cart, .product-vip__buy-btn, button[name="add"], .btn-primary, [class*="buy-button"]'
-    );
+    var btnCompra = buscarBoton();
 
-    // Si lo encontramos y todavía no está en la página, lo insertamos
-    if (btnCompra && !document.getElementById('melmak-aviso-envio')) {
-
+    if (btnCompra) {
       var aviso = document.createElement('div');
       aviso.id = 'melmak-aviso-envio';
       aviso.innerHTML = '🚚 <strong>ENVÍO GRATIS</strong> a sucursal (Andreani/Correo) en compras +$70.000';
 
-      // Estilos forzados con !important para que el tema no los pise
       aviso.style.cssText = [
         'background: #ffee26 !important',
         'color: #353535 !important',
@@ -1361,7 +1368,7 @@ var melkHoloTimer = window.setInterval(function () {
         'font-weight: 500 !important',
         'padding: 12px 15px !important',
         'border-radius: 8px !important',
-        'margin: 15px 0 !important', /* Separación arriba y abajo */
+        'margin: 15px 0 !important',
         'text-align: center !important',
         'border: 2px solid #353535 !important',
         'line-height: 1.4 !important',
@@ -1370,9 +1377,8 @@ var melkHoloTimer = window.setInterval(function () {
         'display: block !important'
       ].join(';');
 
-      // Lo insertamos justo antes del contenedor del botón
-      var contenedorBtn = btnCompra.closest('form, .product-vip__buy-container') || btnCompra;
-      contenedorBtn.parentNode.insertBefore(aviso, contenedorBtn);
+      // Lo insertamos justo antes del botón de compra
+      btnCompra.parentNode.insertBefore(aviso, btnCompra);
 
       clearInterval(timer); // Una vez insertado, dejamos de buscar
     }
