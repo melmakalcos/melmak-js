@@ -1326,37 +1326,55 @@ var melkHoloTimer = window.setInterval(function () {
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
 /* ==========================================================
-   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO
+   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO (V2 - BLINDADO)
    ========================================================== */
 (function avisoEnvioGratis() {
-  // Buscamos el botón de compra
-  var btnCompra = document.querySelector('.product-vip__buy-btn, [class*="buy-button"]');
-  if (!btnCompra) return;
+  var intentos = 0;
+  var maxIntentos = 20; // Intenta durante 10 segundos (20 * 500ms)
 
-  // Evitamos duplicados si el script se ejecuta dos veces
-  if (document.getElementById('melmak-aviso-envio')) return;
+  var timer = setInterval(function () {
+    // Si ya lo insertamos o nos quedamos sin intentos, cortamos
+    if (document.getElementById('melmak-aviso-envio') || intentos >= maxIntentos) {
+      clearInterval(timer);
+      return;
+    }
+    intentos++;
 
-  var aviso = document.createElement('div');
-  aviso.id = 'melmak-aviso-envio';
-  aviso.innerHTML = '🚚 <strong>ENVÍO GRATIS</strong> a sucursal (Andreani/Correo) en compras +$70.000';
+    // Buscamos el botón por varias clases posibles (Tiendanube cambia esto a veces)
+    var btnCompra = document.querySelector(
+      '.js-add-to-cart, .product-vip__buy-btn, button[name="add"], .btn-primary, [class*="buy-button"]'
+    );
 
-  // Estilos en línea para que no dependa de CSS externo
-  aviso.style.cssText = [
-    'background: #ffee26',
-    'color: #353535',
-    'font-family: "Rubik", Arial, sans-serif',
-    'font-size: 12px',
-    'font-weight: 500',
-    'padding: 10px 14px',
-    'border-radius: 8px',
-    'margin-bottom: 12px', // Lo ponemos arriba del botón
-    'text-align: center',
-    'border: 2px solid #353535',
-    'line-height: 1.4',
-    'box-sizing: border-box',
-    'width: 100%'
-  ].join(';');
+    // Si lo encontramos y todavía no está en la página, lo insertamos
+    if (btnCompra && !document.getElementById('melmak-aviso-envio')) {
 
-  // Insertamos el aviso justo ARRIBA del botón de compra
-  btnCompra.parentNode.insertBefore(aviso, btnCompra);
+      var aviso = document.createElement('div');
+      aviso.id = 'melmak-aviso-envio';
+      aviso.innerHTML = '🚚 <strong>ENVÍO GRATIS</strong> a sucursal (Andreani/Correo) en compras +$70.000';
+
+      // Estilos forzados con !important para que el tema no los pise
+      aviso.style.cssText = [
+        'background: #ffee26 !important',
+        'color: #353535 !important',
+        'font-family: "Rubik", Arial, sans-serif !important',
+        'font-size: 13px !important',
+        'font-weight: 500 !important',
+        'padding: 12px 15px !important',
+        'border-radius: 8px !important',
+        'margin: 15px 0 !important', /* Separación arriba y abajo */
+        'text-align: center !important',
+        'border: 2px solid #353535 !important',
+        'line-height: 1.4 !important',
+        'box-sizing: border-box !important',
+        'width: 100% !important',
+        'display: block !important'
+      ].join(';');
+
+      // Lo insertamos justo antes del contenedor del botón
+      var contenedorBtn = btnCompra.closest('form, .product-vip__buy-container') || btnCompra;
+      contenedorBtn.parentNode.insertBefore(aviso, contenedorBtn);
+
+      clearInterval(timer); // Una vez insertado, dejamos de buscar
+    }
+  }, 500);
 })();

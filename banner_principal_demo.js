@@ -123,7 +123,7 @@
         /* ===== BARRA COMPARTIDA (carrusel + clima) ===== */
         '.mbbs-barra{position:relative;z-index:3;width:100%;background:var(--ink);display:flex;align-items:center;padding:16px 0;white-space:nowrap;}',
         '.mbbs-carrusel-clip{width:100%;overflow:hidden;}',
-        '.mbbs-barra-inner{display:flex;width:max-content;align-items:center;animation:mbbs-marquee 22s linear infinite;will-change:transform;}',
+        '.mbbs-barra-inner{display:flex;width:max-content;align-items:center;animation:mbbs-marquee 35s linear infinite;will-change:transform;}',
         '.mbbs-barra:before,.mbbs-barra:after{content:"";position:absolute;left:0;right:0;z-index:1;}',
         '.mbbs-barra:before{top:-10px;height:10px;',
         '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 10H100V9C87.5 9 87.5 3 75 3C62.5 3 62.5 9 50 9C37.5 9 37.5 3 25 3C12.5 3 12.5 9 0 9Z\' fill=\'%23353535\'/%3E%3C/svg%3E");',
