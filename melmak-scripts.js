@@ -865,44 +865,49 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   ESTILO PARA EL DROPDOWN DE INFORMACIÓN (V2 - ALINEADO)
+   FIX MENÚ INFORMACIÓN (V3 - DEFINITIVO)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* 1. ELIMINAR LA BARRA AMARILLA DETRÁS AL PASAR EL MOUSE */
-    '.header-menu__desktop-list__container-list > ul > li > a:hover,',
-    '.header-menu__desktop-list__container-list > ul > li > a:focus,',
-    '.header-menu__desktop-list__container-list > ul > li.uk-open > a,',
-    '.header-menu__desktop-list__container-list li:hover > a {',
+    /* 1. MATAR LA BARRA AMARILLA AL PASAR EL MOUSE (Anulando UIkit y el Tema) */
+    '.header-menu__desktop-list__container-list li > a,',
+    '.header-menu__desktop-list__container-list li > a:hover,',
+    '.header-menu__desktop-list__container-list li > a:focus,',
+    '.header-menu__desktop-list__container-list li.uk-active > a,',
+    '.header-menu__desktop-list__container-list li.uk-open > a {',
+    '  background: transparent !important;',
     '  background-color: transparent !important;',
+    '  background-image: none !important;',
     '  box-shadow: none !important;',
+    '  border: none !important;',
+    '  outline: none !important;',
     '}',
 
-    /* 2. ESTILO Y ALINEACIÓN DEL DROPDOWN (IGUAL AL DE CATÁLOGO) */
+    /* 2. FORZAR EL ESTILO DE LA CAJA DESPLEGABLE */
     '.header-menu .uk-dropdown,',
-    '.header-menu__desktop-list__container-list .uk-dropdown,',
-    'li.uk-parent .uk-dropdown {',
+    '.uk-dropdown-bottom-left,',
+    '.uk-dropdown-bottom-right {',
     '  background-color: #ffee26 !important;',
     '  border-radius: 16px !important;',
     '  padding: 12px 16px !important;',
     '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
     '  border: none !important;',
-    '  margin-top: 0px !important;', /* Alineado al ras del menú */
+    '  /* Forzamos la posición para que no quede más arriba */',
+    '  margin-top: 0px !important;',
+    '  top: 100% !important;',
     '}',
 
-    /* 3. TEXTO Y HOVER DE LOS ENLACES DENTRO DEL DROPDOWN */
+    /* 3. ESTILO DE LOS ENLACES INTERNOS */
     '.header-menu .uk-dropdown a,',
-    '.header-menu__desktop-list__container-list .uk-dropdown a {',
+    '.header-menu .uk-dropdown .uk-nav-sub a {',
     '  color: #353535 !important;',
     '  font-weight: 500 !important;',
     '  display: block !important;',
     '  padding: 8px 12px !important;',
     '  border-radius: 8px !important;',
-    '  transition: background 0.2s ease !important;',
     '}',
-    '.header-menu .uk-dropdown a:hover,',
-    '.header-menu__desktop-list__container-list .uk-dropdown a:hover {',
+    '.header-menu .uk-dropdown a:hover {',
     '  background-color: rgba(255,255,255,0.4) !important;',
     '}'
   ].join('\n');
