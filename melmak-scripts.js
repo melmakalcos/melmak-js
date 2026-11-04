@@ -864,3 +864,38 @@ else melkRelacionados();
     new MutationObserver(debounce(aplicar, 1500)).observe(document.body, { childList: true, subtree: true });
   }
 })();
+/* ==========================================================
+   ESTILO QUIRÚRGICO PARA EL MENÚ INFORMACIÓN (Y OTROS)
+   ========================================================== */
+(function () {
+  var s = document.createElement('style');
+  s.textContent = [
+    /* Fondo amarillo y bordes redondeados SOLO para los submenús */
+    '.desktop-list__subitem,',
+    '.desktop-list__subitem ul {',
+    '  background-color: #ffee26 !important;',
+    '  border-radius: 16px !important;',
+    '  padding: 10px 14px !important;',
+    '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
+    '  border: none !important;',
+    '}',
+
+    /* Asegura que los textos dentro del submenú sean oscuros */
+    '.desktop-list__subitem a,',
+    '.desktop-list__subitem span {',
+    '  color: #353535 !important;',
+    '  font-weight: 500 !important;',
+    '  display: block !important;',
+    '  padding: 6px 12px !important;',
+    '  border-radius: 8px !important;',
+    '  transition: background 0.2s ease !important;',
+    '}',
+
+    /* Efecto hover suave para los ítems */
+    '.desktop-list__subitem a:hover,',
+    '.desktop-list__subitem span:hover {',
+    '  background-color: rgba(255,255,255,0.4) !important;',
+    '}'
+  ].join('\n');
+  document.head.appendChild(s);
+})();
