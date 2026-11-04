@@ -254,7 +254,7 @@
         '.melk-monitor__flecha--next { position: absolute; right: 1.2cqw; top: 0; bottom: 0; margin: auto 0; animation: melk-game-bob-der .85s ease-in-out infinite; }',
         '@keyframes melk-game-bob-izq { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-0.74cqw); } }',
         '@keyframes melk-game-bob-der { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(0.74cqw); } }',
-        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; animation: melk-ingresar-blink 1.1s steps(1) infinite; }',
+        '.melk-monitor__ingresar { display: inline-block; padding: 1.28cqw 2.98cqw; background-color: #353535; border: 0.43cqw solid #ffee26; box-shadow: 0.43cqw 0.43cqw 0 #ffee26; color: #ffee26 !important; font-family: \'Press Start 2P\', monospace; font-size: 1.7cqw; letter-spacing: .06em; text-transform: uppercase; text-decoration: none !important; transform: translateY(20px); animation: melk-ingresar-blink 1.1s steps(1) infinite; }',
         '@keyframes melk-ingresar-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }',
         '.melk-monitor__ingresar:hover, .melk-monitor__ingresar:focus { background-color: #ffee26; color: #353535 !important; }',
         '.melk-monitor__ingresar:active { transform: translate(0.43cqw, 0.43cqw); box-shadow: 0 0 0 #ffee26; }',
