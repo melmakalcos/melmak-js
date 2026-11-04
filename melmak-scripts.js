@@ -397,8 +397,8 @@ function debounce(func, wait) {
 
 function melkRelacionados() {
   try {
-  var ficha = document.querySelector('section.product-vip, .product-vip');
-  if (!ficha || document.getElementById('melk-rel')) return;
+    var ficha = document.querySelector('section.product-vip, .product-vip');
+    if (!ficha || document.getElementById('melk-rel')) return;
   } catch (e) {
     console.warn('[MELMAK] Error en relacionados (ignorado):', e);
   }
