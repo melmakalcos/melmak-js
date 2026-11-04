@@ -531,7 +531,7 @@ function melkRelacionados() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', melkRelacionados);
 else melkRelacionados();
 
-/* ---------- EFECTO HOLOGRÁFICO + INFO ESTÁTICA ---------- */
+/* ---------- EFECTO HOLOGRÁFICO + INFO ESTÁTICA (VERSIÓN BLINDADA) ---------- */
 (function () {
   function melkHolo() {
     if (document.getElementById('melkh-caja')) return;
@@ -539,7 +539,21 @@ else melkRelacionados();
     if (!img) return;
     var items = [].slice.call(document.querySelectorAll('.product-vip__attribute-item'));
     if (!items.length) return;
-    var hayHolo = items.some(function (a) { return (a.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0; });
+
+    // Función blindada: busca "HOLO" en múltiples atributos, normaliza tildes
+    function esHolo(el) {
+      if (!el) return false;
+      var txt = (
+        (el.getAttribute('data-value') || '') + ' ' +
+        (el.textContent || '') + ' ' +
+        (el.getAttribute('title') || '') + ' ' +
+        (el.getAttribute('aria-label') || '') + ' ' +
+        (el.getAttribute('value') || '')
+      ).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return txt.indexOf('HOLO') >= 0 || txt.indexOf('3D') >= 0 || txt.indexOf('IRIDISCENTE') >= 0;
+    }
+
+    var hayHolo = items.some(esHolo);
     if (!hayHolo) return;
 
     var svgNS = 'http://www.w3.org/2000/svg', xlinkNS = 'http://www.w3.org/1999/xlink';
@@ -632,12 +646,20 @@ else melkRelacionados();
     else if (cantidad && cantidad.parentNode) cantidad.parentNode.insertBefore(info, cantidad);
 
     function actualizar() {
-      var sel = items.filter(function (a) { return a.classList.contains('product-vip__attribute-item--selected'); })[0];
+      // Detección de seleccionado por múltiples clases posibles
+      var sel = items.filter(function (a) {
+        return a.classList.contains('product-vip__attribute-item--selected') ||
+          a.classList.contains('product-vip__attribute-item--active') ||
+          a.classList.contains('is-active') ||
+          a.classList.contains('selected') ||
+          a.getAttribute('aria-checked') === 'true';
+      })[0];
+
       var activo = false;
       if (sel) {
-        var val = (sel.getAttribute('data-value') || sel.textContent || '').toUpperCase().trim();
-        if (val.indexOf('HOLO') >= 0) activo = true;
+        activo = esHolo(sel);
       }
+
       caja.classList.toggle('activo', activo);
       if (badge) badge.classList.toggle('melkh-badge--visible', activo);
       if (info) info.style.display = activo ? 'block' : 'none';
