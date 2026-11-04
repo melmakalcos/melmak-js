@@ -865,58 +865,19 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   FORZAR TAMAÑO DE IMAGEN EN FICHA DE PRODUCTO (V2 DEFINITIVA)
+   AJUSTE DE TAMAÑO DE IMAGEN EN FICHA DE PRODUCTO (SEGURO)
    ========================================================== */
 (function () {
-  function ajustarCarrousel() {
+  function ajustar() {
     var img = document.querySelector('.product-vip__carrousel-image');
-    if (!img) return;
-
-    // 1. Forzar la imagen a 500px
-    img.style.setProperty('width', '500px', 'important');
-    img.style.setProperty('max-width', '100%', 'important');
-    img.style.setProperty('height', 'auto', 'important');
-    img.style.setProperty('object-fit', 'contain', 'important');
-    img.style.setProperty('display', 'block', 'important');
-    img.style.setProperty('margin', '0 auto', 'important');
-    img.style.setProperty('transform', 'none', 'important');
-
-    // 2. Recorrer TODOS los ancestros hasta el body y forzar el ancho
-    var el = img.parentElement;
-    for (var i = 0; i < 10; i++) {
-      if (!el || el.tagName === 'BODY') break;
-
-      el.style.setProperty('width', '500px', 'important');
-      el.style.setProperty('max-width', '500px', 'important');
-      el.style.setProperty('margin', '0 auto', 'important');
-      el.style.setProperty('overflow', 'hidden', 'important');
-      // Forzar a que los contenedores flex no se estiren
-      el.style.setProperty('flex', '0 0 500px', 'important');
-
-      el = el.parentElement;
+    if (img) {
+      img.style.setProperty('width', 'auto', 'important');
+      img.style.setProperty('max-width', '100%', 'important');
+      img.style.setProperty('height', 'auto', 'important');
+      img.style.setProperty('object-fit', 'contain', 'important');
     }
   }
-
-  // Ejecutar en varios momentos para asegurar que el tema haya cargado
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ajustarCarrousel);
-  } else {
-    ajustarCarrousel();
-  }
-
-  // Reintentos agresivos por si el tema carga la imagen con JS
-  setTimeout(ajustarCarrousel, 500);
-  setTimeout(ajustarCarrousel, 1000);
-  setTimeout(ajustarCarrousel, 2000);
-  setTimeout(ajustarCarrousel, 4000);
-
-  // Observer por si la imagen se inyecta dinámicamente
-  if (window.MutationObserver) {
-    var observer = new MutationObserver(function () {
-      ajustarCarrousel();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    // Desconectar después de 10 segundos para no consumir recursos
-    setTimeout(function () { observer.disconnect(); }, 10000);
-  }
+  ajustar();
+  setTimeout(ajustar, 1000);
+  setTimeout(ajustar, 2500);
 })();
