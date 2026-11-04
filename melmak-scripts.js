@@ -396,8 +396,13 @@ function debounce(func, wait) {
 })();
 
 function melkRelacionados() {
+  try {
   var ficha = document.querySelector('section.product-vip, .product-vip');
   if (!ficha || document.getElementById('melk-rel')) return;
+  } catch (e) {
+    console.warn('[MELMAK] Error en relacionados (ignorado):', e);
+  }
+}
 
   var GENERICAS = {};
   'POSTER POSTERS PACK PACKS STICKER STICKERS PRINT PRINTS LAMINA LAMINAS CUADRO CUADROS VINILO DECO SET COMBO NUEVO NUEVA OFERTA EDICION LIMITADA TAMANO TAMANOS CHICO CHICA GRANDE MEDIANO MINI DE DEL LA EL LOS LAS Y CON PARA X A4 A3 A5'.split(' ').forEach(function (p) { GENERICAS[p] = 1; });
