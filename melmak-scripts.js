@@ -1326,10 +1326,10 @@ var melkHoloTimer = window.setInterval(function () {
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
 /* ==========================================================
-   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO (V3 - BUSCA POR TEXTO)
+   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO
    ========================================================== */
 (function avisoEnvioGratis() {
-  // Función que busca el botón por su texto, sin importar la clase
+
   function buscarBoton() {
     var botones = document.querySelectorAll('button, a, input[type="submit"]');
     for (var i = 0; i < botones.length; i++) {
@@ -1341,12 +1341,12 @@ var melkHoloTimer = window.setInterval(function () {
     return null;
   }
 
-  // Intentamos insertar el aviso cada 500ms hasta 20 veces (10 segundos)
+
   var intentos = 0;
   var maxIntentos = 20;
 
   var timer = setInterval(function () {
-    // Si ya lo insertamos o nos quedamos sin intentos, cortamos
+   
     if (document.getElementById('melmak-aviso-envio') || intentos >= maxIntentos) {
       clearInterval(timer);
       return;
@@ -1377,10 +1377,46 @@ var melkHoloTimer = window.setInterval(function () {
         'display: block !important'
       ].join(';');
 
-      // Lo insertamos justo antes del botón de compra
+    
       btnCompra.parentNode.insertBefore(aviso, btnCompra);
 
-      clearInterval(timer); // Una vez insertado, dejamos de buscar
+      clearInterval(timer);
     }
   }, 500);
+})();
+/* ==========================================================
+   ESTILO DE BOTÓN DE COMPRA (add_to_cart-btn)
+   ========================================================== */
+(function estilizarBotonCompra() {
+  var styleBtn = document.createElement('style');
+  styleBtn.textContent = [
+    /* Estilo base: Píldora negra con texto amarillo */
+    '.add_to_cart-btn {',
+    '  border-radius: 100px !important;',      /* Bordes bien redondeados */
+    '  border: 3px solid #353535 !important;', /* Borde negro grueso */
+    '  background-color: #353535 !important;',/* Fondo negro */
+    '  color: #ffee26 !important;',           /* Texto amarillo MELMAK */
+    '  font-family: "vinyl", "Rubik", Arial, sans-serif !important;',
+    '  font-weight: 700 !important;',
+    '  letter-spacing: 0.05em !important;',
+    '  text-transform: uppercase !important;',
+    '  transition: all 0.3s ease !important;',
+    '  box-shadow: 4px 4px 0 #ffee26 !important;', /* Sombra amarilla dura para que resalte */
+    '}',
+
+    /* Efecto al pasar el mouse: Se invierte a blanco con texto negro */
+    '.add_to_cart-btn:hover {',
+    '  background-color: #ffffff !important;',
+    '  color: #353535 !important;',
+    '  transform: translateY(-2px) !important;',
+    '  box-shadow: 4px 4px 0 #353535 !important;',
+    '}',
+
+    /* Efecto al hacer clic */
+    '.add_to_cart-btn:active {',
+    '  transform: translateY(2px) !important;',
+    '  box-shadow: none !important;',
+    '}'
+  ].join('\n');
+  document.head.appendChild(styleBtn);
 })();
