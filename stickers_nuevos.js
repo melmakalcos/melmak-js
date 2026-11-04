@@ -16,12 +16,12 @@
         linkVerTodos: '/productos',
         masVendidos: {
             titulo: 'EL MÁS VENDIDO DE LA SEMANA',
-            imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',            // PEGÁ ACÁ el link del PNG del póster
-            link: 'https://www.melmakalcos.com.ar/prints/musica/poster-bts-6',              // PEGÁ ACÁ el link del producto
+            imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',
+            link: 'https://www.melmakalcos.com.ar/prints/musica/print-bts-6',
             alt: 'MÁS VENDIDO',
-            alturaDesktop: 500,    // alto del póster en px (compu)
-            alturaMovil: 250,      // alto del póster en px (celular)
-            textoBoton: 'LO QUIERO' // texto del botón que aparece al pasar el mouse
+            alturaDesktop: 500,
+            alturaMovil: 250,
+            textoBoton: 'LO QUIERO'
         }
     };
 
@@ -37,7 +37,9 @@
 
     var style = document.createElement('style');
     style.textContent = [
-        '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
+        /* FIX: hash de jsDelivr que ya usa banner_principal_demo.js y que sabemos que existe.
+           El hash anterior (85a4913...) podía dar 404 y por eso el @font-face fallaba. */
+        '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
 
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 28px; background: linear-gradient(180deg, transparent 0 14px, #ffee26 14px); }',
         '.msn-carrusel__onda { position: absolute; top: 0; left: 0; right: 0; height: 18px; pointer-events: none; background-repeat: repeat-x; background-size: 26px 18px; background-position: 0 0; animation: msn-onda 1.5s linear infinite; background-image: url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffee26%22/></svg>\'); }',
@@ -46,6 +48,16 @@
         '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 6px; }',
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; text-shadow: 4px 4px 0 #fff; }',
         '.msn-carrusel__head .msn-carrusel__titulo { display: inline-block; transform: none; }',
+
+        /* FIX CLAVE: forzar Curda Gouda con !important en el título y en TODOS sus
+           descendientes (span incluidos). El tema Eris fuerza "font-family: Rubik"
+           en "span", y los títulos que están armados con <span> internos
+           (ej. "EL MÁS VENDIDO") heredaban Rubik aunque el <h2> tuviera Curda Gouda.
+           Con esta regla, los spans internos también muestran Curda Gouda. */
+        '.msn-carrusel__head .msn-carrusel__titulo,',
+        '.msn-carrusel__head .msn-carrusel__titulo *,',
+        '.msn-vendidos .msn-carrusel__titulo,',
+        '.msn-vendidos .msn-carrusel__titulo * { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; }',
 
         '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 10px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
@@ -390,7 +402,6 @@
 
         sec.parentNode.insertBefore(root, sec.nextSibling);
 
-        // animaciones de entrada: se disparan al entrar en pantalla
         if (bloqueMv) {
             if ('IntersectionObserver' in window) {
                 var io = new IntersectionObserver(function (entradas) {
