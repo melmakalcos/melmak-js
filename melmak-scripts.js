@@ -865,12 +865,21 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   ESTILO PARA EL DROPDOWN DE INFORMACIÓN (UIKIT - SEGURO)
+   ESTILO PARA EL DROPDOWN DE INFORMACIÓN (V2 - ALINEADO)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* Apuntamos SOLO a los dropdowns que están dentro del menú header */
+    /* 1. ELIMINAR LA BARRA AMARILLA DETRÁS AL PASAR EL MOUSE */
+    '.header-menu__desktop-list__container-list > ul > li > a:hover,',
+    '.header-menu__desktop-list__container-list > ul > li > a:focus,',
+    '.header-menu__desktop-list__container-list > ul > li.uk-open > a,',
+    '.header-menu__desktop-list__container-list li:hover > a {',
+    '  background-color: transparent !important;',
+    '  box-shadow: none !important;',
+    '}',
+
+    /* 2. ESTILO Y ALINEACIÓN DEL DROPDOWN (IGUAL AL DE CATÁLOGO) */
     '.header-menu .uk-dropdown,',
     '.header-menu__desktop-list__container-list .uk-dropdown,',
     'li.uk-parent .uk-dropdown {',
@@ -879,10 +888,10 @@ else melkRelacionados();
     '  padding: 12px 16px !important;',
     '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
     '  border: none !important;',
-    '  margin-top: 8px !important;',
+    '  margin-top: 0px !important;', /* Alineado al ras del menú */
     '}',
 
-    /* Texto oscuro para los enlaces de adentro */
+    /* 3. TEXTO Y HOVER DE LOS ENLACES DENTRO DEL DROPDOWN */
     '.header-menu .uk-dropdown a,',
     '.header-menu__desktop-list__container-list .uk-dropdown a {',
     '  color: #353535 !important;',
@@ -892,8 +901,6 @@ else melkRelacionados();
     '  border-radius: 8px !important;',
     '  transition: background 0.2s ease !important;',
     '}',
-
-    /* Efecto hover para los enlaces */
     '.header-menu .uk-dropdown a:hover,',
     '.header-menu__desktop-list__container-list .uk-dropdown a:hover {',
     '  background-color: rgba(255,255,255,0.4) !important;',
