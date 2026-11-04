@@ -38,39 +38,27 @@
     var style = document.createElement('style');
     style.textContent = [
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
-
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 28px; background: linear-gradient(180deg, transparent 0 14px, #ffee26 14px); }',
         '.msn-carrusel__onda { position: absolute; top: 0; left: 0; right: 0; height: 18px; pointer-events: none; background-repeat: repeat-x; background-size: 26px 18px; background-position: 0 0; animation: msn-onda 1.5s linear infinite; background-image: url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2226%22 height=%2218%22><path d=%22M0 12 Q6.5 7 13 12 T26 12 L26 18 L0 18 Z%22 fill=%22%23ffee26%22/></svg>\'); }',
         '@keyframes msn-onda { to { background-position: 26px 0; } }',
-
         '.msn-carrusel__head { max-width: 1120px; margin: 0 auto; text-align: center; padding: 0 20px; margin-bottom: 6px; }',
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; text-shadow: 4px 4px 0 #fff; }',
         '.msn-carrusel__head .msn-carrusel__titulo { display: inline-block; transform: none; }',
-
-        '.msn-carrusel__head .msn-carrusel__titulo,',
-        '.msn-carrusel__head .msn-carrusel__titulo *,',
-        '.msn-vendidos .msn-carrusel__titulo,',
-        '.msn-vendidos .msn-carrusel__titulo * { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; }',
-
+        '.msn-carrusel__head .msn-carrusel__titulo, .msn-carrusel__head .msn-carrusel__titulo *, .msn-vendidos .msn-carrusel__titulo, .msn-vendidos .msn-carrusel__titulo * { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif !important; }',
         '.msn-carrusel__viewport { position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; overflow-y: visible; padding: 10px 0 30px; -webkit-user-select: none; user-select: none; touch-action: pan-y; cursor: grab; }',
         '.msn-carrusel__viewport.msn-drag { cursor: grabbing; }',
         '.msn-carrusel__viewport a, .msn-carrusel__viewport button { cursor: pointer; }',
         '.msn-carrusel__track { display: flex; align-items: stretch; will-change: transform; transition: transform .55s cubic-bezier(.22, .61, .36, 1); }',
         '.msn-carrusel__track.msn-no-trans { transition: none; }',
-
         '.msn-carrusel .block-products-feed__product { flex: 0 0 auto; display: flex; align-items: stretch; box-sizing: border-box; margin: 0 !important; }',
-
         '.msn-carrusel .block-products-feed__product-wrapper { width: 100%; display: flex; flex-direction: column; background: #ffffff; border: 3px solid #353535; border-radius: 14px; padding: 8px; box-sizing: border-box; transition: transform .3s ease, box-shadow .3s ease; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover { transform: translateY(-5px); box-shadow: 0 14px 26px rgba(53, 53, 53, .22); }',
-
         '.msn-carrusel .block-products-feed__product-media { position: relative; overflow: hidden; border-radius: 10px; width: 100% !important; height: 0 !important; padding-bottom: 100% !important; max-height: none !important; background: #f2f2f2; }',
         '.msn-carrusel .block-products-feed__product-media a { display: block; position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; }',
         '.msn-carrusel .block-products-feed__product-image { position: absolute !important; inset: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; transition: transform .3s ease; -webkit-user-drag: none; user-select: none; }',
         '.msn-carrusel .block-products-feed__product-wrapper:hover .block-products-feed__product-image { transform: scale(1.06); }',
         '.msn-carrusel__slide[data-extra-img] .block-products-feed__product-image:not(:first-of-type) { display: none !important; }',
-
         '.msn-carrusel .block-products-feed__product-offer { position: absolute; top: 8px; left: 8px; z-index: 2; background-color: #353535 !important; color: #fff !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; border-radius: 100px; padding: 4px 9px; }',
-
         '.msn-carrusel__body { display: flex !important; flex-direction: column; justify-content: center; overflow: hidden; margin: 0 !important; }',
         '.msn-carrusel .block-products-feed__product-info { display: flex !important; flex-direction: column; justify-content: center; padding: 0 2px; box-sizing: border-box; }',
         '.msn-carrusel .block-products-feed__product-name { font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; line-height: 1.2; color: #353535; margin: 8px 0 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }',
@@ -82,27 +70,22 @@
         '.msn-carrusel .block-products-feed__product-buttons-buy { display: inline-block !important; opacity: 1 !important; visibility: visible !important; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 2px solid #353535 !important; border-radius: 100px; padding: 8px 18px; transition: all .2s ease; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:hover { background-color: #ffffff !important; color: #353535 !important; }',
         '.msn-carrusel .block-products-feed__product-buttons-buy:active { transform: scale(.95); }',
-
         '.msn-carrusel__flecha { position: absolute; top: 50%; margin-top: -22px; z-index: 5; width: 44px; height: 44px; border-radius: 50%; border: 3px solid #353535; background-color: rgba(255,255,255,.92); color: #353535; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
         '.msn-carrusel__flecha svg { width: 18px; height: 18px; }',
         '.msn-carrusel__flecha:hover { background-color: #353535; color: #fff; }',
         '.msn-carrusel__flecha:active { transform: scale(.92); }',
         '.msn-carrusel__flecha--prev { left: 6px; }',
         '.msn-carrusel__flecha--next { right: 6px; }',
-
         '.msn-carrusel__mas { display: flex; justify-content: center; margin-top: 18px; }',
         '.msn-carrusel__mas a { display: inline-flex !important; align-items: center; gap: 10px; font-family: \'vinyl\' !important; font-size: 17px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; color: #fff !important; background-color: #353535 !important; border: 3px solid #353535 !important; border-radius: 100px; padding: 12px 28px; transition: background-color .2s ease, color .2s ease, transform .2s ease; }',
         '.msn-carrusel__mas a, .msn-carrusel__mas a * { font-family: \'vinyl\' !important; color: #fff !important; }',
         '.msn-carrusel__mas a:hover { background-color: #fff !important; color: #353535 !important; transform: scale(1.04); }',
         '.msn-carrusel__mas a:hover * { color: #353535 !important; }',
         '.msn-carrusel__mas svg { width: 22px; height: 22px; }',
-
-        '/* trama de puntos: de la barra amarilla hasta el final de melmak-ig */',
         '#msn-root { background-color: #ffee26; background-image: linear-gradient(#fff 0 14px, rgba(255, 255, 255, 0) 14px), radial-gradient(rgba(53, 53, 53, .13) 1.6px, rgba(53, 53, 53, 0) 1.7px); background-size: 100% 100%, 16px 16px; background-repeat: no-repeat, repeat; animation: msn-trama 2.8s linear infinite; }',
         '@keyframes msn-trama { from { background-position: 0 0, 0 0; } to { background-position: 0 0, 16px 16px; } }',
         '#melmak-ig { background-image: radial-gradient(rgba(53, 53, 53, .13) 1.6px, rgba(53, 53, 53, 0) 1.7px) !important; background-size: 16px 16px !important; animation: msn-trama-ig 2.8s linear infinite; }',
         '@keyframes msn-trama-ig { from { background-position: 0 0; } to { background-position: 16px 16px; } }',
-
         '.msn-vendidos { position: relative; text-align: center; padding: 26px 20px 8px; margin-bottom: 22px; background: transparent; }',
         '.msn-vendidos .msn-carrusel__titulo { display: block; position: relative; text-shadow: 4px 4px 0 #fff; }',
         '.msn-vendidos__link { position: relative; display: inline-block; margin-top: 26px; perspective: 900px; text-decoration: none; z-index: 2; }',
@@ -111,23 +94,16 @@
         '.msn-vendidos__img { display: block; height: 100%; width: auto; filter: drop-shadow(0 6px 8px rgba(53, 53, 53, .25)); -webkit-user-drag: none; user-select: none; }',
         '.msn-vendidos__img--dorso { display: none; }',
         '.msn-vendidos__sombra { position: absolute; left: 16%; right: 16%; bottom: -8px; height: 26px; border-radius: 50%; background: rgba(53, 53, 53, .28); filter: blur(11px); pointer-events: none; z-index: 0; }',
-
         '.msn-vendidos__badge { position: absolute; z-index: 6; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border-radius: 100px; padding: 13px 24px; font-size: 17px; line-height: 1; box-shadow: none; pointer-events: none; }',
-        /* FIX: cambiados los left/right de % a px para que no dependan del ancho de la imagen */
         '.msn-vendidos__badge--top { left: -20px; top: -3%; background: #353535; color: #fff; transform: rotate(-8deg); }',
         '.msn-vendidos__badge--pedido { right: -50px; bottom: 30%; background: #fff; color: #353535; border: 2px solid #353535; transform: rotate(7deg); }',
-
         '.msn-vendidos__confeti { position: absolute; inset: 0; z-index: 1; pointer-events: none; }',
         '.msn-vendidos__star { position: absolute; pointer-events: none; transform: translate(-50%, -50%) rotate(var(--r, 0deg)); }',
         '.msn-vendidos__star svg { width: 100%; height: 100%; display: block; overflow: visible; }',
-
-        '/* reflejo intermitente que cruza el poster */',
         '.msn-vendidos__reflejo { position: absolute; inset: 0; z-index: 3; overflow: hidden; border-radius: 3px; pointer-events: none; }',
         '.msn-vendidos__reflejo i { position: absolute; top: -30%; bottom: -30%; left: 0; width: 62%; display: block; background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .04) 16%, rgba(255, 255, 255, .14) 34%, rgba(255, 255, 255, .36) 50%, rgba(255, 255, 255, .14) 66%, rgba(255, 255, 255, .04) 84%, rgba(255, 255, 255, 0) 100%); transform: translateX(-150%) skewX(-16deg); filter: blur(8px); animation: msn-reflejo 7.5s linear infinite; }',
         '@keyframes msn-reflejo { 0%, 30% { transform: translateX(-150%) skewX(-16deg); } 80%, 100% { transform: translateX(300%) skewX(-16deg); } }',
         '.msn-vendidos__link:hover .msn-vendidos__reflejo i { animation-duration: 5.5s; }',
-
-        '/* CTA: en compu aparece con el hover, en celular queda siempre visible */',
         '.msn-vendidos__boton { display: none; }',
         '@media (hover: hover) and (pointer: fine) {',
         '  .msn-vendidos__boton { display: inline-block; position: absolute; left: 50%; bottom: 8%; z-index: 7; opacity: 0; pointer-events: none; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 21px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; color: #353535; background: #fff; border: 3px solid #353535; border-radius: 100px; padding: 14px 38px; box-shadow: 4px 4px 0 #353535; transform: translate(-50%, 22px) scale(.45) rotate(-10deg); }',
@@ -137,11 +113,7 @@
         '@media (hover: none) {',
         '  .msn-vendidos__boton { display: inline-block; position: absolute; left: 50%; top: 100%; bottom: auto; margin-top: 16px; z-index: 7; opacity: 1; pointer-events: auto; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; color: #353535; background: #fff; border: 3px solid #353535; border-radius: 100px; padding: 11px 26px; box-shadow: 4px 4px 0 #353535; transform: translate(-50%, 0); animation: none; }',
         '}',
-
-        '@media (min-width: 640px) {',
-        '  .msn-vendidos__link { margin: 44px 0 60px; perspective: 2400px; }',
-        '}',
-
+        '@media (min-width: 640px) { .msn-vendidos__link { margin: 44px 0 60px; perspective: 2400px; } }',
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 22px; }',
         '  .msn-vendidos { padding: 24px 16px 0; }',
@@ -162,11 +134,7 @@
         '  .msn-carrusel__flecha--next { right: 4px; }',
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px; }',
         '}',
-        '@media (hover: none) and (max-width: 639px) {',
-        '  .msn-vendidos { margin-bottom: 115px; }',
-        '}',
-
-        '/* entradas al hacer scroll */',
+        '@media (hover: none) and (max-width: 639px) { .msn-vendidos { margin-bottom: 115px; } }',
         '@keyframes msn-titulo-pop { 0% { opacity: 0; transform: translateY(-26px) scale(.72) rotate(-1.5deg); } 60% { opacity: 1; transform: translateY(4px) scale(1.05) rotate(-1.5deg); } 100% { opacity: 1; transform: translateY(0) scale(1) rotate(-1.5deg); } }',
         '@keyframes msn-titulo-pop-2 { 0% { opacity: 0; transform: translateY(-24px) scale(.72); } 60% { opacity: 1; transform: translateY(4px) scale(1.05); } 100% { opacity: 1; transform: translateY(0) scale(1); } }',
         '@keyframes msn-poster-pop { 0% { opacity: 0; transform: translateY(52px) scale(.72); } 60% { opacity: 1; transform: translateY(-7px) scale(1.04); } 100% { opacity: 1; transform: translateY(0) scale(1); } }',
@@ -178,7 +146,6 @@
         '.msn-anim .msn-carrusel__head.is-in .msn-carrusel__titulo { animation: msn-titulo-pop-2 .8s cubic-bezier(.34, 1.56, .64, 1) both; }',
         '.msn-anim .msn-vendidos.is-in .msn-vendidos__link { animation: msn-poster-pop .95s cubic-bezier(.34, 1.56, .64, 1) .14s both, msn-flotar 4.4s ease-in-out 1.2s infinite; }',
         '.msn-anim .msn-vendidos.is-in .msn-vendidos__star { animation: msn-star-pop .5s cubic-bezier(.34, 1.56, .64, 1) var(--dl, 0s) both, msn-twinkle var(--d, 3s) ease-in-out calc(var(--dl, 0s) + .5s) infinite; }',
-
         '@media (prefers-reduced-motion: reduce) {',
         '  .msn-carrusel__track { transition: none; }',
         '  .msn-carrusel .block-products-feed__product-wrapper:hover { transform: none; }',
@@ -194,7 +161,15 @@
 
     function montar() {
         var sec = document.querySelector(SECCION);
-        if (!sec) { setTimeout(montar, 300); return; }
+        if (!sec) {
+            // OPTIMIZACIÓN: Limitar los intentos para que no quede en bucle infinito
+            if (!montar.intentos) montar.intentos = 0;
+            montar.intentos++;
+            if (montar.intentos < 10) {
+                setTimeout(montar, 300);
+            }
+            return;
+        }
         if (sec.getAttribute('data-msn') === '1') return;
         if (document.getElementById(ID_ROOT)) return;
         sec.setAttribute('data-msn', '1');
@@ -264,8 +239,7 @@
             tituloMv.className = 'msn-carrusel__titulo';
             var partesTitulo = mv.titulo.split(' VENDIDO');
             if (partesTitulo.length > 1) {
-                tituloMv.innerHTML = '<span class="msn-vendidos__t1">' + partesTitulo[0] + '</span>'
-                    + ' <span class="msn-vendidos__t2">VENDIDO' + partesTitulo[1] + '</span>';
+                tituloMv.innerHTML = '<span class="msn-vendidos__t1">' + partesTitulo[0] + '</span>' + ' <span class="msn-vendidos__t2">VENDIDO' + partesTitulo[1] + '</span>';
             } else {
                 tituloMv.textContent = mv.titulo;
             }
@@ -304,22 +278,7 @@
             confetiMv.className = 'msn-vendidos__confeti';
             confetiMv.setAttribute('aria-hidden', 'true');
             var ESTRELLAS = [
-                [2, 7, 20, -18, 0],
-                [10, 15, 24, 14, 1],
-                [19, 6, 14, -8, 0],
-                [4, 32, 22, 20, 1],
-                [14, 48, 16, -14, 0],
-                [6, 66, 24, 8, 1],
-                [17, 81, 15, -22, 0],
-                [3, 93, 18, 12, 1],
-                [24, 97, 22, -6, 0],
-                [76, 96, 18, 16, 1],
-                [94, 90, 15, -12, 0],
-                [83, 79, 24, 22, 1],
-                [96, 62, 16, -18, 0],
-                [88, 46, 22, 10, 1],
-                [98, 30, 15, -10, 0],
-                [90, 14, 24, 16, 1]
+                [2, 7, 20, -18, 0], [10, 15, 24, 14, 1], [19, 6, 14, -8, 0], [4, 32, 22, 20, 1], [14, 48, 16, -14, 0], [6, 66, 24, 8, 1], [17, 81, 15, -22, 0], [3, 93, 18, 12, 1], [24, 97, 22, -6, 0], [76, 96, 18, 16, 1], [94, 90, 15, -12, 0], [83, 79, 24, 22, 1], [96, 62, 16, -18, 0], [88, 46, 22, 10, 1], [98, 30, 15, -10, 0], [90, 14, 24, 16, 1]
             ];
             for (var e = 0; e < ESTRELLAS.length; e++) {
                 var dat = ESTRELLAS[e];
@@ -372,9 +331,7 @@
             b.type = 'button';
             b.className = 'msn-carrusel__flecha msn-carrusel__flecha--' + dir;
             b.setAttribute('aria-label', dir === 'prev' ? 'Anterior' : 'Siguiente');
-            b.innerHTML = dir === 'prev'
-                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 5 8 12 15 19"></polyline></svg>'
-                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 5 16 12 9 19"></polyline></svg>';
+            b.innerHTML = dir === 'prev' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 5 8 12 15 19"></polyline></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 5 16 12 9 19"></polyline></svg>';
             return b;
         }
         var prev = flecha('prev');
@@ -388,8 +345,7 @@
             mas.className = 'msn-carrusel__mas';
             var a = document.createElement('a');
             a.href = CONFIG.linkVerTodos;
-            a.innerHTML = '<span>VER TODOS</span>'
-                + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="20" y2="12"></line><polyline points="12 4 20 12 12 20"></polyline></svg>';
+            a.innerHTML = '<span>VER TODOS</span>' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="20" y2="12"></line><polyline points="12 4 20 12 12 20"></polyline></svg>';
             mas.appendChild(a);
             root.appendChild(mas);
         }
@@ -418,10 +374,7 @@
             track.appendChild(productos[c].cloneNode(true));
         }
 
-        var indice = 0;
-        var paso = 0;
-        var gutterActual = 0;
-        var cardW = 0;
+        var indice = 0, paso = 0, gutterActual = 0, cardW = 0;
 
         function esMovil() { return window.innerWidth < 640; }
         function gutter() { return esMovil() ? CONFIG.gutterMovil : CONFIG.gutterDesktop; }
@@ -447,7 +400,6 @@
             var p = calcularPer(contentW);
             cardW = (contentW - (p - 1) * gap) / p;
             gutterActual = g;
-
             var bodyH = esMovil() ? 112 : 120;
             var cardH = cardW + bodyH;
 
@@ -459,7 +411,6 @@
                 var bodyEl = cards[i].querySelector('.msn-carrusel__body');
                 if (bodyEl) bodyEl.style.height = bodyH + 'px';
             }
-
             paso = cardW + gap;
             indice = Math.max(0, Math.min(maxIndice(), indice));
             aplicar(true);
@@ -468,10 +419,7 @@
         function aplicar(instant) {
             if (instant) track.style.transition = 'none';
             track.style.transform = 'translateX(' + (gutterActual - indice * paso) + 'px)';
-            if (instant) {
-                void track.offsetWidth;
-                track.style.transition = '';
-            }
+            if (instant) { void track.offsetWidth; track.style.transition = ''; }
         }
 
         function ir(i, instant) {
@@ -486,30 +434,21 @@
         }
         function ant() {
             if (maxIndice() === 0) return;
-            if (indice <= 0) {
-                ir(N0, true);
-                void track.offsetWidth;
-                ir(N0 - 1);
-            } else {
-                ir(indice - 1);
-            }
+            if (indice <= 0) { ir(N0, true); void track.offsetWidth; ir(N0 - 1); }
+            else { ir(indice - 1); }
         }
 
         prev.addEventListener('click', ant);
         next.addEventListener('click', sig);
 
-        var siguiendo = false;
-        var arrastrando = false;
-        var UMBRAL = 6;
+        var siguiendo = false, arrastrando = false, UMBRAL = 6;
         var arrX = 0, arrBase = 0, arrDx = 0, arrDxPrev = 0, arrT = 0, vel = 0;
         var bloqueaClick = false;
 
         viewport.addEventListener('pointerdown', function (e) {
             if (e.target.closest('.msn-carrusel__flecha')) return;
             if (e.pointerType === 'mouse' && e.button !== 0) return;
-            siguiendo = true;
-            arrastrando = false;
-            arrX = e.clientX;
+            siguiendo = true; arrastrando = false; arrX = e.clientX;
             arrBase = gutterActual - indice * paso;
             arrDx = 0; arrDxPrev = 0; vel = 0; arrT = 0;
         });
@@ -517,7 +456,6 @@
         viewport.addEventListener('pointermove', function (e) {
             if (!siguiendo) return;
             var dx = e.clientX - arrX;
-
             if (!arrastrando) {
                 if (Math.abs(dx) < UMBRAL) return;
                 arrastrando = true;
@@ -525,28 +463,19 @@
                 viewport.classList.add('msn-drag');
                 try { viewport.setPointerCapture(e.pointerId); } catch (err) { }
             }
-
             var ahora = Date.now();
-            if (arrT) {
-                var dt = ahora - arrT;
-                if (dt > 0) vel = (dx - arrDxPrev) / dt;
-            }
-            arrDxPrev = dx;
-            arrT = ahora;
-            arrDx = dx;
+            if (arrT) { var dt = ahora - arrT; if (dt > 0) vel = (dx - arrDxPrev) / dt; }
+            arrDxPrev = dx; arrT = ahora; arrDx = dx;
             track.style.transform = 'translateX(' + (arrBase + dx) + 'px)';
         });
 
         function soltar() {
             if (!siguiendo) return;
             var estabaArrastrando = arrastrando;
-            siguiendo = false;
-            arrastrando = false;
+            siguiendo = false; arrastrando = false;
             if (!estabaArrastrando) return;
-
             track.classList.remove('msn-no-trans');
             viewport.classList.remove('msn-drag');
-
             var dist = Math.abs(arrDx);
             var flotante = (gutterActual - (arrBase + arrDx)) / paso;
             var objetivo = Math.round(flotante);
@@ -559,11 +488,7 @@
         viewport.addEventListener('pointercancel', soltar);
 
         viewport.addEventListener('click', function (e) {
-            if (bloqueaClick) {
-                e.preventDefault();
-                e.stopPropagation();
-                bloqueaClick = false;
-            }
+            if (bloqueaClick) { e.preventDefault(); e.stopPropagation(); bloqueaClick = false; }
         }, true);
 
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
