@@ -864,3 +864,42 @@ else melkRelacionados();
     new MutationObserver(debounce(aplicar, 1500)).observe(document.body, { childList: true, subtree: true });
   }
 })();
+/* ==========================================================
+   FORZAR TAMAÑO DE IMAGEN EN FICHA DE PRODUCTO (500px)
+   ========================================================== */
+(function () {
+  function ajustarCarrousel() {
+    // 1. El contenedor padre
+    var carrousel = document.querySelector('.product-vip__carrousel');
+    if (carrousel) {
+      carrousel.style.setProperty('max-width', '500px', 'important');
+      carrousel.style.setProperty('width', '100%', 'important');
+      carrousel.style.setProperty('margin', '0 auto', 'important');
+      carrousel.style.setProperty('overflow', 'hidden', 'important');
+    }
+
+    // 2. La imagen
+    var img = document.querySelector('.product-vip__carrousel-image');
+    if (img) {
+      img.style.setProperty('max-width', '100%', 'important');
+      img.style.setProperty('height', 'auto', 'important');
+      img.style.setProperty('object-fit', 'contain', 'important');
+      img.style.setProperty('display', 'block', 'important');
+      img.style.setProperty('margin', '0 auto', 'important');
+      // Anulamos el efecto de zoom del tilt que pueda estar agrandándola
+      img.style.setProperty('transform', 'none', 'important');
+    }
+  }
+
+  // Ejecutar al cargar
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ajustarCarrousel);
+  } else {
+    ajustarCarrousel();
+  }
+
+  // Reintentar por si Empretienda carga la imagen con JS después
+  setTimeout(ajustarCarrousel, 500);
+  setTimeout(ajustarCarrousel, 1500);
+  setTimeout(ajustarCarrousel, 3000);
+})();
