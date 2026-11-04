@@ -1254,38 +1254,38 @@ var melkHoloTimer = window.setInterval(function () {
   }, 500);
 })();
 /* ==========================================================
-   FIXES GLOBALES DE HEADER (MELMAK) - V3
+   FIXES GLOBALES DE HEADER (MELMAK) - V4
    ========================================================== */
 (function arreglarHeaderYMarquee() {
   var styleHeader = document.createElement('style');
   styleHeader.textContent = [
-    /* 1. LOGO: Animación de flotación centrada (eje en el medio) */
+    /* 1. LOGO: Animación de flotación MUY suave y lenta */
     '@keyframes melmak-logo-float {',
     '  0% { transform: scale(1) translateY(0); }',
-    '  50% { transform: scale(1.05) translateY(-4px); }', /* Sube un poquito y agranda */
+    '  50% { transform: scale(1.02) translateY(-2px); }', /* Solo 2% de escala y 2px de altura */
     '  100% { transform: scale(1) translateY(0); }',
     '}',
     '.header-logo, .header-logo__image, a.header-logo {',
-    '  transform-origin: center center !important;', /* Eje perfectamente centrado */
-    '  animation: melmak-logo-float 4s ease-in-out infinite !important;', /* Movimiento constante */
+    '  transform-origin: center center !important;',
+    '  animation: melmak-logo-float 6s ease-in-out infinite !important;', /* 6 segundos para que sea pausado */
     '  display: inline-block !important;',
     '}',
     /* Al pasar el mouse, se pausa la flotación y hace un zoom suave */
     '.header-logo:hover, .header-logo__image:hover, a.header-logo:hover {',
     '  animation-play-state: paused !important;',
-    '  transform: scale(1.08) !important;',
+    '  transform: scale(1.04) !important;', /* Zoom suave al hover */
     '  transition: transform 0.3s ease !important;',
     '}',
 
     /* 2. RESPONSIVO: Más espacio en blanco y evitar superposición */
     '@media (max-width: 768px) {',
     '  .header, header, .header__container {',
-    '    padding-top: 25px !important;', /* Aumenta el espacio blanco general */
+    '    padding-top: 25px !important;',
     '    margin-top: 0 !important;',
     '    position: relative !important;',
     '  }',
     '  .header-logo, .header__left {',
-    '    margin-top: 15px !important;', /* Empuja el logo más abajo para que respire */
+    '    margin-top: 15px !important;',
     '    position: relative !important;',
     '    z-index: 5 !important;',
     '  }',
