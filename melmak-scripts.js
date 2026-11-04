@@ -1325,3 +1325,38 @@ var melkHoloTimer = window.setInterval(function () {
   setTimeout(forzarTodasLasAnimaciones, 300);
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
+/* ==========================================================
+   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO
+   ========================================================== */
+(function avisoEnvioGratis() {
+  // Buscamos el botón de compra
+  var btnCompra = document.querySelector('.product-vip__buy-btn, [class*="buy-button"]');
+  if (!btnCompra) return;
+
+  // Evitamos duplicados si el script se ejecuta dos veces
+  if (document.getElementById('melmak-aviso-envio')) return;
+
+  var aviso = document.createElement('div');
+  aviso.id = 'melmak-aviso-envio';
+  aviso.innerHTML = '🚚 <strong>ENVÍO GRATIS</strong> a sucursal (Andreani/Correo) en compras +$70.000';
+
+  // Estilos en línea para que no dependa de CSS externo
+  aviso.style.cssText = [
+    'background: #ffee26',
+    'color: #353535',
+    'font-family: "Rubik", Arial, sans-serif',
+    'font-size: 12px',
+    'font-weight: 500',
+    'padding: 10px 14px',
+    'border-radius: 8px',
+    'margin-bottom: 12px', // Lo ponemos arriba del botón
+    'text-align: center',
+    'border: 2px solid #353535',
+    'line-height: 1.4',
+    'box-sizing: border-box',
+    'width: 100%'
+  ].join(';');
+
+  // Insertamos el aviso justo ARRIBA del botón de compra
+  btnCompra.parentNode.insertBefore(aviso, btnCompra);
+})();
