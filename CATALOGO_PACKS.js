@@ -213,7 +213,7 @@
         '.melk-monitor__titulo { display: block; text-align: center; font-family: \'Press Start 2P\', monospace; font-size: 1.2cqw; line-height: 1.5; letter-spacing: .02em; text-transform: uppercase; color: #ffee26; white-space: nowrap; }',
         '.melk-monitor__cuerpo { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background-color: #fff; animation: melk-plasma 9s steps(1) infinite; }',
         '@keyframes melk-plasma { 0%, 82%, 100% { transform: translate(0, 0); filter: brightness(1); } 84% { transform: translate(-0.7cqw, 0.3cqw); filter: brightness(1.25) saturate(1.4); } 86% { transform: translate(1cqw, -0.3cqw); filter: brightness(0.8); } 88% { transform: translate(-0.4cqw, 0.2cqw); filter: brightness(1.15); } 90% { transform: translate(0, 0); filter: brightness(1); } }',
-        '.melk-monitor__contenido { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; object-fit: contain; object-position: center 25%; transform: scale(0.85); filter: saturate(1.4) contrast(1.08) brightness(1.34); }',
+        '.melk-monitor__contenido { position: absolute; inset: 0; z-index: 0; display: block; background-image: url("https://d22fxaf9t8d39k.cloudfront.net/56049d68251cc5343f48db52146a89d386a06181464574469c1f739d7d7190e320700.png"); background-repeat: no-repeat; background-position: center top 20%; background-size: contain; filter: saturate(1.4) contrast(1.08) brightness(1.34); }',
         '.melk-monitor__cambio { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }',
         '.melk-monitor__cambio--on { animation: melk-canal .5s steps(1) 1; }',
         '@keyframes melk-canal { 0% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 4px); } 20% { opacity: 1; background: repeating-linear-gradient(0deg, #000 0 3px, #fff 3px 6px); transform: translateY(4px); } 40% { opacity: 1; background: repeating-linear-gradient(90deg, #fff 0 3px, #000 3px 6px); transform: translate(-3px, -4px); } 60% { opacity: 1; background: repeating-linear-gradient(0deg, #fff 0 2px, #000 2px 5px); transform: translate(2px, 3px); } 80% { opacity: .5; background: repeating-linear-gradient(0deg, #000 0 2px, #fff 2px 4px); } 100% { opacity: 0; } }',
@@ -450,7 +450,7 @@
             + '<span class="melk-monitor__titulo">' + MONITOR_BARRA_TEXTO + '</span>'
             + '</div>'
             + '<div class="melk-monitor__cuerpo">'
-            + '<img class="melk-monitor__contenido" src="' + c.img + '" alt="">'
+            + '<div class="melk-monitor__contenido"></div>'
             + '<div class="melk-monitor__cambio"></div>'
             + '<div class="melk-monitor__hud">'
             + '<div class="melk-hud melk-hud--hp"><span class="melk-hud__label">HP:</span><span class="melk-hud__hearts"><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span><span class="melk-hud__heart"></span></span></div>'
