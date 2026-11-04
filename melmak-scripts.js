@@ -865,35 +865,44 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   FIX MENÚ INFORMACIÓN (V6 - CSS PURO Y ESTABLE)
+   FIX MENÚ INFORMACIÓN (V7 - DEFINITIVO A PRUEBA DE BALAS)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* 1. MATAR LA CAJA TRANSPARENTE (Sombra/fondo en el <li> y en el <a> al abrir) */
-    '.header-menu__desktop-list__container-list li.uk-open,',
-    '.header-menu__desktop-list__container-list li.uk-active,',
-    '.header-menu__desktop-list__container-list li:hover,',
-    '.header-menu__desktop-list__container-list li > a:hover,',
-    '.header-menu__desktop-list__container-list li.uk-open > a {',
+    /* 1. MATAR CUALQUIER CAJA, SOMBRA O BORDE EN EL <li> Y EN EL <a> */
+    '.header-menu li,',
+    '.header-menu li:hover,',
+    '.header-menu li.uk-open,',
+    '.header-menu li.uk-active,',
+    '.header-menu a,',
+    '.header-menu a:hover,',
+    '.header-menu a:focus,',
+    '.header-menu a:active {',
     '  background: transparent !important;',
     '  background-color: transparent !important;',
     '  box-shadow: none !important;',
     '  border: none !important;',
+    '  outline: none !important;',
+    '  text-decoration: none !important;',
     '}',
 
-    /* 2. ANIMACIÓN DE LEVITACIÓN (Igual que CATÁLOGO) */
-    '.header-menu__desktop-list__container-list li:hover > a {',
+    /* 2. ANIMACIÓN DE LEVITACIÓN (Igual a CATÁLOGO, usando las clases exactas) */
+    'a.desktop-list-link__text--bold:hover,',
+    'a.desktop-list-link__text--bold:focus {',
     '  display: inline-block !important;',
-    '  animation: melk-levitar-info 2.6s ease-in-out infinite !important;',
+    '  animation: melk-levitar 2.6s ease-in-out infinite !important;',
     '  transform-origin: 50% 60% !important;',
+    '  transition: transform .3s ease !important;',
+    '  will-change: transform;',
     '}',
-    '@keyframes melk-levitar-info {',
+    /* Aseguramos que existan los keyframes si no estaban cargados antes */
+    '@keyframes melk-levitar {',
     '  0%, 100% { transform: translateY(0) scale(1.04); }',
     '  50% { transform: translateY(-4px) scale(1.05); }',
     '}',
 
-    /* 3. POSICIÓN Y ESTILO DE LA CAJA AMARILLA (Sin JS, solo CSS) */
+    /* 3. ESTILO Y POSICIÓN DE LA CAJA AMARILLA */
     '.header-menu .uk-dropdown,',
     '.uk-dropdown-bottom-left,',
     '.uk-dropdown-bottom-right {',
@@ -902,11 +911,11 @@ else melkRelacionados();
     '  padding: 12px 16px !important;',
     '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
     '  border: none !important;',
-    '  margin-top: 0px !important;', /* Alinea al ras */
-    '  top: 100% !important;',         /* Pega al borde inferior */
+    '  margin-top: 0px !important;',
+    '  top: 100% !important;',
     '}',
 
-    /* 4. ESTILO DE LOS ENLACES DE ADENTRO */
+    /* 4. TEXTO DE LOS ENLACES INTERNOS */
     '.header-menu .uk-dropdown a {',
     '  color: #353535 !important;',
     '  font-weight: 500 !important;',
