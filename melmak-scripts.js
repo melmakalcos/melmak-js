@@ -80,7 +80,12 @@ function debounce(func, wait) {
   document.addEventListener('DOMContentLoaded', atar);
   if (window.MutationObserver) {
     var observerTilt = new MutationObserver(debounce(atar, 250));
-    observerTilt.observe(document.body, { childList: true, subtree: true });
+    var contenedorTilt = document.querySelector('.products-feed__products, .block-products-feed__products, .product-vip, .product-preview-carrousel, .products-feed__content');
+    if (contenedorTilt) {
+      observerTilt.observe(contenedorTilt, { childList: true, subtree: true });
+    } else {
+      observerTilt.observe(document.body, { childList: true, subtree: true });
+    }
   } else {
     setInterval(atar, 1000);
   }
@@ -318,9 +323,15 @@ function debounce(func, wait) {
     agregarProductos();
     if (window.MutationObserver) {
       var obsBread = new MutationObserver(debounce(agregarProductos, 300));
-      obsBread.observe(document.body, { childList: true, subtree: true });
-    } else { setInterval(agregarProductos, 1000); }
-  }
+      var contenedorBread = document.querySelector('.category-feed__breadcrumb, .breadcrumb, .breadcrumb__item');
+      if (contenedorBread && contenedorBread.parentNode) {
+        obsBread.observe(contenedorBread.parentNode, { childList: true, subtree: true });
+      } else {
+        obsBread.observe(document.body, { childList: true, subtree: true });
+      }
+    } else {
+      setInterval(agregarProductos, 1000);
+    }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();
 })();
