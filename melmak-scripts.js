@@ -866,10 +866,13 @@ if (document.readyState === 'loading') {
         '.melkh--moviendo .melkh__capa::before { animation-play-state: running; filter: saturate(1.8); }',
         '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
 
-        '.melkh-badge { position: absolute; left: 0; top: 0; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
+        /* BADGE: ahora posicionado con CSS */
+        '.melkh-badge { position: absolute; right: -15px; top: -10px; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
         '@media (hover: hover) and (pointer: fine) { .melkh-badge--visible { display: flex; } }',
         '.melkh-badge--oculto { opacity: 0; transform: rotate(-8deg) scale(.8); }',
-        '@media (hover: none) { .melkh.activo .melkh__capa::before { animation: melkh-mover 6s ease-in-out infinite alternate; animation-play-state: running; filter: saturate(1.8); } }', '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+        '@media (hover: none) { .melkh.activo .melkh__capa::before { animation: melkh-mover 6s ease-in-out infinite alternate; animation-play-state: running; filter: saturate(1.8); } }',
+
+        '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
         '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
         '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
@@ -939,12 +942,11 @@ if (document.readyState === 'loading') {
     var capa = document.createElement('span');
     capa.className = 'melkh__capa';
     caja.appendChild(capa);
+
     var badge = document.createElement('span');
     badge.className = 'melkh-badge';
     badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
-    var contenedorBadge = document.querySelector('.product-vip__left-container') || (caja.parentNode && caja.parentNode.parentNode) || document.body;
-    if (getComputedStyle(contenedorBadge).position === 'static') contenedorBadge.style.position = 'relative';
-    contenedorBadge.appendChild(badge);
+    wrap.appendChild(badge); // Ahora el badge vive dentro del wrap de la imagen
 
     wrap.appendChild(caja);
 
@@ -965,13 +967,6 @@ if (document.readyState === 'loading') {
       caja.style.top = '0px';
       caja.style.width = w + 'px';
       caja.style.height = h + 'px';
-
-      if (badge && badge.parentNode) {
-        var rb = img.getBoundingClientRect();
-        var pb = badge.parentNode.getBoundingClientRect();
-        badge.style.left = (rb.right - pb.left - 74) + 'px';
-        badge.style.top = (rb.top - pb.top - 14) + 'px';
-      }
     };
 
     actualizarMascara();
@@ -1028,14 +1023,16 @@ if (document.readyState === 'loading') {
     }
 
     function actualizar() {
+      // Busca la opción seleccionada por su clase exacta en Tiendanube
       var sel = items.filter(function (a) {
-        return a.className.indexOf('--selected') >= 0 || a.classList.contains('is-active') || a.getAttribute('aria-checked') === 'true';
+        return a.classList.contains('product-vip__attribute-item--selected');
       })[0];
 
       var activo = false;
       if (sel) {
-        var val = (sel.getAttribute('data-value') || sel.textContent || '').toUpperCase();
-        if (val.indexOf('HOLO') >= 0 || val.indexOf('UV') >= 0) {
+        var val = (sel.getAttribute('data-value') || sel.textContent || '').toUpperCase().trim();
+        // SOLO activar si contiene "HOLO". Ignoramos por completo "UV" o "BLANCO".
+        if (val.indexOf('HOLO') >= 0) {
           activo = true;
         }
       }
@@ -1043,7 +1040,7 @@ if (document.readyState === 'loading') {
       caja.classList.toggle('activo', activo);
       if (badge) badge.classList.toggle('melkh-badge--visible', activo);
 
-      // Lógica para mostrar/ocultar la info
+      // Mostrar u ocultar la caja de información
       if (info) {
         info.style.display = activo ? 'block' : 'none';
       }
