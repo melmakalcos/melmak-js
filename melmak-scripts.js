@@ -332,6 +332,8 @@ function debounce(func, wait) {
     } else {
       setInterval(agregarProductos, 1000);
     }
+  }
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iniciar);
   else iniciar();
 })();
