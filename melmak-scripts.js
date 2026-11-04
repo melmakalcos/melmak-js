@@ -856,7 +856,8 @@ if (document.readyState === 'loading') {
       var estilo = document.createElement('style');
       estilo.id = 'melkh-estilo';
       estilo.textContent = [
-        '.melkh-holo-wrap { position: relative; display: block; width: 100%; line-height: 0; }',
+        '.melkh-holo-wrap { position: relative; display: block; width: 100%; line-height: 0; overflow: visible !important; }',
+        '.product-vip__carrousel, .product-vip__carrousel-images, .product-vip__left-container { overflow: visible !important; }',
         '.melkh-holo-wrap > img { display: block; width: 100%; height: auto; }',
 
         '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
@@ -866,8 +867,8 @@ if (document.readyState === 'loading') {
         '.melkh--moviendo .melkh__capa::before { animation-play-state: running; filter: saturate(1.8); }',
         '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
 
-        /* BADGE: ahora posicionado con CSS */
-        '.melkh-badge { position: absolute; right: -15px; top: -10px; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
+        /* BADGE: posicionado abajo a la izquierda */
+        '.melkh-badge { position: absolute; left: -20px; bottom: -20px; top: auto; right: auto; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 9999; transition: opacity .25s ease, transform .25s ease; }',
         '@media (hover: hover) and (pointer: fine) { .melkh-badge--visible { display: flex; } }',
         '.melkh-badge--oculto { opacity: 0; transform: rotate(-8deg) scale(.8); }',
         '@media (hover: none) { .melkh.activo .melkh__capa::before { animation: melkh-mover 6s ease-in-out infinite alternate; animation-play-state: running; filter: saturate(1.8); } }',
@@ -946,7 +947,7 @@ if (document.readyState === 'loading') {
     var badge = document.createElement('span');
     badge.className = 'melkh-badge';
     badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
-    wrap.appendChild(badge); // Ahora el badge vive dentro del wrap de la imagen
+    wrap.appendChild(badge);
 
     wrap.appendChild(caja);
 
@@ -991,7 +992,7 @@ if (document.readyState === 'loading') {
     var info = document.createElement('div');
     info.className = 'melkh-info';
     info.id = 'melkh-info';
-    info.style.display = 'none'; // Oculto por defecto
+    info.style.display = 'none';
 
     var tag = document.createElement('span');
     tag.className = 'melkh-info__tag';
@@ -1023,7 +1024,6 @@ if (document.readyState === 'loading') {
     }
 
     function actualizar() {
-      // Busca la opción seleccionada por su clase exacta en Tiendanube
       var sel = items.filter(function (a) {
         return a.classList.contains('product-vip__attribute-item--selected');
       })[0];
@@ -1031,7 +1031,6 @@ if (document.readyState === 'loading') {
       var activo = false;
       if (sel) {
         var val = (sel.getAttribute('data-value') || sel.textContent || '').toUpperCase().trim();
-        // SOLO activar si contiene "HOLO". Ignoramos por completo "UV" o "BLANCO".
         if (val.indexOf('HOLO') >= 0) {
           activo = true;
         }
@@ -1040,7 +1039,6 @@ if (document.readyState === 'loading') {
       caja.classList.toggle('activo', activo);
       if (badge) badge.classList.toggle('melkh-badge--visible', activo);
 
-      // Mostrar u ocultar la caja de información
       if (info) {
         info.style.display = activo ? 'block' : 'none';
       }
@@ -1224,8 +1222,6 @@ if (document.readyState === 'loading') {
     a.classList.add('melk-alerta');
     if (a.parentElement) a.parentElement.classList.add('melk-alerta-padre');
 
-    /* Prints: el alerta del tema es global (lo comparten stickers), así que el
-       texto propio de posters se aplica solo en las páginas /prints/... */
     if (!/^\/prints\//.test(location.pathname) || a.getAttribute('data-melk-alerta-prints')) return;
 
     a.setAttribute('data-melk-alerta-prints', '1');
@@ -1273,7 +1269,6 @@ if (document.readyState === 'loading') {
 (function arreglarHeaderYMarquee() {
   var styleHeader = document.createElement('style');
   styleHeader.textContent = [
-    /* 1. LOGO: Animación de flotación MUY suave y lenta */
     '@keyframes melmak-logo-float {',
     '  0% { transform: scale(1) translateY(0); }',
     '  50% { transform: scale(1.02) translateY(-2px); }',
@@ -1289,8 +1284,6 @@ if (document.readyState === 'loading') {
     '  transform: scale(1.04) !important;',
     '  transition: transform 0.3s ease !important;',
     '}',
-
-    /* 2. RESPONSIVO: Espacio simétrico (arriba y abajo) */
     '@media (max-width: 768px) {',
     '  .header, header, .header__container {',
     '    padding-top: 25px !important;',
@@ -1313,7 +1306,6 @@ if (document.readyState === 'loading') {
   ].join('\n');
   document.head.appendChild(styleHeader);
 
-  /* 3. MARQUEE AMARILLO: Fuerza el arranque de la animación si se traba */
   function forzarTodasLasAnimaciones() {
     var todos = document.querySelectorAll('*');
     for (var i = 0; i < todos.length; i++) {
@@ -1355,12 +1347,10 @@ if (document.readyState === 'loading') {
     return null;
   }
 
-
   var intentos = 0;
   var maxIntentos = 20;
 
   var timer = setInterval(function () {
-
     if (document.getElementById('melmak-aviso-envio') || intentos >= maxIntentos) {
       clearInterval(timer);
       return;
@@ -1391,18 +1381,42 @@ if (document.readyState === 'loading') {
         'display: block !important'
       ].join(';');
 
-
       btnCompra.parentNode.insertBefore(aviso, btnCompra);
-
       clearInterval(timer);
     }
   }, 500);
 })();
 
 /* ==========================================================
-   ESTILO DE BOTÓN DE COMPRA (V3 - BORDE AMARILLO)
+   ESTILO DE BOTÓN DE COMPRA (V4 - FUENTE RUBIK FORZADA)
    ========================================================== */
 (function estilizarBotonCompra() {
+  if (!document.getElementById('melmak-btn-style')) {
+    var styleBtn = document.createElement('style');
+    styleBtn.id = 'melmak-btn-style';
+    styleBtn.textContent = [
+      '.melmak-btn-compra {',
+      '  border-radius: 100px !important;',
+      '  border: 3px solid #ffee26 !important;',
+      '  background-color: #353535 !important;',
+      '  color: #ffee26 !important;',
+      '  font-family: "Rubik", system-ui, sans-serif !important;',
+      '  font-weight: 700 !important;',
+      '  letter-spacing: 0.05em !important;',
+      '  text-transform: uppercase !important;',
+      '  transition: all 0.3s ease !important;',
+      '  box-shadow: none !important;',
+      '}',
+      '.melmak-btn-compra:hover {',
+      '  background-color: #ffee26 !important;',
+      '  color: #353535 !important;',
+      '  border: 3px solid #353535 !important;',
+      '  transform: translateY(-2px) !important;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(styleBtn);
+  }
+
   function buscarBotonCompra() {
     var botones = document.querySelectorAll('button, a, input[type="submit"]');
     for (var i = 0; i < botones.length; i++) {
@@ -1419,30 +1433,7 @@ if (document.readyState === 'loading') {
     var boton = buscarBotonCompra();
 
     if (boton) {
-      boton.style.borderRadius = '100px';
-      boton.style.border = '3px solid #ffee26';
-      boton.style.backgroundColor = '#353535';
-      boton.style.color = '#ffee26';
-      boton.style.fontFamily = '"vinyl", "Rubik", Arial, sans-serif';
-      boton.style.fontWeight = '700';
-      boton.style.letterSpacing = '0.05em';
-      boton.style.textTransform = 'uppercase';
-      boton.style.transition = 'all 0.3s ease';
-      boton.style.boxShadow = 'none';
-
-      boton.onmouseenter = function () {
-        this.style.backgroundColor = '#ffee26';
-        this.style.color = '#353535';
-        this.style.border = '3px solid #353535';
-        this.style.transform = 'translateY(-2px)';
-      };
-      boton.onmouseleave = function () {
-        this.style.backgroundColor = '#353535';
-        this.style.color = '#ffee26';
-        this.style.border = '3px solid #ffee26';
-        this.style.transform = 'translateY(0)';
-      };
-
+      boton.classList.add('melmak-btn-compra');
       clearInterval(timer);
     }
 
