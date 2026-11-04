@@ -413,7 +413,7 @@ function melkRelacionados() {
       '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
       '.melk-rel { padding: 56px 16px 64px; background: #ffffff; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
       '.melk-rel__caja { max-width: 1150px; margin: 0 auto; }',
-      '.melk-rel__titulo { margin: 0 0 28px; font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 40px; font-weight: 400; line-height: 1; text-align: center; text-transform: uppercase; color: #353535; }',
+      '.melk-rel__titulo { margin: 0 0 28px; font-family: \'Curda Gouda\', \'Rubik\', system-ui, sans-serif; font-size: 40px; font-weight: 400; line-height: 1; text-align: center; text-transform: uppercase; color: #353535; }',
       '.melk-rel__grilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px 18px; }',
       '.melk-rel__card { display: block; text-decoration: none; color: inherit; }',
       '.melk-rel__foto { position: relative; overflow: hidden; background: #f3f3f3; aspect-ratio: 1 / 1; }',

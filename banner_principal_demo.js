@@ -285,7 +285,7 @@
         '#melmak-bbs__merit{position:relative;width:100%;background:#fff;',
         '  padding:clamp(26px,3vw,44px) 20px clamp(30px,5vw,60px);}',
         '#melmak-bbs__merit *{box-sizing:border-box;margin:0;',
-        '  font-family:"vinyl","matt-b","Curda Gouda",Rubik,Arial,sans-serif;}',
+        '  font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;}',
         '#melmak-bbs__merit .mbms-merit__caja{position:relative;max-width:min(1180px,95vw);margin:0 auto;background:#fff;border:3px solid var(--ink);border-radius:26px;',
         '  padding:clamp(30px,4vw,40px) clamp(24px,3vw,32px) clamp(30px,4vw,40px);',
         '  min-height:clamp(110px,15vw,160px);}',
