@@ -17,7 +17,7 @@
         masVendidos: {
             titulo: 'EL MÁS VENDIDO DE LA SEMANA',
             imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',
-            link: 'https://www.melmakalcos.com.ar/prints/musica/poster-bts-6',
+            link: 'https://www.melmakalcos.com.ar/prints/musica/print-bts-6',
             alt: 'MÁS VENDIDO',
             alturaDesktop: 500,
             alturaMovil: 250,
