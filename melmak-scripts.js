@@ -110,13 +110,7 @@
     try {
       var url = new URL(href, window.location.origin);
       var ruta = url.pathname.replace(/\/+$/, '');
-
-      // ACÁ AGREGAMOS LA URL DE LA FAQ PARA QUE EL SCRIPT LA IGNORE
-      var ignorar = ['/', '/productos', '/preguntas-frecuentes', '/faq'];
-
-      if (url.origin !== window.location.origin || !ruta || ignorar.indexOf(ruta.toLowerCase()) !== -1) {
-        return null;
-      }
+      if (url.origin !== window.location.origin || !ruta || ruta === '/' || ruta === '/productos') return null;
       return ruta.toLowerCase();
     } catch (error) {
       return null;
