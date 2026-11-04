@@ -822,3 +822,28 @@ else melkRelacionados();
   }
   setTimeout(intentarBoton, 500);
 })();
+/* ==========================================================
+   FIX width y height a las imágenes
+   ========================================================== */
+(function arreglarDimensionesImagenes() {
+  function aplicar() {
+    var imgs = document.querySelectorAll('img:not([width]):not([height])');
+    for (var i = 0; i < imgs.length; i++) {
+      var img = imgs[i];
+      if (img.naturalWidth && img.naturalHeight) {
+        img.setAttribute('width', img.naturalWidth);
+        img.setAttribute('height', img.naturalHeight);
+      } else {
+        // Fallback: si la imagen aún no cargó, usamos onload
+        img.addEventListener('load', function () {
+          this.setAttribute('width', this.naturalWidth);
+          this.setAttribute('height', this.naturalHeight);
+        }, { once: true });
+      }
+    }
+  }
+  aplicar();
+  if (window.MutationObserver) {
+    new MutationObserver(debounce(aplicar, 500)).observe(document.body, { childList: true, subtree: true });
+  }
+})();
