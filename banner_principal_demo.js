@@ -74,11 +74,11 @@
     };
 
     var FOTOS = [
-        { src: 'https://d22fxaf9t8d39k.cloudfront.net/b2caa17a5655c9e1148c53a589e5e4131a2e31649329d59af688697e45a5c76f20700.png', alt: 'Trabajo MELMAK 1', sticker: '' },
-        { src: 'https://d22fxaf9t8d39k.cloudfront.net/76fcbcd4c93bb52718e518ec5149e5c2da84c8a9414d91ea0bf589b325843b8320700.png', alt: 'Trabajo MELMAK 2', sticker: '' },
-        { src: 'https://d22fxaf9t8d39k.cloudfront.net/c94296280a7cf92cdc354c16be1c15de80aede99e289905e99d5848c18cf983520700.png', alt: 'Trabajo MELMAK 3', sticker: '' },
-        { src: 'https://d22fxaf9t8d39k.cloudfront.net/debcef30e89655b29276de0dd0387d1788594d58837bcd56e108e5cd3e6a95b320700.png', alt: 'Trabajo MELMAK 4', sticker: '' },
-        { src: 'https://d22fxaf9t8d39k.cloudfront.net/348a1c033a7b4f9a7341a9c279721277827e972306ea6ce35b2750a3cdda402020700.png', alt: 'Trabajo MELMAK 5', sticker: '' }
+        { src: 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@main/img/1.webp', alt: 'Trabajo MELMAK 1', sticker: '' },
+        { src: 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@main/img/2.webp', alt: 'Trabajo MELMAK 2', sticker: '' },
+        { src: 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@main/img/3.webp', alt: 'Trabajo MELMAK 3', sticker: '' },
+        { src: 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@main/img/4.webp', alt: 'Trabajo MELMAK 4', sticker: '' },
+        { src: 'https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@main/img/5.webp', alt: 'Trabajo MELMAK 5', sticker: '' }
     ];
     var COLOR_BG = '#ffee26';
     var COLOR_INK = '#353535';
