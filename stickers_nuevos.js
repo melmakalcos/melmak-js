@@ -17,7 +17,7 @@
         masVendidos: {
             titulo: 'EL MÁS VENDIDO DE LA SEMANA',
             imagen: 'https://d22fxaf9t8d39k.cloudfront.net/7b9f5d0ebb5a5fb09c9cde5d696358a33ce2dca68f2fd4df8acf16080208757c20700.png',
-            link: 'https://www.melmakalcos.com.ar/prints/musica/print-bts-6',
+            link: 'https://www.melmakalcos.com.ar/prints/musica/poster-bts-6',
             alt: 'MÁS VENDIDO',
             alturaDesktop: 500,
             alturaMovil: 250,
@@ -37,8 +37,6 @@
 
     var style = document.createElement('style');
     style.textContent = [
-        /* FIX: hash de jsDelivr que ya usa banner_principal_demo.js y que sabemos que existe.
-           El hash anterior (85a4913...) podía dar 404 y por eso el @font-face fallaba. */
         '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
 
         '.msn-carrusel { position: relative; left: 50%; margin-left: -50vw; width: 100vw; box-sizing: border-box; overflow: hidden; padding: 60px 0 28px; background: linear-gradient(180deg, transparent 0 14px, #ffee26 14px); }',
@@ -49,11 +47,6 @@
         '.msn-carrusel__titulo { font-family: \'Curda Gouda\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(28px, 4.5vw, 42px); color: #353535; margin: 0; text-shadow: 4px 4px 0 #fff; }',
         '.msn-carrusel__head .msn-carrusel__titulo { display: inline-block; transform: none; }',
 
-        /* FIX CLAVE: forzar Curda Gouda con !important en el título y en TODOS sus
-           descendientes (span incluidos). El tema Eris fuerza "font-family: Rubik"
-           en "span", y los títulos que están armados con <span> internos
-           (ej. "EL MÁS VENDIDO") heredaban Rubik aunque el <h2> tuviera Curda Gouda.
-           Con esta regla, los spans internos también muestran Curda Gouda. */
         '.msn-carrusel__head .msn-carrusel__titulo,',
         '.msn-carrusel__head .msn-carrusel__titulo *,',
         '.msn-vendidos .msn-carrusel__titulo,',
@@ -120,8 +113,9 @@
         '.msn-vendidos__sombra { position: absolute; left: 16%; right: 16%; bottom: -8px; height: 26px; border-radius: 50%; background: rgba(53, 53, 53, .28); filter: blur(11px); pointer-events: none; z-index: 0; }',
 
         '.msn-vendidos__badge { position: absolute; z-index: 6; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; border-radius: 100px; padding: 13px 24px; font-size: 17px; line-height: 1; box-shadow: none; pointer-events: none; }',
-        '.msn-vendidos__badge--top { left: -6%; top: -3%; background: #353535; color: #fff; transform: rotate(-8deg); }',
-        '.msn-vendidos__badge--pedido { right: -14%; bottom: 30%; background: #fff; color: #353535; border: 2px solid #353535; transform: rotate(7deg); }',
+        /* FIX: cambiados los left/right de % a px para que no dependan del ancho de la imagen */
+        '.msn-vendidos__badge--top { left: -20px; top: -3%; background: #353535; color: #fff; transform: rotate(-8deg); }',
+        '.msn-vendidos__badge--pedido { right: -50px; bottom: 30%; background: #fff; color: #353535; border: 2px solid #353535; transform: rotate(7deg); }',
 
         '.msn-vendidos__confeti { position: absolute; inset: 0; z-index: 1; pointer-events: none; }',
         '.msn-vendidos__star { position: absolute; pointer-events: none; transform: translate(-50%, -50%) rotate(var(--r, 0deg)); }',
@@ -157,7 +151,7 @@
         '  .msn-vendidos__link::before { width: min(60vw, 240px); }',
         '  .msn-vendidos__giro { height: ' + CONFIG.masVendidos.alturaMovil + 'px; }',
         '  .msn-vendidos__badge { font-size: 13px; padding: 9px 16px; }',
-        '  .msn-vendidos__badge--top { left: 1%; top: -2%; }',
+        '  .msn-vendidos__badge--top { left: -8px; top: -2%; }',
         '  .msn-vendidos__confeti { top: 30%; }',
         '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
@@ -169,7 +163,7 @@
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px; }',
         '}',
         '@media (hover: none) and (max-width: 639px) {',
-        '  .msn-vendidos { margin-bottom: 84px; }',
+        '  .msn-vendidos { margin-bottom: 115px; }',
         '}',
 
         '/* entradas al hacer scroll */',
