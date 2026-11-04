@@ -69,7 +69,7 @@
 
     var style = document.createElement('style');
     style.textContent = [
-        '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@85a491307507245bd4b7ea4c7ec7127a02123174/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
+        '@font-face { font-family: \'Curda Gouda\'; src: url("https://cdn.jsdelivr.net/gh/melmakalcos/melmak-js@51a89bfb88809c8675480f42147afd66d90c6f19/Curda%20Gouda.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }',
         '@keyframes mmOnda { to { background-position: 26px 0; } }',
         '.melk-catalogo { font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
         '.melk-catalogo__fondo { position: relative; overflow: hidden; padding: 72px 16px 72px; background-color: #ffffff; --melk-cuadricula-tam: 50px;',

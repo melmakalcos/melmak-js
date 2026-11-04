@@ -93,9 +93,17 @@
     if (root.dataset.melmakBbs) return;
     root.dataset.melmakBbs = '1';
 
+    if (!document.getElementById('melmak-typekit-tdt')) {
+        var linkTypekit = document.createElement('link');
+        linkTypekit.id = 'melmak-typekit-tdt';
+        linkTypekit.rel = 'stylesheet';
+        linkTypekit.href = 'https://use.typekit.net/tdt2nii.css';
+        document.head.appendChild(linkTypekit);
+    }
+
     var style = document.createElement('style');
     style.textContent = [
-        '@import url("https://use.typekit.net/tdt2nii.css");',
+        '',
         '@font-face{font-family:"Curda Gouda";src:url("' + CURDA_URL + '") format("truetype");font-weight:400;font-style:normal;font-display:swap;}',
         '@font-face{font-family:"Curda Gouda";src:url("' + CURDA_URL + '") format("truetype");font-weight:700;font-style:normal;font-display:swap;}',
         '#melmak-bbs{--bg:' + COLOR_BG + ';--ink:' + COLOR_INK + ';',
