@@ -864,3 +864,34 @@ else melkRelacionados();
     new MutationObserver(debounce(aplicar, 1500)).observe(document.body, { childList: true, subtree: true });
   }
 })();
+/* ==========================================================
+   ESTILO UNIFICADO PARA TODOS LOS DROPDOWNS DEL MENÚ
+   ========================================================== */
+(function () {
+  var s = document.createElement('style');
+  s.textContent = [
+    /* Fondo amarillo y bordes redondeados para el dropdown de INFORMACIÓN (y cualquier otro) */
+    '.desktop-list__menu > ul > li > ul {',
+    '  background-color: #ffee26 !important;',
+    '  border-radius: 16px !important;',
+    '  padding: 12px !important;',
+    '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
+    '  border: none !important;',
+    '  overflow: hidden !important;',
+    '}',
+    /* Texto oscuro para los enlaces dentro del dropdown */
+    '.desktop-list__menu > ul > li > ul a {',
+    '  color: #353535 !important;',
+    '  font-weight: 500 !important;',
+    '  display: block !important;',
+    '  padding: 8px 16px !important;',
+    '  border-radius: 8px !important;',
+    '  transition: background 0.2s ease !important;',
+    '}',
+    /* Efecto hover sutil para los enlaces */
+    '.desktop-list__menu > ul > li > ul a:hover {',
+    '  background-color: rgba(255,255,255,0.4) !important;',
+    '}'
+  ].join('\n');
+  document.head.appendChild(s);
+})();
