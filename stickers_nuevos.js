@@ -129,7 +129,7 @@
         '}',
         '@keyframes msn-cta-pop { 0% { opacity: 0; transform: translate(-50%, 30px) scale(.3) rotate(-14deg); } 55% { opacity: 1; transform: translate(-50%, -8px) scale(1.18) rotate(4deg); } 78% { opacity: 1; transform: translate(-50%, 2px) scale(.95) rotate(-2deg); } 100% { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0deg); } }',
         '@media (hover: none) {',
-        '  .msn-vendidos__boton { display: inline-block; position: absolute; left: 50%; bottom: 6%; z-index: 7; opacity: 1; pointer-events: auto; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; color: #353535; background: #fff; border: 3px solid #353535; border-radius: 100px; padding: 11px 26px; box-shadow: 4px 4px 0 #353535; transform: translate(-50%, 0); animation: none; }',
+        '  .msn-vendidos__boton { display: inline-block; position: absolute; left: 50%; top: 100%; bottom: auto; margin-top: 16px; z-index: 7; opacity: 1; pointer-events: auto; font-family: \'vinyl\', \'matt-b\', \'Rubik\', system-ui, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; color: #353535; background: #fff; border: 3px solid #353535; border-radius: 100px; padding: 11px 26px; box-shadow: 4px 4px 0 #353535; transform: translate(-50%, 0); animation: none; }',
         '}',
 
         '@media (min-width: 640px) {',
@@ -138,9 +138,15 @@
 
         '@media (max-width: 639px) {',
         '  .msn-carrusel { padding: 46px 0 22px; }',
+        '  .msn-vendidos { padding: 24px 16px 0; }',
+        '  .msn-vendidos .msn-carrusel__titulo { line-height: 1.12; }',
+        '  .msn-vendidos__t1, .msn-vendidos__t2 { display: block; }',
+        '  .msn-vendidos__link { margin-top: 36px; }',
+        '  .msn-vendidos__link::before { width: min(60vw, 240px); }',
         '  .msn-vendidos__giro { height: ' + CONFIG.masVendidos.alturaMovil + 'px; }',
         '  .msn-vendidos__badge { font-size: 13px; padding: 9px 16px; }',
         '  .msn-vendidos__badge--top { left: 1%; top: -2%; }',
+        '  .msn-vendidos__confeti { top: 30%; }',
         '  .msn-carrusel .block-products-feed__product-info { min-height: 84px; }',
         '  .msn-carrusel .block-products-feed__product-name { font-size: 12px; }',
         '  .msn-carrusel .block-products-feed__product-buttons-buy { font-size: 12px; padding: 7px 14px; }',
@@ -149,6 +155,9 @@
         '  .msn-carrusel__flecha--prev { left: 4px; }',
         '  .msn-carrusel__flecha--next { right: 4px; }',
         '  .msn-carrusel__mas a { font-size: 15px; padding: 10px 22px; }',
+        '}',
+        '@media (hover: none) and (max-width: 639px) {',
+        '  .msn-vendidos { margin-bottom: 84px; }',
         '}',
 
         '/* entradas al hacer scroll */',
@@ -247,7 +256,13 @@
             bloqueMv.className = 'msn-vendidos';
             var tituloMv = document.createElement('h2');
             tituloMv.className = 'msn-carrusel__titulo';
-            tituloMv.textContent = mv.titulo;
+            var partesTitulo = mv.titulo.split(' VENDIDO');
+            if (partesTitulo.length > 1) {
+                tituloMv.innerHTML = '<span class="msn-vendidos__t1">' + partesTitulo[0] + '</span>'
+                    + ' <span class="msn-vendidos__t2">VENDIDO' + partesTitulo[1] + '</span>';
+            } else {
+                tituloMv.textContent = mv.titulo;
+            }
             var linkMv = document.createElement('a');
             linkMv.className = 'msn-vendidos__link';
             linkMv.href = mv.link;
@@ -270,6 +285,7 @@
             reflejoMv.className = 'msn-vendidos__reflejo';
             reflejoMv.setAttribute('aria-hidden', 'true');
             reflejoMv.innerHTML = '<i></i>';
+            giroMv.appendChild(reflejoMv);
 
             var badgeTop = document.createElement('span');
             badgeTop.className = 'msn-vendidos__badge msn-vendidos__badge--top';
@@ -282,22 +298,22 @@
             confetiMv.className = 'msn-vendidos__confeti';
             confetiMv.setAttribute('aria-hidden', 'true');
             var ESTRELLAS = [
-                [-7, 8, 22, -16, 1],
-                [5, -7, 20, 18, 0],
-                [26, -10, 26, -10, 1],
-                [50, -9, 15, 24, 0],
-                [75, -8, 22, -20, 1],
-                [95, -3, 16, 12, 0],
-                [105, 16, 26, -8, 1],
-                [108, 45, 17, 20, 0],
-                [103, 74, 24, -14, 1],
-                [94, 99, 16, 10, 0],
-                [72, 107, 22, -22, 1],
-                [44, 108, 14, 16, 0],
-                [20, 105, 24, -6, 1],
-                [-5, 97, 17, 12, 0],
-                [-10, 70, 22, -18, 1],
-                [-9, 36, 15, 8, 0]
+                [2, 7, 20, -18, 0],
+                [10, 15, 24, 14, 1],
+                [19, 6, 14, -8, 0],
+                [4, 32, 22, 20, 1],
+                [14, 48, 16, -14, 0],
+                [6, 66, 24, 8, 1],
+                [17, 81, 15, -22, 0],
+                [3, 93, 18, 12, 1],
+                [24, 97, 22, -6, 0],
+                [76, 96, 18, 16, 1],
+                [94, 90, 15, -12, 0],
+                [83, 79, 24, 22, 1],
+                [96, 62, 16, -18, 0],
+                [88, 46, 22, 10, 1],
+                [98, 30, 15, -10, 0],
+                [90, 14, 24, 16, 1]
             ];
             for (var e = 0; e < ESTRELLAS.length; e++) {
                 var dat = ESTRELLAS[e];
@@ -321,13 +337,12 @@
 
             linkMv.appendChild(sombraMv);
             linkMv.appendChild(giroMv);
-            linkMv.appendChild(reflejoMv);
             linkMv.appendChild(badgeTop);
             linkMv.appendChild(badgePedido);
-            linkMv.appendChild(confetiMv);
             linkMv.appendChild(botonMv);
             bloqueMv.appendChild(tituloMv);
             bloqueMv.appendChild(linkMv);
+            bloqueMv.appendChild(confetiMv);
             root.appendChild(bloqueMv);
         }
 
