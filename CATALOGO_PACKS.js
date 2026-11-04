@@ -12,11 +12,11 @@
     var MONITOR_TITULO_TAMANO = 'auto';
 
     var MONITOR_CATEGORIAS = [
-        { nombre: 'STICKERS', img: 'https://d22fxaf9t8d39k.cloudfront.net/bd00a1591a202d1b730b2de320260e600d9ea4ece199e7e165847eeaad0aaeec20700.png', link: 'https://www.melmakalcos.com.ar/stickers' },
-        { nombre: 'PRINTS', img: '', link: 'https://www.melmakalcos.com.ar/prints' },
-        { nombre: 'PACKS', img: '', link: 'https://www.melmakalcos.com.ar/packs' },
-        { nombre: 'PERSONALIZADOS', img: '', link: 'https://www.melmakalcos.com.ar/personalizados' },
-        { nombre: 'MAYORISTA', img: '', link: 'https://www.melmakalcos.com.ar/mayorista' }
+        { nombre: 'STICKERS', img: 'https://d22fxaf9t8d39k.cloudfront.net/b7f6ce494e28cade112bb3f6a5dc796bdb83d3aea8364c26461bc6ef15476d4b20700.png', link: 'https://www.melmakalcos.com.ar/stickers' },
+        { nombre: 'PRINTS', img: 'https://d22fxaf9t8d39k.cloudfront.net/ac4664e79fbbd3f22e9a7943738de7f62078a41ac87f6d9153df268291a33cbc20700.png', link: 'https://www.melmakalcos.com.ar/prints' },
+        { nombre: 'PACKS', img: 'https://d22fxaf9t8d39k.cloudfront.net/fb96e5ad30bc883ffac24933395a57e82cadd6440a0351ffe7e3cefb0f21829020700.png', link: 'https://www.melmakalcos.com.ar/packs' },
+        { nombre: 'PERSONALIZADOS', img: 'https://d22fxaf9t8d39k.cloudfront.net/f0b1518559e7b6661b70ef082724c0f093045bb648604076eef4ed4db6bbc36620700.png', link: 'https://www.melmakalcos.com.ar/personalizados' },
+        { nombre: 'MAYORISTA', img: 'https://d22fxaf9t8d39k.cloudfront.net/d2d457a702a00a11290b519faf0ab34f6c9c5be1a8174cf2515a17cdf4cd1d9f20700.png', link: 'https://www.melmakalcos.com.ar/mayorista' }
     ];
 
     var MONITOR_KERNING = {
