@@ -865,44 +865,56 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   FIX MENÚ INFORMACIÓN (V7 - DEFINITIVO A PRUEBA DE BALAS)
+   FIX MENÚ INFORMACIÓN (V8 - MATANDO EL FANTASMA)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* 1. MATAR CUALQUIER CAJA, SOMBRA O BORDE EN EL <li> Y EN EL <a> */
-    '.header-menu li,',
-    '.header-menu li:hover,',
-    '.header-menu li.uk-open,',
-    '.header-menu li.uk-active,',
-    '.header-menu a,',
-    '.header-menu a:hover,',
-    '.header-menu a:focus,',
-    '.header-menu a:active {',
+    /* 1. ANULAR FANTASMAS DE UIKIT (Pseudo-elementos, sombras de foco, etc.) */
+    '.header-menu li::before,',
+    '.header-menu li::after,',
+    '.header-menu a::before,',
+    '.header-menu a::after,',
+    '.header-menu .uk-dropdown::before,',
+    '.header-menu .uk-dropdown::after {',
+    '  display: none !important;',
+    '  content: none !important;',
+    '}',
+
+    '.header-menu li, .header-menu a, .header-menu .uk-dropdown {',
     '  background: transparent !important;',
     '  background-color: transparent !important;',
     '  box-shadow: none !important;',
-    '  border: none !important;',
     '  outline: none !important;',
-    '  text-decoration: none !important;',
+    '  border: none !important;',
+    '  backdrop-filter: none !important;',
     '}',
 
-    /* 2. ANIMACIÓN DE LEVITACIÓN (Igual a CATÁLOGO, usando las clases exactas) */
+    /* 2. Z-INDEX: El texto por encima, el dropdown por detrás */
+    '.header-menu li {',
+    '  position: relative !important;',
+    '}',
+    '.header-menu a {',
+    '  position: relative !important;',
+    '  z-index: 100 !important;', /* El texto siempre arriba */
+    '}',
+    '.header-menu .uk-dropdown {',
+    '  z-index: 50 !important;',  /* La caja amarilla abajo */
+    '}',
+
+    /* 3. ANIMACIÓN DE LEVITACIÓN (Igual a CATÁLOGO) */
     'a.desktop-list-link__text--bold:hover,',
     'a.desktop-list-link__text--bold:focus {',
     '  display: inline-block !important;',
     '  animation: melk-levitar 2.6s ease-in-out infinite !important;',
     '  transform-origin: 50% 60% !important;',
-    '  transition: transform .3s ease !important;',
-    '  will-change: transform;',
     '}',
-    /* Aseguramos que existan los keyframes si no estaban cargados antes */
     '@keyframes melk-levitar {',
     '  0%, 100% { transform: translateY(0) scale(1.04); }',
     '  50% { transform: translateY(-4px) scale(1.05); }',
     '}',
 
-    /* 3. ESTILO Y POSICIÓN DE LA CAJA AMARILLA */
+    /* 4. CAJA AMARILLA (Posición y estilo) */
     '.header-menu .uk-dropdown,',
     '.uk-dropdown-bottom-left,',
     '.uk-dropdown-bottom-right {',
@@ -915,7 +927,7 @@ else melkRelacionados();
     '  top: 100% !important;',
     '}',
 
-    /* 4. TEXTO DE LOS ENLACES INTERNOS */
+    /* 5. ENLACES INTERNOS */
     '.header-menu .uk-dropdown a {',
     '  color: #353535 !important;',
     '  font-weight: 500 !important;',
