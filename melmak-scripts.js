@@ -1254,7 +1254,7 @@ var melkHoloTimer = window.setInterval(function () {
   }, 500);
 })();
 /* ==========================================================
-   FIXES GLOBALES DE HEADER (MELMAK) - V4
+   FIXES GLOBALES DE HEADER (MELMAK) - V5
    ========================================================== */
 (function arreglarHeaderYMarquee() {
   var styleHeader = document.createElement('style');
@@ -1262,30 +1262,32 @@ var melkHoloTimer = window.setInterval(function () {
     /* 1. LOGO: Animación de flotación MUY suave y lenta */
     '@keyframes melmak-logo-float {',
     '  0% { transform: scale(1) translateY(0); }',
-    '  50% { transform: scale(1.02) translateY(-2px); }', /* Solo 2% de escala y 2px de altura */
+    '  50% { transform: scale(1.02) translateY(-2px); }',
     '  100% { transform: scale(1) translateY(0); }',
     '}',
     '.header-logo, .header-logo__image, a.header-logo {',
     '  transform-origin: center center !important;',
-    '  animation: melmak-logo-float 6s ease-in-out infinite !important;', /* 6 segundos para que sea pausado */
+    '  animation: melmak-logo-float 6s ease-in-out infinite !important;',
     '  display: inline-block !important;',
     '}',
-    /* Al pasar el mouse, se pausa la flotación y hace un zoom suave */
     '.header-logo:hover, .header-logo__image:hover, a.header-logo:hover {',
     '  animation-play-state: paused !important;',
-    '  transform: scale(1.04) !important;', /* Zoom suave al hover */
+    '  transform: scale(1.04) !important;',
     '  transition: transform 0.3s ease !important;',
     '}',
 
-    /* 2. RESPONSIVO: Más espacio en blanco y evitar superposición */
+    /* 2. RESPONSIVO: Espacio simétrico (arriba y abajo) */
     '@media (max-width: 768px) {',
     '  .header, header, .header__container {',
     '    padding-top: 25px !important;',
+    '    padding-bottom: 30px !important;', /* NUEVO: espacio extra abajo */
     '    margin-top: 0 !important;',
+    '    margin-bottom: 0 !important;',
     '    position: relative !important;',
     '  }',
     '  .header-logo, .header__left {',
     '    margin-top: 15px !important;',
+    '    margin-bottom: 15px !important;', /* NUEVO: empuja hacia arriba para dar aire abajo */
     '    position: relative !important;',
     '    z-index: 5 !important;',
     '  }',
