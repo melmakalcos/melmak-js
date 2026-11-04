@@ -6,11 +6,7 @@
     s.appendChild(document.createTextNode(
       '[class*="product-offer"] { z-index: 999 !important; pointer-events: none !important; }' +
       '.product-vip__carrousel-image { box-shadow: none !important; transition: transform .05s ease-out, filter .05s ease-out; will-change: transform; cursor: pointer; }' +
-
-      /* FIX: Arregla la deformación del carrusel del home */
-      '.products-feed__product-wrapper, .block-products-feed__product-wrapper, .block-products-set__product-wrapper { box-shadow: none !important; }' +
-      '.msn-carrusel .block-products-feed__product-wrapper { overflow: hidden !important; }' +
-      '.msn-carrusel .melmak-btn-compra { padding: 6px 10px !important; font-size: 11px !important; white-space: nowrap !important; border-width: 2px !important; }' +
+      '.products-feed__product-wrapper, .products-feed__product-wrapper:hover, .block-products-feed__product-wrapper, .block-products-feed__product-wrapper:hover, .block-products-set__product-wrapper, .block-products-set__product-wrapper:hover { box-shadow: none !important; }' +
 
       '.block-products-feed__product-media, .products-feed__product-media, .product-preview-carrousel__item { position: relative; overflow: hidden; }' +
       '.melmak-glare { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; opacity: 0; transition: opacity .3s ease; mix-blend-mode: color-dodge; }'
@@ -1335,13 +1331,23 @@ if (document.readyState === 'loading') {
   setTimeout(forzarTodasLasAnimaciones, 300);
   setTimeout(forzarTodasLasAnimaciones, 1000);
 })();
+
 /* ==========================================================
-   AVISO DE ENVÍO GRATIS EN FICHA DE PRODUCTO
+   AVISO DE ENVÍO GRATIS (SOLO FICHA DE PRODUCTO)
    ========================================================== */
 (function avisoEnvioGratis() {
+  // Si no estamos en la ficha de producto, no hacer nada.
+  var ficha = document.querySelector('.product-vip');
+  if (!ficha) return;
+
+  // Limpieza preventiva: borrar avisos que se hayan inyectado por error en carruseles o grillas
+  var erroneos = document.querySelectorAll('.msn-carrusel .melmak-aviso-envio, .products-feed__product .melmak-aviso-envio');
+  for (var e = 0; e < erroneos.length; e++) {
+    erroneos[e].remove();
+  }
 
   function buscarBoton() {
-    var botones = document.querySelectorAll('button, a, input[type="submit"]');
+    var botones = ficha.querySelectorAll('button, a, input[type="submit"]');
     for (var i = 0; i < botones.length; i++) {
       var texto = (botones[i].textContent || botones[i].value || '').toLowerCase();
       if (texto.includes('agregar al carrito') || texto.includes('comprar') || texto.includes('añadir al carrito')) {
@@ -1392,9 +1398,13 @@ if (document.readyState === 'loading') {
 })();
 
 /* ==========================================================
-   ESTILO DE BOTÓN DE COMPRA (V4 - FUENTE RUBIK FORZADA)
+   ESTILO DE BOTÓN DE COMPRA (SOLO FICHA DE PRODUCTO)
    ========================================================== */
 (function estilizarBotonCompra() {
+  // Si no estamos en la ficha de producto, no hacer nada.
+  var ficha = document.querySelector('.product-vip');
+  if (!ficha) return;
+
   if (!document.getElementById('melmak-btn-style')) {
     var styleBtn = document.createElement('style');
     styleBtn.id = 'melmak-btn-style';
@@ -1423,7 +1433,7 @@ if (document.readyState === 'loading') {
   }
 
   function buscarBotonCompra() {
-    var botones = document.querySelectorAll('button, a, input[type="submit"]');
+    var botones = ficha.querySelectorAll('button, a, input[type="submit"]');
     for (var i = 0; i < botones.length; i++) {
       var texto = (botones[i].textContent || botones[i].value || '').toLowerCase();
       if (texto.includes('agregar al carrito') || texto.includes('comprar') || texto.includes('añadir al carrito')) {
