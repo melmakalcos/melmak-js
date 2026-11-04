@@ -228,7 +228,7 @@
         '.melk-hud { position: absolute; display: flex; align-items: center; gap: 0.85cqw; padding: 0.7cqw 1.1cqw; background-color: #353535; border: 0.27cqw solid #fff; }',
         '.melk-hud--hp { top: 1.7cqw; left: 1.7cqw; }',
         '.melk-hud--coins { top: 1.7cqw; right: 1.7cqw; }',
-        '.melk-hud-wrap--score { position: absolute; bottom: 1.7cqw; left: 1.7cqw; display: inline-grid; grid-template-columns: max-content; gap: 1.1cqw; }',
+        '.melk-hud-wrap--score { position: absolute; bottom: 1.7cqw; left: 1.7cqw; display: inline-grid; grid-template-columns: max-content; gap: 1.1cqw; transform: scale(0.65); transform-origin: bottom left; }',
         '.melk-hud-wrap--score .melk-hud { position: static; }',
         '.melk-hud__gif { display: block; width: 0; min-width: 100%; height: auto; image-rendering: pixelated; }',
         '.melk-hud__label { font-size: 1cqw; line-height: 1; letter-spacing: .05em; color: #ffee26; }',
