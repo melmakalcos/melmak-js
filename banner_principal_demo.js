@@ -104,10 +104,18 @@
         '  overflow-x:clip;overflow-y:visible;}',
         '#melmak-bbs,#melmak-bbs *{box-sizing:border-box;}',
 
+        /* NUEVA ONDA AMARILLA EN EL TOPE SUPERIOR */
+        '#melmak-bbs-root{position:relative;}',
+        '#melmak-bbs-root::before{content:"";position:absolute;top:-10px;left:0;right:0;height:10px;',
+        '  background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 10H100V9C87.5 9 87.5 3 75 3C62.5 3 62.5 9 50 9C37.5 9 37.5 3 25 3C12.5 3 12.5 9 0 9Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");',
+        '  background-size:180px 10px;background-repeat:repeat-x;',
+        '  animation:mbbs-ola-top 6s linear infinite;z-index:1;pointer-events:none;}',
+
         '.mbbs-panel{position:absolute;top:0;bottom:0;left:-40px;right:-40px;z-index:0;',
         '  pointer-events:none;overflow:hidden;',
         '  background-color:var(--bg);',
-        '  border-radius:26px;}',
+        /* Cambiado para que las esquinas superiores sean rectas y encajen con la onda */
+        '  border-radius:0 0 26px 26px;}',
         '#melmak-bbs__inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;',
         '  padding:clamp(24px,3.5vw,54px) 20px clamp(30px,5vw,60px);}',
         '#melmak-bbs__scroll-block,#melmak-bbs__carrusel,#melmak-bbs__post,#melmak-bbs__head{will-change:opacity,transform;}',
@@ -134,15 +142,13 @@
 
         /* ===== BARRA DE CLIMA (específico) ===== */
         '#melmak-bbs__clima-wrap{position:relative;z-index:2;background:#fff;padding:clamp(40px,6vw,80px) 0;}',
-        /* Barra de clima: amarilla, texto e íconos en negro. */
         '#melmak-bbs__clima{margin:0;background:var(--bg);}',
         '#melmak-bbs__clima:before{background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 10H100V9C87.5 9 87.5 3 75 3C62.5 3 62.5 9 50 9C37.5 9 37.5 3 25 3C12.5 3 12.5 9 0 9Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");}',
-        '#melmak-bbs__clima:after{background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 0H100V3C87.5 3 87.5 9 75 9C62.5 9 62.5 3 50 3C37.5 3 37.5 9 25 9C12.5 3 12.5 3 0 3Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");}',
+        '#melmak-bbs__clima:after{background-image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'10\' viewBox=\'0 0 100 10\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0 0H100V3C87.5 3 87.5 9 75 9C62.5 9 62.5 3 50 3C37.5 3 37.5 9 25 9C12.5 9 12.5 3 0 3Z\' fill=\'%23ffee26\'/%3E%3C/svg%3E");}',
         '#melmak-bbs__clima .mbbs-barra-inner{animation-duration:32s;}',
         '.mbbs-clima-item{display:inline-flex;align-items:center;gap:14px;margin:0 26px;}',
         '.mbbs-clima-icono{display:inline-flex;flex:none;width:34px;height:34px;line-height:1;}',
         '.mbbs-clima-icono svg{display:block;width:100%;height:100%;}',
-        /* Íconos del clima en negro (monocromo). */
         '#melmak-bbs__clima .mbbs-clima-icono svg *{fill:#353535 !important;stroke:#353535 !important;}',
         '.mbbs-clima-texto{font-family:"vinyl","Curda Gouda",Rubik,Arial,sans-serif;font-weight:400;',
         '  font-size:clamp(20px,3vw,34px);line-height:1.15;letter-spacing:.02em;text-transform:uppercase;',
@@ -240,8 +246,6 @@
         '.mbbs-noticias__lista .mbbs-noticia__texto{display:block;margin-top:2px;}',
         '@media (min-width:768px){.mbbs-noticias__titulo{font-size:92px;}}',
         '@media (max-width:600px){#melmak-bbs__noticias{padding:40px 14px 18px;}.mbbs-noticias__caja{width:min(360px,100%);padding:18px;}.mbbs-noticias__titulo{font-size:46px;}.mbbs-noticias__lista{font-size:14px;padding-left:20px;}}',
-        /* Compensa el vuelo de las tarjetas laterales (translateY -56px + rotación):
-           así el aire visual barra → galería iguala carrusel → NOTICIAS. */
         '#melmak-bbs__clima-wrap + #melmak-bbs__galeria{padding-top:64px;}',
         '@media (max-width:900px){',
         '  #melmak-bbs__hero{grid-template-columns:1fr;}',
@@ -319,6 +323,7 @@
         '@media (prefers-reduced-motion:reduce){',
         '  .mbbs-barra-inner{animation:none;}',
         '  .mbbs-barra:before,.mbbs-barra:after{animation:none;}',
+        '  #melmak-bbs-root::before{animation:none;}',
         '  #melmak-bbs__galeria.is-pop .mbbs-galeria-viewport{animation:none;}',
         '  #melmak-bbs__noticias.is-init .mbbs-noticias__titulo,',
         '  #melmak-bbs__noticias.is-init .mbbs-noticias__caja{opacity:1;}',
@@ -378,8 +383,6 @@
     }
 
     function crearBarraClima() {
-        /* Envoltorio blanco: oculta el amarillo del panel detrás de la barra negra
-           y maneja el aire arriba/abajo (misma distancia que carrusel → NOTICIAS). */
         var wrap = document.createElement('div');
         wrap.id = 'melmak-bbs__clima-wrap';
         var barra = document.createElement('div');
@@ -619,7 +622,7 @@
         sec.appendChild(carrusel);
         var noticias = crearNoticias();
         if (noticias) { sec.appendChild(noticias); }
-        sec.appendChild(crearBarraClima()); /* NUEVA BARRA DE CLIMA */
+        sec.appendChild(crearBarraClima());
         sec.appendChild(crearGaleria());
         sec.appendChild(crearMerit());
         return sec;
@@ -694,8 +697,6 @@
         caja.appendChild(ul);
         s.appendChild(caja);
 
-        /* Plop al scrollear: se marca is-init antes de insertar (primer paint
-           oculto, sin flash) y se agrega is-pop cuando entra en viewport. */
         var sinMovimientoNoticias = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (!sinMovimientoNoticias && 'IntersectionObserver' in window) {
             s.classList.add('is-init');
