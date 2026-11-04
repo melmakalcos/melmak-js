@@ -32,7 +32,7 @@
         },
         {
             "titulo": "¿NOS CONOCES DE ANTES Y NO PODÉS VER EL CATÁLOGO DE STICKERS ANTERIOR?",
-            "texto": "Decidimos darle un nuevo comienzo a MELMAK. Se vienen mucho fan-art y diseños propios. Si te quedaste con ganas de comprar stickers del catálogo viejo, este estará disponible (tanto para compras mayoristas como minoristas) durante unas semanas más mientras actualizamos todo lo nuevo. Solicitalo haciendo una consulta o por MD en nuestro Instagram.",
+            "texto": "Decidimos darle un nuevo comienzo a MELMAK. Se vienen muchos diseños nuevos. Si te quedaste con ganas de comprar stickers del catálogo viejo, este estará disponible (tanto para compras mayoristas como minoristas) durante unas semanas más mientras actualizamos todo lo nuevo. Encontrá el catálogo en el menú superior 'INFORMACIÓN'",
             "link": ""
         },
         {
