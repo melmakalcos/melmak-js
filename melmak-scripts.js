@@ -865,28 +865,32 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   MANTENER TAMAÑO ORIGINAL DE LA IMAGEN (SIN ESTIRAR)
+   MANTENER TAMAÑO ORIGINAL Y CENTRAR IMAGEN
    ========================================================== */
 (function () {
   function ajustarImagen() {
     var img = document.querySelector('.product-vip__carrousel-image');
     if (!img) return;
 
-    // 1. Anular el estiramiento forzado por el tema
+    // 1. Imagen: tamaño original, centrada
     img.style.setProperty('width', 'auto', 'important');
     img.style.setProperty('max-width', '100%', 'important');
     img.style.setProperty('height', 'auto', 'important');
     img.style.setProperty('object-fit', 'contain', 'important');
+    img.style.setProperty('display', 'block', 'important');
+    img.style.setProperty('margin', '0 auto', 'important'); /* <-- CLAVE: centra la imagen */
 
-    // 2. Opcional: Limitar la caja contenedora inmediata para que no se expanda
+    // 2. Contenedor inmediato: limitar ancho y centrar
     var contenedor = img.closest('.product-vip__carrousel');
     if (contenedor) {
       contenedor.style.setProperty('max-width', '500px', 'important');
-      contenedor.style.setProperty('margin', '0 auto', 'important');
+      contenedor.style.setProperty('margin', '0 auto', 'important'); /* <-- CLAVE: centra la caja */
+      contenedor.style.setProperty('display', 'flex', 'important');
+      contenedor.style.setProperty('justify-content', 'center', 'important');
+      contenedor.style.setProperty('align-items', 'center', 'important');
     }
   }
 
-  // Ejecutar cuando el DOM esté listo y reintentar por si el tema carga la imagen después
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', ajustarImagen);
   } else {
