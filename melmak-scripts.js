@@ -865,19 +865,34 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   AJUSTE DE TAMAÑO DE IMAGEN EN FICHA DE PRODUCTO (SEGURO)
+   MANTENER TAMAÑO ORIGINAL DE LA IMAGEN (SIN ESTIRAR)
    ========================================================== */
 (function () {
-  function ajustar() {
+  function ajustarImagen() {
     var img = document.querySelector('.product-vip__carrousel-image');
-    if (img) {
-      img.style.setProperty('width', 'auto', 'important');
-      img.style.setProperty('max-width', '100%', 'important');
-      img.style.setProperty('height', 'auto', 'important');
-      img.style.setProperty('object-fit', 'contain', 'important');
+    if (!img) return;
+
+    // 1. Anular el estiramiento forzado por el tema
+    img.style.setProperty('width', 'auto', 'important');
+    img.style.setProperty('max-width', '100%', 'important');
+    img.style.setProperty('height', 'auto', 'important');
+    img.style.setProperty('object-fit', 'contain', 'important');
+
+    // 2. Opcional: Limitar la caja contenedora inmediata para que no se expanda
+    var contenedor = img.closest('.product-vip__carrousel');
+    if (contenedor) {
+      contenedor.style.setProperty('max-width', '500px', 'important');
+      contenedor.style.setProperty('margin', '0 auto', 'important');
     }
   }
-  ajustar();
-  setTimeout(ajustar, 1000);
-  setTimeout(ajustar, 2500);
+
+  // Ejecutar cuando el DOM esté listo y reintentar por si el tema carga la imagen después
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ajustarImagen);
+  } else {
+    ajustarImagen();
+  }
+
+  setTimeout(ajustarImagen, 500);
+  setTimeout(ajustarImagen, 1500);
 })();
