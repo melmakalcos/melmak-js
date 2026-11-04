@@ -683,7 +683,7 @@ else melkRelacionados();
     '.header-menu__desktop-list__container-list > a:first-child { background-color: #ffffff !important; margin: 12px 12px 0 12px; padding: 10px 14px; border-radius: 10px !important; display: block; }',
     '.header-menu__desktop-list__container-list hr { border-color: rgba(53,53,53,0.25) !important; }',
     '.header-menu__desktop-list__container-list a { color: #353535 !important; }',
-    
+
     '.desktop-list__menu > ul > li > a.desktop-list-link__text--bold:hover, .desktop-list__menu > ul > li > a.desktop-list-link__text--bold:focus { animation: melk-levitar 2.6s ease-in-out infinite !important; transform-origin: 50% 60% !important; transition: transform .3s ease !important; will-change: transform; }',
     '@keyframes melk-levitar { 0%, 100% { transform: translateY(0) scale(1.04); } 50% { transform: translateY(-4px) scale(1.05); } }',
     '.desktop-list__menu ul ul a.desktop-list-link__text:hover, .desktop-list__menu ul ul a.desktop-list-link__text:focus { animation: none !important; transform: none !important; }',
