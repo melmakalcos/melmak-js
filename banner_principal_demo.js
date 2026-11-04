@@ -341,7 +341,8 @@
 
     var CARRUSEL_TEXTOS = [
         { t: 'TIEMPO DE ELABORACIÓN DE POSTERS - 1 A 2 DÍAS HÁBILES', c: '#ffffff' },
-        { t: 'TIEMPO DE ELABORACIÓN DE STICKERS - 7 A 10 DÍAS HÁBILES', c: COLOR_BG }
+        { t: 'TIEMPO DE ELABORACIÓN DE STICKERS - 7 A 10 DÍAS HÁBILES', c: COLOR_BG },
+        { t: 'ENVÍO GRATIS A SUCURSAL (ANDREANI/CORREO ARGENTINO) EN COMPRAS SUPERIORES A $70.000', c: '#ffffff' }
     ];
 
     /* ==========================================================
