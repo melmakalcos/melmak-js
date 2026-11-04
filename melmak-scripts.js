@@ -864,3 +864,40 @@ else melkRelacionados();
     new MutationObserver(debounce(aplicar, 1500)).observe(document.body, { childList: true, subtree: true });
   }
 })();
+/* ==========================================================
+   ESTILO PARA EL DROPDOWN DE INFORMACIÓN (UIKIT - SEGURO)
+   ========================================================== */
+(function () {
+  var s = document.createElement('style');
+  s.textContent = [
+    /* Apuntamos SOLO a los dropdowns que están dentro del menú header */
+    '.header-menu .uk-dropdown,',
+    '.header-menu__desktop-list__container-list .uk-dropdown,',
+    'li.uk-parent .uk-dropdown {',
+    '  background-color: #ffee26 !important;',
+    '  border-radius: 16px !important;',
+    '  padding: 12px 16px !important;',
+    '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
+    '  border: none !important;',
+    '  margin-top: 8px !important;',
+    '}',
+
+    /* Texto oscuro para los enlaces de adentro */
+    '.header-menu .uk-dropdown a,',
+    '.header-menu__desktop-list__container-list .uk-dropdown a {',
+    '  color: #353535 !important;',
+    '  font-weight: 500 !important;',
+    '  display: block !important;',
+    '  padding: 8px 12px !important;',
+    '  border-radius: 8px !important;',
+    '  transition: background 0.2s ease !important;',
+    '}',
+
+    /* Efecto hover para los enlaces */
+    '.header-menu .uk-dropdown a:hover,',
+    '.header-menu__desktop-list__container-list .uk-dropdown a:hover {',
+    '  background-color: rgba(255,255,255,0.4) !important;',
+    '}'
+  ].join('\n');
+  document.head.appendChild(s);
+})();
