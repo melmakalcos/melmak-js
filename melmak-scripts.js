@@ -865,26 +865,42 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   FIX MENÚ INFORMACIÓN (V3 - DEFINITIVO)
+   FIX MENÚ INFORMACIÓN (V4 - ANIMACIÓN Y CAJA)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* 1. MATAR LA BARRA AMARILLA AL PASAR EL MOUSE (Anulando UIkit y el Tema) */
-    '.header-menu__desktop-list__container-list li > a,',
-    '.header-menu__desktop-list__container-list li > a:hover,',
-    '.header-menu__desktop-list__container-list li > a:focus,',
-    '.header-menu__desktop-list__container-list li.uk-active > a,',
-    '.header-menu__desktop-list__container-list li.uk-open > a {',
+    /* 1. MATAR CUALQUIER CAJA O SOMBRA EN EL ÍTEM PADRE (Soluciona la caja transparente) */
+    '.header-menu__desktop-list__container-list li,',
+    '.header-menu__desktop-list__container-list li:hover,',
+    '.header-menu__desktop-list__container-list li.uk-open,',
+    '.header-menu__desktop-list__container-list li.uk-active {',
     '  background: transparent !important;',
     '  background-color: transparent !important;',
-    '  background-image: none !important;',
     '  box-shadow: none !important;',
     '  border: none !important;',
     '  outline: none !important;',
     '}',
 
-    /* 2. FORZAR EL ESTILO DE LA CAJA DESPLEGABLE */
+    '.header-menu__desktop-list__container-list li > a {',
+    '  background: transparent !important;',
+    '  box-shadow: none !important;',
+    '  border: none !important;',
+    '  outline: none !important;',
+    '}',
+
+    /* 2. ANIMACIÓN DE LEVITACIÓN (Igual al menú de CATÁLOGO) */
+    '.header-menu__desktop-list__container-list li:hover > a.desktop-list__link {',
+    '  animation: melk-levitar-info 2.6s ease-in-out infinite !important;',
+    '  transform-origin: 50% 60% !important;',
+    '  will-change: transform;',
+    '}',
+    '@keyframes melk-levitar-info {',
+    '  0%, 100% { transform: translateY(0) scale(1.04); }',
+    '  50% { transform: translateY(-4px) scale(1.05); }',
+    '}',
+
+    /* 3. ESTILO DE LA CAJA DESPLEGABLE (Amarilla, redondeada, al ras) */
     '.header-menu .uk-dropdown,',
     '.uk-dropdown-bottom-left,',
     '.uk-dropdown-bottom-right {',
@@ -893,12 +909,18 @@ else melkRelacionados();
     '  padding: 12px 16px !important;',
     '  box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;',
     '  border: none !important;',
-    '  /* Forzamos la posición para que no quede más arriba */',
     '  margin-top: 0px !important;',
     '  top: 100% !important;',
+    '  animation: melk-dropdown-fade 0.3s ease-out !important;',
     '}',
 
-    /* 3. ESTILO DE LOS ENLACES INTERNOS */
+    /* Animación sutil de aparición para la caja */
+    '@keyframes melk-dropdown-fade {',
+    '  from { opacity: 0; transform: translateY(10px); }',
+    '  to { opacity: 1; transform: translateY(0); }',
+    '}',
+
+    /* 4. ESTILO DE LOS ENLACES INTERNOS */
     '.header-menu .uk-dropdown a,',
     '.header-menu .uk-dropdown .uk-nav-sub a {',
     '  color: #353535 !important;',
@@ -906,7 +928,9 @@ else melkRelacionados();
     '  display: block !important;',
     '  padding: 8px 12px !important;',
     '  border-radius: 8px !important;',
+    '  background: transparent !important;',
     '}',
+
     '.header-menu .uk-dropdown a:hover {',
     '  background-color: rgba(255,255,255,0.4) !important;',
     '}'
