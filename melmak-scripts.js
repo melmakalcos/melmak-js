@@ -836,233 +836,250 @@ if (document.readyState === 'loading') {
 
 /* ---------- EFECTO HOLOGRÁFICO + INFO ESTÁTICA (ficha de producto) ---------- */
 (function () {
-function melkHolo() {
-  if (document.getElementById('melkh-caja')) return;
-  var img = document.querySelector('.product-vip__carrousel-image');
-  if (!img) return;
+  function melkHolo() {
+    if (document.getElementById('melkh-caja')) return;
+    var img = document.querySelector('.product-vip__carrousel-image');
+    if (!img) return;
 
-  var items = [].slice.call(document.querySelectorAll('.product-vip__attribute-item'));
-  if (!items.length) return;
+    var items = [].slice.call(document.querySelectorAll('.product-vip__attribute-item'));
+    if (!items.length) return;
 
-  var hayHolo = items.some(function (a) {
-    return (a.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
-  });
-  if (!hayHolo) return;
-
-  var svgNS = 'http://www.w3.org/2000/svg';
-  var xlinkNS = 'http://www.w3.org/1999/xlink';
-
-  if (!document.getElementById('melkh-estilo')) {
-    var estilo = document.createElement('style');
-    estilo.id = 'melkh-estilo';
-    estilo.textContent = [
-      '.melkh-holo-wrap { position: relative; display: block; width: 100%; line-height: 0; }',
-      '.melkh-holo-wrap > img { display: block; width: 100%; height: auto; }',
-
-      '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
-      '.melkh.activo { opacity: 1; }',
-      '.melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; }',
-      '.melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); filter: saturate(1.0); transition: filter .3s ease; animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
-      '.melkh--moviendo .melkh__capa::before { animation-play-state: running; filter: saturate(1.8); }',
-      '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
-
-      '.melkh-badge { position: absolute; left: 0; top: 0; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
-      '@media (hover: hover) and (pointer: fine) { .melkh-badge--visible { display: flex; } }',
-      '.melkh-badge--oculto { opacity: 0; transform: rotate(-8deg) scale(.8); }',
-      '@media (hover: none) { .melkh.activo .melkh__capa::before { animation: melkh-mover 6s ease-in-out infinite alternate; animation-play-state: running; filter: saturate(1.8); } }',      '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
-      '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
-      '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
-      '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
-    ].join('');
-    document.head.appendChild(estilo);
-  }
-
-  if (!document.getElementById('melkh-svg')) {
-    var svg = document.createElementNS(svgNS, 'svg');
-    svg.id = 'melkh-svg';
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('width', '0');
-    svg.setAttribute('height', '0');
-    svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-
-    var defs = document.createElementNS(svgNS, 'defs');
-
-    var filtroBlanco = document.createElementNS(svgNS, 'filter');
-    filtroBlanco.id = 'melkh-blanco';
-    filtroBlanco.setAttribute('color-interpolation-filters', 'sRGB');
-    var matrizBlanco = document.createElementNS(svgNS, 'feColorMatrix');
-    matrizBlanco.setAttribute('type', 'matrix');
-    matrizBlanco.setAttribute('values', '0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0');
-    filtroBlanco.appendChild(matrizBlanco);
-
-    var mascara = document.createElementNS(svgNS, 'mask');
-    mascara.id = 'melkh-mascara';
-    mascara.setAttribute('maskUnits', 'objectBoundingBox');
-    mascara.setAttribute('maskContentUnits', 'objectBoundingBox');
-    mascara.setAttribute('style', 'mask-type:alpha');
-
-    var mascaraImg = document.createElementNS(svgNS, 'image');
-    mascaraImg.id = 'melkh-mascara-img';
-    mascaraImg.setAttribute('x', '0');
-    mascaraImg.setAttribute('y', '0');
-    mascaraImg.setAttribute('width', '1');
-    mascaraImg.setAttribute('height', '1');
-    mascaraImg.setAttribute('preserveAspectRatio', 'none');
-    mascaraImg.setAttribute('filter', 'url(#melkh-blanco)');
-    mascara.appendChild(mascaraImg);
-
-    defs.appendChild(filtroBlanco);
-    defs.appendChild(mascara);
-    svg.appendChild(defs);
-    document.body.appendChild(svg);
-  }
-
-  var wrap = document.createElement('div');
-  wrap.className = 'melkh-holo-wrap';
-  var padre = img.parentNode;
-  padre.insertBefore(wrap, img);
-  wrap.appendChild(img);
-
-  if (img.style.transform || img.style.filter) {
-    wrap.style.transform = img.style.transform;
-    wrap.style.filter = img.style.filter;
-    wrap.style.transition = img.style.transition;
-    img.style.transform = '';
-    img.style.filter = '';
-  }
-
-  var caja = document.createElement('span');
-  caja.className = 'melkh';
-  caja.id = 'melkh-caja';
-  caja.setAttribute('aria-hidden', 'true');
-
-  var capa = document.createElement('span');
-  capa.className = 'melkh__capa';
-  caja.appendChild(capa);
-  var badge = document.createElement('span');
-  badge.className = 'melkh-badge';
-  badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
-  var contenedorBadge = document.querySelector('.product-vip__left-container') || (caja.parentNode && caja.parentNode.parentNode) || document.body;
-  if (getComputedStyle(contenedorBadge).position === 'static') contenedorBadge.style.position = 'relative';
-  contenedorBadge.appendChild(badge);
-
-  wrap.appendChild(caja);
-
-  var actualizarMascara = function () {
-    var src = img.currentSrc || img.src || '';
-    if (!src) return;
-    var mascaraImg = document.getElementById('melkh-mascara-img');
-    if (!mascaraImg) return;
-    mascaraImg.setAttribute('href', src);
-    mascaraImg.setAttributeNS(xlinkNS, 'xlink:href', src);
-  };
-
-  var ubicar = function () {
-    var w = img.offsetWidth || img.getBoundingClientRect().width;
-    var h = img.offsetHeight || img.getBoundingClientRect().height;
-    if (!w || !h) return;
-    caja.style.left = '0px';
-    caja.style.top = '0px';
-    caja.style.width = w + 'px';
-    caja.style.height = h + 'px';
-
-    if (badge && badge.parentNode) {
-      var rb = img.getBoundingClientRect();
-      var pb = badge.parentNode.getBoundingClientRect();
-      badge.style.left = (rb.right - pb.left - 74) + 'px';
-      badge.style.top = (rb.top - pb.top - 14) + 'px';
-    }
-  };
-
-  actualizarMascara();
-  ubicar();
-  img.addEventListener('load', function () { ubicar(); actualizarMascara(); });
-  window.addEventListener('resize', ubicar);
-  if (window.ResizeObserver) new ResizeObserver(ubicar).observe(img);
-  new MutationObserver(function () { actualizarMascara(); ubicar(); }).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
-
-  var puedeHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
-  if (puedeHover) {
-    img.addEventListener('mouseenter', function () {
-      caja.classList.add('melkh--moviendo');
-      badge.classList.add('melkh-badge--oculto');
+    var hayHolo = items.some(function (a) {
+      return (a.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
     });
-    img.addEventListener('mouseleave', function () {
-      caja.classList.remove('melkh--moviendo');
-      badge.classList.remove('melkh-badge--oculto');
-    });
-  }
+    if (!hayHolo) return;
 
-  var info = document.createElement('div');
-  info.className = 'melkh-info';
-  info.id = 'melkh-info';
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var xlinkNS = 'http://www.w3.org/1999/xlink';
 
-  var tag = document.createElement('span');
-  tag.className = 'melkh-info__tag';
-  tag.textContent = 'INFORMACIÓN IMPORTANTE SOBRE STICKERS HOLOGRÁFICOS';
+    if (!document.getElementById('melkh-estilo')) {
+      var estilo = document.createElement('style');
+      estilo.id = 'melkh-estilo';
+      estilo.textContent = [
+        '.melkh-holo-wrap { position: relative; display: block; width: 100%; line-height: 0; }',
+        '.melkh-holo-wrap > img { display: block; width: 100%; height: auto; }',
 
-  var cajaInfo = document.createElement('div');
-  cajaInfo.className = 'melkh-info__caja';
-  var texto = document.createElement('span');
-  texto.textContent = 'Material que cambia de color según la luz y el ángulo. El corte se hace sobre el holo. Si el diseño tiene borde de color, se agrega un margen de 1 a 2 mm.';
-  var aviso = document.createElement('b');
-  aviso.className = 'melkh-info__aviso';
-  aviso.textContent = 'No incluye tinta blanca. Imagen ilustrativa.';
-  cajaInfo.appendChild(texto);
-  cajaInfo.appendChild(aviso);
+        '.melkh { position: absolute; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; }',
+        '.melkh.activo { opacity: 1; }',
+        '.melkh__capa { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden; -webkit-mask-image: url(#melkh-mascara); mask-image: url(#melkh-mascara); mix-blend-mode: multiply; opacity: .9; }',
+        '.melkh__capa::before { content: ""; position: absolute; left: -60%; top: -60%; width: 220%; height: 220%; background-image: repeating-linear-gradient(115deg, #ffc9f2 0%, #bff6ff 5%, #f6ffbf 10%, #bfffe0 15%, #cfc9ff 20%, #ffe3c9 25%, #ffc9f2 30%); filter: saturate(1.0); transition: filter .3s ease; animation: melkh-mover 3.5s ease-in-out infinite alternate; animation-play-state: paused; will-change: transform; }',
+        '.melkh--moviendo .melkh__capa::before { animation-play-state: running; filter: saturate(1.8); }',
+        '@keyframes melkh-mover { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-12%, 0, 0); } }',
 
-  info.appendChild(tag);
-  info.appendChild(cajaInfo);
-
-  var cantidad = document.querySelector('.product-vip__quantity');
-  var filaCantidad = cantidad && cantidad.closest ? cantidad.closest('.uk-grid') : null;
-  var contenedorAtributos = document.getElementById('product-vip__attributes');
-
-  if (filaCantidad && filaCantidad.parentNode) {
-    filaCantidad.parentNode.insertBefore(info, filaCantidad);
-  } else if (contenedorAtributos && contenedorAtributos.parentNode) {
-    contenedorAtributos.parentNode.insertBefore(info, contenedorAtributos.nextSibling);
-  } else if (cantidad && cantidad.parentNode) {
-    cantidad.parentNode.insertBefore(info, cantidad);
-  }
-
-  function actualizar() {
-    var sel = items.filter(function (a) { return a.className.indexOf('--selected') >= 0; })[0];
-    var activo = !!sel && (sel.getAttribute('data-value') || '').toUpperCase().indexOf('HOLO') >= 0;
-    caja.classList.toggle('activo', activo);
-    if (badge) badge.classList.toggle('melkh-badge--visible', activo);
-    if (activo && puedeHover) {
-      try {
-        if (img.matches(':hover')) caja.classList.add('melkh--moviendo');
-      } catch (e) { }
+        '.melkh-badge { position: absolute; left: 0; top: 0; width: 112px; height: 112px; box-sizing: border-box; padding: 10px; border-radius: 50%; border: 2px solid #111; background: #ffe600; color: #111; box-shadow: 3px 3px 0 #111; display: none; align-items: center; justify-content: center; text-align: center; font-family: Rubik, system-ui, sans-serif; font-size: 10px; font-weight: 800; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; transform: rotate(-8deg); pointer-events: none; z-index: 5; transition: opacity .25s ease, transform .25s ease; }',
+        '@media (hover: hover) and (pointer: fine) { .melkh-badge--visible { display: flex; } }',
+        '.melkh-badge--oculto { opacity: 0; transform: rotate(-8deg) scale(.8); }',
+        '@media (hover: none) { .melkh.activo .melkh__capa::before { animation: melkh-mover 6s ease-in-out infinite alternate; animation-play-state: running; filter: saturate(1.8); } }', '.melkh-info { margin: 4px 0 20px; width: 100%; max-width: 100%; box-sizing: border-box; font-family: \'Rubik\', system-ui, sans-serif; color: #353535; }',
+        '.melkh-info__tag { display: inline-block; max-width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 7px 14px; border: 2px solid #353535; border-radius: 999px; background: #ffe600; font-size: 10.5px; font-weight: 700; line-height: 1.25; letter-spacing: .04em; text-transform: uppercase; text-align: center; }',
+        '.melkh-info__caja { box-sizing: border-box; padding: 12px 14px; border: 2px solid #353535; border-radius: 12px; background: #ffffff; font-size: 12.5px; font-weight: 400; line-height: 1.5; }',
+        '.melkh-info__aviso { display: block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }'
+      ].join('');
+      document.head.appendChild(estilo);
     }
+
+    if (!document.getElementById('melkh-svg')) {
+      var svg = document.createElementNS(svgNS, 'svg');
+      svg.id = 'melkh-svg';
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('width', '0');
+      svg.setAttribute('height', '0');
+      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
+
+      var defs = document.createElementNS(svgNS, 'defs');
+
+      var filtroBlanco = document.createElementNS(svgNS, 'filter');
+      filtroBlanco.id = 'melkh-blanco';
+      filtroBlanco.setAttribute('color-interpolation-filters', 'sRGB');
+      var matrizBlanco = document.createElementNS(svgNS, 'feColorMatrix');
+      matrizBlanco.setAttribute('type', 'matrix');
+      matrizBlanco.setAttribute('values', '0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0');
+      filtroBlanco.appendChild(matrizBlanco);
+
+      var mascara = document.createElementNS(svgNS, 'mask');
+      mascara.id = 'melkh-mascara';
+      mascara.setAttribute('maskUnits', 'objectBoundingBox');
+      mascara.setAttribute('maskContentUnits', 'objectBoundingBox');
+      mascara.setAttribute('style', 'mask-type:alpha');
+
+      var mascaraImg = document.createElementNS(svgNS, 'image');
+      mascaraImg.id = 'melkh-mascara-img';
+      mascaraImg.setAttribute('x', '0');
+      mascaraImg.setAttribute('y', '0');
+      mascaraImg.setAttribute('width', '1');
+      mascaraImg.setAttribute('height', '1');
+      mascaraImg.setAttribute('preserveAspectRatio', 'none');
+      mascaraImg.setAttribute('filter', 'url(#melkh-blanco)');
+      mascara.appendChild(mascaraImg);
+
+      defs.appendChild(filtroBlanco);
+      defs.appendChild(mascara);
+      svg.appendChild(defs);
+      document.body.appendChild(svg);
+    }
+
+    var wrap = document.createElement('div');
+    wrap.className = 'melkh-holo-wrap';
+    var padre = img.parentNode;
+    padre.insertBefore(wrap, img);
+    wrap.appendChild(img);
+
+    if (img.style.transform || img.style.filter) {
+      wrap.style.transform = img.style.transform;
+      wrap.style.filter = img.style.filter;
+      wrap.style.transition = img.style.transition;
+      img.style.transform = '';
+      img.style.filter = '';
+    }
+
+    var caja = document.createElement('span');
+    caja.className = 'melkh';
+    caja.id = 'melkh-caja';
+    caja.setAttribute('aria-hidden', 'true');
+
+    var capa = document.createElement('span');
+    capa.className = 'melkh__capa';
+    caja.appendChild(capa);
+    var badge = document.createElement('span');
+    badge.className = 'melkh-badge';
+    badge.innerHTML = 'PASÁ EL MOUSE<br>PARA VER<br>LOS COLORES';
+    var contenedorBadge = document.querySelector('.product-vip__left-container') || (caja.parentNode && caja.parentNode.parentNode) || document.body;
+    if (getComputedStyle(contenedorBadge).position === 'static') contenedorBadge.style.position = 'relative';
+    contenedorBadge.appendChild(badge);
+
+    wrap.appendChild(caja);
+
+    var actualizarMascara = function () {
+      var src = img.currentSrc || img.src || '';
+      if (!src) return;
+      var mascaraImg = document.getElementById('melkh-mascara-img');
+      if (!mascaraImg) return;
+      mascaraImg.setAttribute('href', src);
+      mascaraImg.setAttributeNS(xlinkNS, 'xlink:href', src);
+    };
+
+    var ubicar = function () {
+      var w = img.offsetWidth || img.getBoundingClientRect().width;
+      var h = img.offsetHeight || img.getBoundingClientRect().height;
+      if (!w || !h) return;
+      caja.style.left = '0px';
+      caja.style.top = '0px';
+      caja.style.width = w + 'px';
+      caja.style.height = h + 'px';
+
+      if (badge && badge.parentNode) {
+        var rb = img.getBoundingClientRect();
+        var pb = badge.parentNode.getBoundingClientRect();
+        badge.style.left = (rb.right - pb.left - 74) + 'px';
+        badge.style.top = (rb.top - pb.top - 14) + 'px';
+      }
+    };
+
+    actualizarMascara();
+    ubicar();
+    img.addEventListener('load', function () { ubicar(); actualizarMascara(); });
+    window.addEventListener('resize', ubicar);
+    if (window.ResizeObserver) new ResizeObserver(ubicar).observe(img);
+    new MutationObserver(function () { actualizarMascara(); ubicar(); }).observe(img, { attributes: true, attributeFilter: ['src', 'srcset'] });
+
+    var puedeHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    if (puedeHover) {
+      img.addEventListener('mouseenter', function () {
+        caja.classList.add('melkh--moviendo');
+        badge.classList.add('melkh-badge--oculto');
+      });
+      img.addEventListener('mouseleave', function () {
+        caja.classList.remove('melkh--moviendo');
+        badge.classList.remove('melkh-badge--oculto');
+      });
+    }
+
+    var info = document.createElement('div');
+    info.className = 'melkh-info';
+    info.id = 'melkh-info';
+    info.style.display = 'none'; // Oculto por defecto
+
+    var tag = document.createElement('span');
+    tag.className = 'melkh-info__tag';
+    tag.textContent = 'INFORMACIÓN IMPORTANTE SOBRE STICKERS HOLOGRÁFICOS';
+
+    var cajaInfo = document.createElement('div');
+    cajaInfo.className = 'melkh-info__caja';
+    var texto = document.createElement('span');
+    texto.textContent = 'Material que cambia de color según la luz y el ángulo. El corte se hace sobre el holo. Si el diseño tiene borde de color, se agrega un margen de 1 a 2 mm.';
+    var aviso = document.createElement('b');
+    aviso.className = 'melkh-info__aviso';
+    aviso.textContent = 'No incluye tinta blanca. Imagen ilustrativa.';
+    cajaInfo.appendChild(texto);
+    cajaInfo.appendChild(aviso);
+
+    info.appendChild(tag);
+    info.appendChild(cajaInfo);
+
+    var cantidad = document.querySelector('.product-vip__quantity');
+    var filaCantidad = cantidad && cantidad.closest ? cantidad.closest('.uk-grid') : null;
+    var contenedorAtributos = document.getElementById('product-vip__attributes');
+
+    if (filaCantidad && filaCantidad.parentNode) {
+      filaCantidad.parentNode.insertBefore(info, filaCantidad);
+    } else if (contenedorAtributos && contenedorAtributos.parentNode) {
+      contenedorAtributos.parentNode.insertBefore(info, contenedorAtributos.nextSibling);
+    } else if (cantidad && cantidad.parentNode) {
+      cantidad.parentNode.insertBefore(info, cantidad);
+    }
+
+    function actualizar() {
+      var sel = items.filter(function (a) {
+        return a.className.indexOf('--selected') >= 0 || a.classList.contains('is-active') || a.getAttribute('aria-checked') === 'true';
+      })[0];
+
+      var activo = false;
+      if (sel) {
+        var val = (sel.getAttribute('data-value') || sel.textContent || '').toUpperCase();
+        if (val.indexOf('HOLO') >= 0 || val.indexOf('UV') >= 0) {
+          activo = true;
+        }
+      }
+
+      caja.classList.toggle('activo', activo);
+      if (badge) badge.classList.toggle('melkh-badge--visible', activo);
+
+      // Lógica para mostrar/ocultar la info
+      if (info) {
+        info.style.display = activo ? 'block' : 'none';
+      }
+
+      if (activo && puedeHover) {
+        try {
+          if (img.matches(':hover')) caja.classList.add('melkh--moviendo');
+        } catch (e) { }
+      }
+    }
+
+    for (var k = 0; k < items.length; k++) {
+      (function (a) {
+        a.addEventListener('click', function () { window.setTimeout(actualizar, 40); });
+        new MutationObserver(actualizar).observe(a, { attributes: true, attributeFilter: ['class'] });
+      })(items[k]);
+    }
+
+    actualizar();
   }
 
-  for (var k = 0; k < items.length; k++) {
-    (function (a) {
-      a.addEventListener('click', function () { window.setTimeout(actualizar, 40); });
-      new MutationObserver(actualizar).observe(a, { attributes: true, attributeFilter: ['class'] });
-    })(items[k]);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', melkHolo);
+  } else {
+    melkHolo();
   }
 
-  actualizar();
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', melkHolo);
-} else {
-  melkHolo();
-}
-
-var melkHoloVueltas = 0;
-var melkHoloTimer = window.setInterval(function () {
-  melkHoloVueltas++;
-  if (document.getElementById('melkh-caja') || melkHoloVueltas > 40) {
-    window.clearInterval(melkHoloTimer);
-    return;
-  }
-  melkHolo();
-}, 250);
+  var melkHoloVueltas = 0;
+  var melkHoloTimer = window.setInterval(function () {
+    melkHoloVueltas++;
+    if (document.getElementById('melkh-caja') || melkHoloVueltas > 40) {
+      window.clearInterval(melkHoloTimer);
+      return;
+    }
+    melkHolo();
+  }, 250);
 })();
 
 
@@ -1280,14 +1297,14 @@ var melkHoloTimer = window.setInterval(function () {
     '@media (max-width: 768px) {',
     '  .header, header, .header__container {',
     '    padding-top: 25px !important;',
-    '    padding-bottom: 30px !important;', /* NUEVO: espacio extra abajo */
+    '    padding-bottom: 30px !important;',
     '    margin-top: 0 !important;',
     '    margin-bottom: 0 !important;',
     '    position: relative !important;',
     '  }',
     '  .header-logo, .header__left {',
     '    margin-top: 15px !important;',
-    '    margin-bottom: 15px !important;', /* NUEVO: empuja hacia arriba para dar aire abajo */
+    '    margin-bottom: 15px !important;',
     '    position: relative !important;',
     '    z-index: 5 !important;',
     '  }',
@@ -1346,7 +1363,7 @@ var melkHoloTimer = window.setInterval(function () {
   var maxIntentos = 20;
 
   var timer = setInterval(function () {
-   
+
     if (document.getElementById('melmak-aviso-envio') || intentos >= maxIntentos) {
       clearInterval(timer);
       return;
@@ -1377,18 +1394,18 @@ var melkHoloTimer = window.setInterval(function () {
         'display: block !important'
       ].join(';');
 
-    
+
       btnCompra.parentNode.insertBefore(aviso, btnCompra);
 
       clearInterval(timer);
     }
   }, 500);
 })();
+
 /* ==========================================================
-   ESTILO DE BOTÓN DE COMPRA (V2 - BUSCA POR TEXTO)
+   ESTILO DE BOTÓN DE COMPRA (V3 - BORDE AMARILLO)
    ========================================================== */
 (function estilizarBotonCompra() {
-  // Función que busca el botón de compra por su texto, sin importar la clase
   function buscarBotonCompra() {
     var botones = document.querySelectorAll('button, a, input[type="submit"]');
     for (var i = 0; i < botones.length; i++) {
@@ -1400,17 +1417,13 @@ var melkHoloTimer = window.setInterval(function () {
     return null;
   }
 
-  // Aplicamos los estilos directamente al botón cuando lo encontremos
   var intentos = 0;
-  var maxIntentos = 30; // Intentar durante 15 segundos
-
   var timer = setInterval(function () {
     var boton = buscarBotonCompra();
 
     if (boton) {
-      // Forzamos los estilos en línea para que el tema no los pise
       boton.style.borderRadius = '100px';
-      boton.style.border = '3px solid #353535';
+      boton.style.border = '3px solid #ffee26';
       boton.style.backgroundColor = '#353535';
       boton.style.color = '#ffee26';
       boton.style.fontFamily = '"vinyl", "Rubik", Arial, sans-serif';
@@ -1418,28 +1431,25 @@ var melkHoloTimer = window.setInterval(function () {
       boton.style.letterSpacing = '0.05em';
       boton.style.textTransform = 'uppercase';
       boton.style.transition = 'all 0.3s ease';
-      boton.style.boxShadow = '4px 4px 0 #ffee26';
+      boton.style.boxShadow = 'none';
 
-      // Efecto hover (usamos eventos porque los estilos en línea no tienen :hover)
       boton.onmouseenter = function () {
-        this.style.backgroundColor = '#ffffff';
+        this.style.backgroundColor = '#ffee26';
         this.style.color = '#353535';
+        this.style.border = '3px solid #353535';
         this.style.transform = 'translateY(-2px)';
-        this.style.boxShadow = '4px 4px 0 #353535';
       };
       boton.onmouseleave = function () {
         this.style.backgroundColor = '#353535';
         this.style.color = '#ffee26';
+        this.style.border = '3px solid #ffee26';
         this.style.transform = 'translateY(0)';
-        this.style.boxShadow = '4px 4px 0 #ffee26';
       };
 
-      clearInterval(timer); // Dejamos de buscar una vez encontrado
+      clearInterval(timer);
     }
 
     intentos++;
-    if (intentos >= maxIntentos) {
-      clearInterval(timer); // Nos rendimos después de 15 segundos
-    }
+    if (intentos >= 30) { clearInterval(timer); }
   }, 500);
 })();
