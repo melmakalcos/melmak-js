@@ -974,7 +974,6 @@
 
         aplicarScroll(document.getElementById('melmak-bbs__scroll-block'));
     }
-    window.addEventListener('scroll', animacionScroll, { passive: true });
     window.addEventListener('resize', animacionScroll, { passive: true });
     animacionScroll();
 
@@ -982,6 +981,16 @@
     function ocultarHint() {
         if (hintEl) { hintEl.style.opacity = (window.scrollY > 60) ? '0' : '1'; }
     }
-    window.addEventListener('scroll', ocultarHint, { passive: true });
     ocultarHint();
+
+    var _scrollTickBbs = false;
+    window.addEventListener('scroll', function () {
+        if (_scrollTickBbs) return;
+        _scrollTickBbs = true;
+        requestAnimationFrame(function () {
+            animacionScroll();
+            ocultarHint();
+            _scrollTickBbs = false;
+        });
+    }, { passive: true });
 })();

@@ -603,11 +603,11 @@ else melkRelacionados();
   var melkHoloVueltas = 0;
   function intentarHolo() {
     melkHoloVueltas++;
-    if (document.getElementById('melkh-caja') || melkHoloVueltas > 40) return;
-    melkHolo(); // <-- ESTA LÍNEA FALTABA: vuelve a intentar crear la caja
-    setTimeout(intentarHolo, 250);
+    if (document.getElementById('melkh-caja') || melkHoloVueltas > 20) return;
+    melkHolo();
+    setTimeout(intentarHolo, 300);
   }
-  setTimeout(intentarHolo, 250);
+  setTimeout(intentarHolo, 300);
 })();
 
 (function () {
@@ -658,7 +658,8 @@ else melkRelacionados();
     function intentarMenu() {
       arreglarMenu();
       n++;
-      if (n >= 30) return;
+      if (n >= 15) return;
+      if (document.querySelector('#melk-ver-todo-btn')) return;
       setTimeout(intentarMenu, 500);
     }
     setTimeout(intentarMenu, 500);
@@ -736,7 +737,10 @@ else melkRelacionados();
   function intentar() {
     envolver(); respaldo(); alerta();
     n++;
-    if (n >= 20) return;
+    if (n >= 12) return;
+    var infoListo = !!document.querySelector('.melk-prodinfo');
+    var alertListo = !document.querySelector('.product-vip__alert-text') || !!document.querySelector('.melk-alerta');
+    if (infoListo && alertListo) return;
     setTimeout(intentar, 500);
   }
   setTimeout(intentar, 500);
@@ -857,6 +861,6 @@ else melkRelacionados();
   }
   aplicar();
   if (window.MutationObserver) {
-    new MutationObserver(debounce(aplicar, 500)).observe(document.body, { childList: true, subtree: true });
+    new MutationObserver(debounce(aplicar, 1500)).observe(document.body, { childList: true, subtree: true });
   }
 })();
