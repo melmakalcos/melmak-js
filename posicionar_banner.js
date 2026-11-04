@@ -11,7 +11,34 @@
             ref = menu && menu.parentNode ? menu.nextSibling : null;
         }
         if (!ref || !ref.parentNode) return false;
-        ref.parentNode.insertBefore(banner, ref);
+
+        // Medir altura real del banner ANTES de moverlo
+        var alturaBanner = Math.max(
+            banner.offsetHeight || 0,
+            banner.getBoundingClientRect().height || 0,
+            600 // estimación mínima por si mide 0
+        );
+
+        // Crear placeholder con esa altura para reservar el espacio
+        var placeholder = document.getElementById('melmak-banner-placeholder');
+        if (!placeholder) {
+            placeholder = document.createElement('div');
+            placeholder.id = 'melmak-banner-placeholder';
+            placeholder.style.cssText = 'height:' + alturaBanner + 'px;width:100%;pointer-events:none;display:block;';
+            ref.parentNode.insertBefore(placeholder, ref);
+        }
+
+        // Mover el banner después del placeholder
+        placeholder.parentNode.insertBefore(banner, placeholder.nextSibling);
+
+        // Quitar el placeholder en el siguiente frame
+        // (el banner ya está renderizado en su lugar definitivo)
+        requestAnimationFrame(function () {
+            if (placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+        });
+
         try { window.dispatchEvent(new Event('scroll')); } catch (e) { }
         return true;
     }
