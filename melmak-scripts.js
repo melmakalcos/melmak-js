@@ -270,31 +270,6 @@ function debounce(func, wait) {
 })();
 
 (function () {
-  const pathname = window.location.pathname;
-  const isHomePage = pathname === '/' || pathname === '' || pathname === '/index.html';
-  if (!isHomePage) return;
-  const style = document.createElement('style');
-  style.textContent = `
-    #floating-mascot { position: fixed; bottom: 0px; left: 20px; z-index: 9998; pointer-events: none; }
-    #floating-mascot img { width: 150px; height: auto; display: block; }
-    @media (max-width: 150px) { #floating-mascot img { width: 60px; } }
-  `;
-  document.head.appendChild(style);
-  function createMascot() {
-    if (document.getElementById('floating-mascot')) return;
-    const container = document.createElement('div');
-    container.id = 'floating-mascot';
-    const img = document.createElement('img');
-    img.src = 'https://d22fxaf9t8d39k.cloudfront.net/af2b89bf5852a5149c6662f2b9b31bad160f48187062804c370b0093f7dbc50120700.gif';
-    img.alt = 'Melmak Mascot';
-    container.appendChild(img);
-    document.body.appendChild(container);
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', createMascot);
-  else createMascot();
-})();
-
-(function () {
   function esCatalogo() {
     var ruta = window.location.pathname.replace(/\/+$/, '');
     return ruta === '/productos';
