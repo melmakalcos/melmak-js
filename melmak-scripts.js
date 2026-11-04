@@ -1253,3 +1253,62 @@ var melkHoloTimer = window.setInterval(function () {
     if (n >= 20) window.clearInterval(t);
   }, 500);
 })();
+/* ==========================================================
+   FIXES GLOBALES DE HEADER (MELMAK)
+   ========================================================== */
+(function arreglarHeaderYMarquee() {
+  var styleHeader = document.createElement('style');
+  styleHeader.textContent = [
+    /* 1. Movimiento del logo natural (centrado) */
+    /* Corrige la deformación o el movimiento raro al hacer hover o abrir el menú */
+    '.header-logo, .header-logo * {',
+    '  transform-origin: center center !important;',
+    '  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1) !important;',
+    '}',
+
+    /* 2. Espacio de la franja blanca en móvil */
+    /* Evita que el logo se esconda debajo de la franja negra de anuncios */
+    '@media (max-width: 768px) {',
+    '  .header, header.header, .header__container {',
+    '    padding-top: 18px !important;',
+    '    margin-top: 2px !important;',
+    '    min-height: auto !important;',
+    '  }',
+    '  .header-announcement {',
+    '    position: relative !important;',
+    '    z-index: 1 !important;',
+    '  }',
+    '}'
+  ].join('\n');
+  document.head.appendChild(styleHeader);
+
+  /* 3. Forzar el arranque del marquee (franja amarilla) al cargar */
+  function forzarMarquee() {
+    var marquees = document.querySelectorAll('.marquee-track, [class*="marquee"], #melmak-bbs__carrusel-inner');
+    for (var i = 0; i < marquees.length; i++) {
+      var el = marquees[i];
+      // Si el elemento tiene animación, la reseteamos para que arranque de una
+      if (window.getComputedStyle(el).animationName !== 'none') {
+        el.style.animation = 'none';
+        void el.offsetWidth; // Fuerza al navegador a recalcular el layout
+        el.style.animation = ''; // Restaura la animación original
+      }
+    }
+  }
+
+  // Intentamos forzarlo apenas carga el DOM, cuando cargan las fuentes y en el load general
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', forzarMarquee);
+  } else {
+    forzarMarquee();
+  }
+
+  window.addEventListener('load', forzarMarquee);
+
+  if (document.fonts) {
+    document.fonts.ready.then(forzarMarquee);
+  }
+
+  // Un pequeño timeout de seguridad por si el tema inyecta el marquee un milisegundo después
+  setTimeout(forzarMarquee, 400);
+})();
