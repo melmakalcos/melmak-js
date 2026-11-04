@@ -865,13 +865,16 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   ESTILO UNIFICADO PARA TODOS LOS DROPDOWNS DEL MENÚ
+   ESTILO UNIFICADO PARA TODOS LOS DROPDOWNS DEL MENÚ (V2)
    ========================================================== */
 (function () {
   var s = document.createElement('style');
   s.textContent = [
-    /* Fondo amarillo y bordes redondeados para el dropdown de INFORMACIÓN (y cualquier otro) */
-    '.desktop-list__menu > ul > li > ul {',
+    /* Fuerza el fondo amarillo y bordes redondeados a CUALQUIER submenú (ul o div) */
+    '.header-menu__desktop-list__container-list li:hover > ul,',
+    '.header-menu__desktop-list__container-list li:hover > div,',
+    '.desktop-list__menu li:hover > ul,',
+    '.desktop-list__menu li:hover > div {',
     '  background-color: #ffee26 !important;',
     '  border-radius: 16px !important;',
     '  padding: 12px !important;',
@@ -879,8 +882,10 @@ else melkRelacionados();
     '  border: none !important;',
     '  overflow: hidden !important;',
     '}',
-    /* Texto oscuro para los enlaces dentro del dropdown */
-    '.desktop-list__menu > ul > li > ul a {',
+
+    /* Asegura que los textos dentro del menú sean oscuros */
+    '.header-menu__desktop-list__container-list li:hover > ul a,',
+    '.header-menu__desktop-list__container-list li:hover > div a {',
     '  color: #353535 !important;',
     '  font-weight: 500 !important;',
     '  display: block !important;',
@@ -888,8 +893,10 @@ else melkRelacionados();
     '  border-radius: 8px !important;',
     '  transition: background 0.2s ease !important;',
     '}',
-    /* Efecto hover sutil para los enlaces */
-    '.desktop-list__menu > ul > li > ul a:hover {',
+
+    /* Efecto hover para los enlaces */
+    '.header-menu__desktop-list__container-list li:hover > ul a:hover,',
+    '.header-menu__desktop-list__container-list li:hover > div a:hover {',
     '  background-color: rgba(255,255,255,0.4) !important;',
     '}'
   ].join('\n');
