@@ -1385,38 +1385,61 @@ var melkHoloTimer = window.setInterval(function () {
   }, 500);
 })();
 /* ==========================================================
-   ESTILO DE BOTÓN DE COMPRA (add_to_cart-btn)
+   ESTILO DE BOTÓN DE COMPRA (V2 - BUSCA POR TEXTO)
    ========================================================== */
 (function estilizarBotonCompra() {
-  var styleBtn = document.createElement('style');
-  styleBtn.textContent = [
-    /* Estilo base: Píldora negra con texto amarillo */
-    '.add_to_cart-btn {',
-    '  border-radius: 100px !important;',      /* Bordes bien redondeados */
-    '  border: 3px solid #353535 !important;', /* Borde negro grueso */
-    '  background-color: #353535 !important;',/* Fondo negro */
-    '  color: #ffee26 !important;',           /* Texto amarillo MELMAK */
-    '  font-family: "vinyl", "Rubik", Arial, sans-serif !important;',
-    '  font-weight: 700 !important;',
-    '  letter-spacing: 0.05em !important;',
-    '  text-transform: uppercase !important;',
-    '  transition: all 0.3s ease !important;',
-    '  box-shadow: 4px 4px 0 #ffee26 !important;', /* Sombra amarilla dura para que resalte */
-    '}',
+  // Función que busca el botón de compra por su texto, sin importar la clase
+  function buscarBotonCompra() {
+    var botones = document.querySelectorAll('button, a, input[type="submit"]');
+    for (var i = 0; i < botones.length; i++) {
+      var texto = (botones[i].textContent || botones[i].value || '').toLowerCase();
+      if (texto.includes('agregar al carrito') || texto.includes('comprar') || texto.includes('añadir al carrito')) {
+        return botones[i];
+      }
+    }
+    return null;
+  }
 
-    /* Efecto al pasar el mouse: Se invierte a blanco con texto negro */
-    '.add_to_cart-btn:hover {',
-    '  background-color: #ffffff !important;',
-    '  color: #353535 !important;',
-    '  transform: translateY(-2px) !important;',
-    '  box-shadow: 4px 4px 0 #353535 !important;',
-    '}',
+  // Aplicamos los estilos directamente al botón cuando lo encontremos
+  var intentos = 0;
+  var maxIntentos = 30; // Intentar durante 15 segundos
 
-    /* Efecto al hacer clic */
-    '.add_to_cart-btn:active {',
-    '  transform: translateY(2px) !important;',
-    '  box-shadow: none !important;',
-    '}'
-  ].join('\n');
-  document.head.appendChild(styleBtn);
+  var timer = setInterval(function () {
+    var boton = buscarBotonCompra();
+
+    if (boton) {
+      // Forzamos los estilos en línea para que el tema no los pise
+      boton.style.borderRadius = '100px';
+      boton.style.border = '3px solid #353535';
+      boton.style.backgroundColor = '#353535';
+      boton.style.color = '#ffee26';
+      boton.style.fontFamily = '"vinyl", "Rubik", Arial, sans-serif';
+      boton.style.fontWeight = '700';
+      boton.style.letterSpacing = '0.05em';
+      boton.style.textTransform = 'uppercase';
+      boton.style.transition = 'all 0.3s ease';
+      boton.style.boxShadow = '4px 4px 0 #ffee26';
+
+      // Efecto hover (usamos eventos porque los estilos en línea no tienen :hover)
+      boton.onmouseenter = function () {
+        this.style.backgroundColor = '#ffffff';
+        this.style.color = '#353535';
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '4px 4px 0 #353535';
+      };
+      boton.onmouseleave = function () {
+        this.style.backgroundColor = '#353535';
+        this.style.color = '#ffee26';
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '4px 4px 0 #ffee26';
+      };
+
+      clearInterval(timer); // Dejamos de buscar una vez encontrado
+    }
+
+    intentos++;
+    if (intentos >= maxIntentos) {
+      clearInterval(timer); // Nos rendimos después de 15 segundos
+    }
+  }, 500);
 })();
