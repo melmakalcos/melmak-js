@@ -671,6 +671,11 @@ else melkRelacionados();
   var estilo = document.createElement('style');
   estilo.id = 'melk-menu-fix';
   estilo.textContent = [
+    /* Ocultar subcategorías del menú CATÁLOGO */
+    '.header-menu__desktop-list__container-list .desktop-list__menu > ul > li > ul,',
+    '.header-menu__desktop-list__container-list .desktop-list__menu li.desktop-list__subitem > ul,',
+    '.header-menu__desktop-list__container-list .desktop-list__menu a.desktop-list-link__default { display: none !important; }',
+
     /* FIX: Restaurar el fondo amarillo del menú CATÁLOGO (sin el RGB) */
     '.header-menu__desktop-list__container-list { background-color: #ffee26 !important; border-radius: 16px !important; overflow: hidden !important; }',
     '.header-menu__desktop-list__container-list .desktop-list__menu { display: flex !important; flex-wrap: wrap !important; gap: 4px 12px !important; padding: 4px 12px 14px 12px !important; }',
