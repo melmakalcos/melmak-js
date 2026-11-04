@@ -865,32 +865,33 @@ else melkRelacionados();
   }
 })();
 /* ==========================================================
-   MANTENER TAMAÑO ORIGINAL Y CENTRAR IMAGEN
+   MANTENER TAMAÑO ORIGINAL Y CENTRAR IMAGEN (V4 - CORREGIDO)
    ========================================================== */
 (function () {
   function ajustarImagen() {
     var img = document.querySelector('.product-vip__carrousel-image');
     if (!img) return;
 
-    // 1. Imagen: tamaño original, centrada
+    // 1. Forzar a la imagen a su tamaño natural, bloque y centrada
     img.style.setProperty('width', 'auto', 'important');
     img.style.setProperty('max-width', '100%', 'important');
     img.style.setProperty('height', 'auto', 'important');
     img.style.setProperty('object-fit', 'contain', 'important');
-    img.style.setProperty('display', 'block', 'important');
-    img.style.setProperty('margin', '0 auto', 'important'); /* <-- CLAVE: centra la imagen */
+    img.style.setProperty('display', 'block', 'important'); // La convierte en bloque
+    img.style.setProperty('margin', '0 auto', 'important'); // La centra horizontalmente
 
-    // 2. Contenedor inmediato: limitar ancho y centrar
+    // 2. Forzar al contenedor a centrar su contenido (por si usa flexbox)
     var contenedor = img.closest('.product-vip__carrousel');
     if (contenedor) {
       contenedor.style.setProperty('max-width', '500px', 'important');
-      contenedor.style.setProperty('margin', '0 auto', 'important'); /* <-- CLAVE: centra la caja */
-      contenedor.style.setProperty('display', 'flex', 'important');
-      contenedor.style.setProperty('justify-content', 'center', 'important');
-      contenedor.style.setProperty('align-items', 'center', 'important');
+      contenedor.style.setProperty('margin', '0 auto', 'important');
+      contenedor.style.setProperty('display', 'flex', 'important'); // Asegura flexbox
+      contenedor.style.setProperty('justify-content', 'center', 'important'); // Centra horizontalmente en flex
+      contenedor.style.setProperty('align-items', 'center', 'important'); // Centra verticalmente en flex
     }
   }
 
+  // Ejecutar en varios momentos para asegurar que el tema no lo pise después
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', ajustarImagen);
   } else {
@@ -899,4 +900,5 @@ else melkRelacionados();
 
   setTimeout(ajustarImagen, 500);
   setTimeout(ajustarImagen, 1500);
+  setTimeout(ajustarImagen, 3000);
 })();
